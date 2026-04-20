@@ -609,9 +609,9 @@ const App = {
   },
 
   _findZoneData(zoneId) {
-    for (const [, city] of Object.entries(CITIES)) {
+    for (const [slug, city] of Object.entries(CITIES)) {
       const z = city.zones.find(cz => cz.id === zoneId);
-      if (z) return z;
+      if (z) return { ...z, citySlug: slug };
     }
     return null;
   },
