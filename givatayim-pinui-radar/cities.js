@@ -950,8 +950,13 @@ function parseTimelineMid(facts) {
 function parsePpsqmRange(rows) {
   const row = rows.find(r => r[0].includes('מחיר למ'));
   if (!row) return null;
+  // Handle range like "34K-39K" or "₪34K-39K"
   const m = row[1].match(/(\d+)K[–\-](\d+)K/);
-  return m ? ((parseInt(m[1]) + parseInt(m[2])) / 2) * 1000 : null;
+  if (m) return ((parseInt(m[1]) + parseInt(m[2])) / 2) * 1000;
+  // Handle single like "55K+" or "₪55K"
+  const s = row[1].match(/(\d+)K/);
+  if (s) return parseInt(s[1]) * 1000;
+  return null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
