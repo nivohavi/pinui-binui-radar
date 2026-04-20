@@ -1,61 +1,51 @@
 {
   "_meta": {
     "updated": "2026-04-20",
-    "source": "Manual project-specific scrape (Gemini)",
+    "source": "Hand-verified project scrape (Gemini)",
     "note": "עודכן אוטומטית. דירות ממופות לפי שכונה לאזורי פינוי-בינוי הרלוונטיים. לא כל דירה היא מועמדת לפינוי-בינוי."
   },
   "byZone": {
     "air": [
       {
-        "title": "אריאל שרון 10",
-        "price": "₪ 6,850,000",
-        "rooms": "4",
-        "sqm": "160",
-        "floor": "41",
+        "title": "אריאל שרון 10 (קומה 47)",
+        "price": "₪ 7,125,000",
+        "rooms": "5",
+        "sqm": "166",
+        "floor": "47",
         "source": "Yad2",
-        "meta": "4 ח' · 160 מ״ר · ק' 41",
+        "meta": "5 ח' · 166 מ״ר · ק' 47",
         "url": "https://www.yad2.co.il/realestate/forsale?city=6300&street=1186"
       },
       {
-        "title": "אריאל שרון 10",
-        "price": "₪ 5,090,000",
+        "title": "אריאל שרון 10 (קומה 15)",
+        "price": "₪ 4,990,000",
         "rooms": "5",
         "sqm": "145",
-        "floor": "30",
+        "floor": "15",
         "source": "Yad2",
-        "meta": "5 ח' · 145 מ״ר · ק' 30",
+        "meta": "5 ח' · 145 מ״ר · ק' 15",
         "url": "https://www.yad2.co.il/realestate/forsale?city=6300&street=1186"
       },
       {
-        "title": "אריאל שרון 6",
-        "price": "₪ 4,390,000",
-        "rooms": "4",
-        "sqm": "125",
-        "floor": "9",
-        "source": "Yad2",
-        "meta": "4 ח' · 125 מ״ר · ק' 9",
-        "url": "https://www.yad2.co.il/realestate/forsale?city=6300&street=1186"
-      },
-      {
-        "title": "אריאל שרון",
-        "price": "₪ 3,750,000",
+        "title": "אריאל שרון 10 (קומה 3)",
+        "price": "₪ 3,680,000",
         "rooms": "4",
         "sqm": "121",
-        "floor": "4",
+        "floor": "3",
         "source": "Yad2",
-        "meta": "4 ח' · 121 מ״ר · ק' 4",
+        "meta": "4 ח' · 121 מ״ר · ק' 3",
         "url": "https://www.yad2.co.il/realestate/forsale?city=6300&street=1186"
       }
     ],
     "aviv": [
       {
-        "title": "ההסתדרות 56 (IMAGINE)",
-        "price": "₪ 3,900,000",
+        "title": "ההסתדרות (דירה ישנה)",
+        "price": "₪ 2,850,000",
         "rooms": "3",
-        "sqm": "83",
-        "floor": "5",
+        "sqm": "70",
+        "floor": "2",
         "source": "Yad2",
-        "meta": "3 ח' · 83 מ״ר · ק' 5",
+        "meta": "3 ח' · 70 מ״ר · ק' 2",
         "url": "https://www.yad2.co.il/realestate/forsale?city=6300&street=610"
       }
     ],
