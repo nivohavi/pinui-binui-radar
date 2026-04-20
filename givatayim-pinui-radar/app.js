@@ -2,6 +2,98 @@
    Pinui-Binui Radar — App Controller (SPA Router + Views)
    ═══════════════════════════════════════════════════════════════════ */
 
+// ── Top-level data constants (used across multiple views) ────────
+
+const glossaryTerms = [
+  { id: 'pinui', term: 'פינוי-בינוי', tr: 'Pinui-Binui · Evacuation and Reconstruction',
+    desc: 'מסלול להתחדשות עירונית שבו הורסים לגמרי בניינים ישנים ובונים חדשים במקומם — בדרך כלל גבוהים ועם יותר דירות. הדיירים הישנים מקבלים דירה חדשה ואת ההפרש היזם מוכר בשוק החופשי.',
+    example: 'AIR — שני בניינים בני 3 קומות פונו, נבנה במקומם מגדל מגורים עם 333 דירות.' },
+  { id: 'tama', term: 'תמ"א 38', tr: 'Tama 38 · National Master Plan 38',
+    desc: 'תוכנית ארצית שאפשרה חיזוק מבנים ישנים נגד רעידות אדמה תמורת תוספת דירות. 38/1 (חיזוק + תוספת קומות) ו-38/2 (הריסה ובנייה מחדש). התוכנית הסתיימה ב-2022.',
+    example: 'אם יש מודעה שמבטיחה "תמ"א 38" — תבדוק מתי הוגשה הבקשה. אחרי 2022 זה לא אופציה חדשה.' },
+  { id: 'tochnit', term: 'תב"ע — תוכנית בניין עיר', tr: 'Tochnit Binyan Ir · Local Building Plan',
+    desc: 'המסמך התכנוני המרכזי שמגדיר "מה מותר לבנות כאן" — כמה קומות, אילו שימושים, זכויות בנייה, דרכים. כדי שפרויקט פינוי-בינוי ייצא לדרך, חייבת להיות תב"ע מאושרת.',
+    example: 'שלבי החיים של תב"ע: הכנה → הגשה → הפקדה → דיון → אישור → תוקף.' },
+  { id: 'hefkada', term: 'תוכנית מופקדת / מאושרת', tr: '',
+    desc: 'מופקדת = התב"ע הוגשה רשמית ופתוחה 60 יום להתנגדויות. עדיין לא מחייבת. מאושרת = אחרי הפקדה ודיון, התוכנית אושרה סופית ותקפה.',
+    example: 'הפער בין "לקראת הפקדה" ל"מאושרת" יכול להיות 3-5 שנים.' },
+  { id: 'mavat', term: 'מבא"ת', tr: 'MAVAT · Government Planning Database',
+    desc: 'המערכת הממשלתית המרכזית לכל התוכניות בישראל. אפשר לחפש לפי גוש/חלקה, שם רחוב, או שם תוכנית, ולקבל את כל המסמכים.',
+    example: 'לפני שקונים דירה — מחפשים את כתובתה ב-mavat.iplan.gov.il ורואים אם יש תב"ע פעילה.' },
+  { id: 'vaada', term: 'ועדה מקומית / ועדה מחוזית', tr: '',
+    desc: 'ועדה מקומית = של העירייה, מאשרת היתרי בנייה ותוכניות קטנות. ועדה מחוזית = של המחוז, מאשרת תוכניות גדולות כמו תב"ע לפינוי-בינוי מתחמי.',
+    example: 'יזם מגיש תב"ע לוועדה המחוזית → אישור → מגיש בקשה להיתר לוועדה המקומית → אישור → בונה.' },
+  { id: 'heter', term: 'היתר בנייה', tr: '',
+    desc: 'האישור הסופי של העירייה שמאפשר פיזית להתחיל לבנות. זה המסמך הכי חשוב — בלעדיו הכל רק על הנייר.',
+    example: 'יזם שאומר "ההיתר יגיע תוך שבועיים" אבל כבר חודשיים לא קרה כלום — בקש לראות את המסמך הרשמי.' },
+  { id: 'sarvan', term: 'דייר סרבן', tr: '',
+    desc: 'דייר שמסרב לחתום על הסכם הפינוי-בינוי. פרויקט חייב תמיכה של 80% מבעלי הדירות כדי להתחיל. יש מנגנון משפטי (סעיף 23) להסיר סרבן יחיד.',
+    example: '"כמה דיירים חתמו?" אם פחות מ-70% — הסיכון גבוה.' },
+  { id: '66', term: 'רוב 66% / 80%', tr: '',
+    desc: '66% = הרוב הדרוש להתחיל תהליך מקדים. 80% = הרוב הנדרש בפועל כדי להחיל את הפרויקט על כל הדיירים (כולל הסרבנים).',
+    example: '"מתחם" = קבוצה של בניינים שעל פי התב"ע מתחדשים יחד. לפעמים 2 בניינים, לפעמים 20.' },
+  { id: 'saif23', term: 'סעיף 23 לחוק פינוי-בינוי', tr: '',
+    desc: 'הסעיף שמאפשר לתבוע דייר סרבן יחיד אם הוא מונע מ-80% מהשכנים להתחדש. בית המשפט יכול לחייב אותו להצטרף לפרויקט. מסלול ארוך — 1-3 שנים.',
+    example: 'אם יש 1-2 סרבנים — הפרויקט יקרה, אבל לא מחר.' },
+  { id: 'hitnagdut', term: 'התנגדויות', tr: '',
+    desc: 'מסמכים שתושבים, שכנים, או העירייה מגישים נגד תוכנית מופקדת. במהלך 60 יום של הפקדה — כל אחד יכול להגיש. התנגדויות יכולות לדחות, לשנות או לבטל תוכנית.',
+    example: 'תוכנית ארלוזורוב (שני מגדלים בני 15 קומות) נמצאת בסטטוס התנגדויות — זו הסיבה שהמתחם מסומן כ"עדיין לא".' },
+  { id: 'arvut', term: 'ערבות בנקאית', tr: '',
+    desc: 'מסמך מהבנק שמבטיח שאם היזם פשט רגל או לא יסיים לבנות — הרוכש יקבל את כספו חזרה. בישראל זה חובה. לעולם לא לשלם סכום משמעותי ליזם בלי ערבות.',
+    example: '"חוק המכר דירות" — מחייב את היזם לתת ערבות על כל תשלום מעל 7% משווי הדירה.' },
+  { id: 'hashvaha', term: 'היטל השבחה', tr: '',
+    desc: 'מס שהעירייה גובה כשערך הנכס עלה בגלל אישור תוכנית חדשה. בפרויקטי פינוי-בינוי — היזם בדרך כלל נושא בהיטל.',
+    example: 'גובה ההיטל: 50% מההפרש בין שווי הנכס לפני התוכנית לאחריה.' },
+  { id: 'shevach', term: 'מס שבח', tr: '',
+    desc: 'מס על רווח ההון ממכירת דירה. בפינוי-בינוי — יש פטור לבעל דירה יחידה שמקבל דירה חדשה במקום הישנה.',
+    example: 'אם בעוד 7 שנים תקבל דירה חדשה תמורת הישנה — בדרך כלל הפטור חל גם עליך אם זו דירתך היחידה.' },
+  { id: 'rechisha', term: 'מס רכישה', tr: '',
+    desc: 'מס שמשלם הקונה בעת רכישת דירה. לדירה יחידה — מדרגות ותעריפים נוחים (0%-5%). לדירה שנייה או משקיע — 8%-10% מהשקל הראשון.',
+    example: 'אם קונה דירה ישנה במתחם לצורך השקעה — מס רכישה של משקיע (8%+). זה משפיע על המשוואה.' },
+  { id: 'nesach', term: 'נסח טאבו', tr: '',
+    desc: 'מסמך רשמי מרשם המקרקעין שמראה: מי הבעלים, משכנתאות, עיקולים, הערות אזהרה. חובה להוציא לפני כל קנייה.',
+    example: 'באתר טאבו אונליין או דרך עורך הדין שלך. עלות ~15 ש"ח.' },
+  { id: 'gush', term: 'גוש / חלקה', tr: '',
+    desc: 'המספר הרשמי של הקרקע במפות הקדסטר של ישראל. "גוש" = אזור, "חלקה" = חלקת קרקע ספציפית. זו הדרך הכי מדויקת לחפש תוכניות.',
+    example: 'מוצאים את המספרים בנסח הטאבו, ברישיונות הבנייה, או ב-nadlan.gov.il.' },
+  { id: 'rashut', term: 'הרשות הממשלתית להתחדשות עירונית', tr: '',
+    desc: 'הגוף המרכזי במדינה שאחראי על פרויקטי פינוי-בינוי. מכריז על מתחמים רשמיים, מלווה דיירים, ומקיים מאגר פרויקטים פתוח.',
+    example: 'אתר הרשות: gov.il/urban-renewal — רשימה של מתחמים מוכרזים.' }
+];
+
+const resourceGroups = [
+  { title: 'תוכניות ורגולציה', items: [
+    { tag: 'חינם · רשמי', cls: 'free', title: 'מבא"ת', desc: 'חיפוש תוכניות לפי כתובת/גוש/חלקה', url: 'https://mavat.iplan.gov.il', label: 'mavat.iplan.gov.il' },
+    { tag: 'חינם · רשמי', cls: 'free', title: 'הרשות להתחדשות', desc: 'מתחמים מוכרזים, הטבות מס', url: 'https://www.gov.il/he/departments/government_authority_for_urban_renewal', label: 'gov.il/urban-renewal' },
+    { tag: 'חינם · רשמי', cls: 'free', title: 'מינהל התכנון', desc: 'מדיניות, תמ"אות, תוכניות ארציות', url: 'https://www.gov.il/he/departments/ministry_of_interior_planning_administration', label: 'gov.il/planning' }
+  ]},
+  { title: 'עסקאות ושווי', items: [
+    { tag: 'חינם · רשמי', cls: 'free', title: 'nadlan.gov.il', desc: 'עסקאות אמת מרשות המיסים', url: 'https://www.nadlan.gov.il', label: 'nadlan.gov.il' },
+    { tag: 'חלקי חינם', cls: 'paid', title: 'Madlan', desc: 'מפות מחירים + דירות למכירה', url: 'https://www.madlan.co.il', label: 'madlan.co.il' },
+    { tag: 'חלקי חינם', cls: 'paid', title: 'Yad2', desc: 'הלוח הגדול בישראל', url: 'https://www.yad2.co.il/realestate', label: 'yad2.co.il' },
+    { tag: 'חינם · API', cls: 'free', title: 'data.gov.il', desc: 'גישה פרוגרמטית לנתונים', url: 'https://data.gov.il/dataset', label: 'data.gov.il' }
+  ]},
+  { title: 'מסמכים משפטיים', items: [
+    { tag: '~15 ש"ח', cls: 'paid', title: 'טאבו אונליין', desc: 'נסח טאבו תוך דקות', url: 'https://www.gov.il/he/departments/general/real_estate_registration', label: 'טאבו אונליין' },
+    { tag: 'חינם · רשמי', cls: 'free', title: 'חוק פינוי-בינוי', desc: 'נוסח מלא כולל סעיף 23', url: 'https://www.nevo.co.il', label: 'nevo.co.il' },
+    { tag: 'חינם', cls: 'free', title: 'פסקי דין', desc: 'מאגר פסקי דין סרבנים', url: 'https://www.takdin.co.il', label: 'takdin.co.il' }
+  ]},
+  { title: 'מיסוי', items: [
+    { tag: 'חינם · רשמי', cls: 'free', title: 'מחשבון מס רכישה', desc: 'המחשבון הרשמי', url: 'https://www.gov.il/he/service/purchase-tax-calculator', label: 'gov.il/purchase-tax' },
+    { tag: 'חינם · רשמי', cls: 'free', title: 'מס שבח', desc: 'פטורים, חישוב, טפסים', url: 'https://www.gov.il/he/departments/topics/real_estate_taxes', label: 'gov.il/real-estate-taxes' }
+  ]},
+  { title: 'חדשות', items: [
+    { tag: 'מנוי', cls: 'paid', title: 'גלובס', desc: 'חדשות נדל"ן עסקי', url: 'https://www.globes.co.il/news/RealEstate.aspx', label: 'globes.co.il' },
+    { tag: 'חינם', cls: 'free', title: 'ynet נדל"ן', desc: 'כיסוי התחדשות עירונית', url: 'https://www.ynet.co.il/real-estate', label: 'ynet.co.il' },
+    { tag: 'מנוי', cls: 'paid', title: 'TheMarker', desc: 'ניתוחים מעמיקים', url: 'https://www.themarker.com/realestate', label: 'themarker.com' }
+  ]},
+  { title: 'AI / MCP', items: [
+    { tag: 'ב-Cowork', cls: 'free', title: 'Claude in Chrome', desc: 'סוכן סריקה אוטומטי', url: 'https://www.claude.com', label: 'claude.com' },
+    { tag: 'חינם', cls: 'free', title: 'data.gov.il API', desc: 'סקריפט עסקאות לילי', url: 'https://data.gov.il/dataset', label: 'data.gov.il' },
+    { tag: 'חינם · עברית', cls: 'free', title: 'agentskills.co.il', desc: 'אינדקס MCP בעברית', url: 'https://agentskills.co.il/he', label: 'agentskills.co.il' }
+  ]}
+];
+
 const App = {
 
   // ── State ──────────────────────────────────────────────────────
@@ -16,18 +108,20 @@ const App = {
     toolsOpen: {}
   },
 
+  // Per-zone checklist tracking
+  _currentChecklistZone: null,
+
   // ── Routing ────────────────────────────────────────────────────
   parseHash() {
     const h = location.hash.slice(1) || 'dashboard';
     if (h.startsWith('zone/')) return { view: 'zone', zoneId: h.slice(5) };
-    if (h.startsWith('tools/')) return { view: 'tools', section: h.slice(6) };
-    if (h === 'tools') return { view: 'tools', section: null };
+    // Redirect old tools routes to dashboard
+    if (h === 'tools' || h.startsWith('tools/')) return { view: 'dashboard' };
     return { view: 'dashboard' };
   },
 
   navigate(view, params) {
     if (view === 'zone') location.hash = '#zone/' + params;
-    else if (view === 'tools' && params) location.hash = '#tools/' + params;
     else location.hash = '#' + view;
   },
 
@@ -99,7 +193,6 @@ const App = {
     main.style.opacity = '0';
     setTimeout(() => {
       if (parsed.view === 'zone') this.renderZoneDetail(parsed.zoneId);
-      else if (parsed.view === 'tools') this.renderTools(parsed.section);
       else this.renderDashboard();
       main.style.opacity = '1';
     }, 50);
@@ -121,11 +214,10 @@ const App = {
     // Logo
     let html = '<div class="sb-logo"><span>⬡</span><span>התחדשות.AI</span></div>';
 
-    // Nav
+    // Nav — only 2 items now
     const navItems = [
       { view: 'dashboard', icon: '⊞', label: 'סקירה' },
-      { view: 'zone',      icon: '◎', label: 'מתחמים' },
-      { view: 'tools',     icon: '⚙', label: 'כלים' }
+      { view: 'zone',      icon: '◎', label: 'מתחמים' }
     ];
     html += '<nav class="sb-nav">';
     for (const n of navItems) {
@@ -195,6 +287,11 @@ const App = {
       html += '</div>';
     }
 
+    // Glossary search
+    html += '<div class="sb-section-label">מונחים</div>';
+    html += '<input class="sb-input" placeholder="חפש מונח..." oninput="App._searchGlossary(this.value)">';
+    html += '<div id="sb-glossary-result" style="font-size:10px;color:var(--muted);margin-top:4px;line-height:1.5"></div>';
+
     sb.innerHTML = html;
   },
 
@@ -218,6 +315,24 @@ const App = {
       App.saveBudget();
       if (App.state.view === 'dashboard') App.renderDashboard();
     }, 300);
+  },
+
+  // ── Glossary search ────────────────────────────────────────────
+  _searchGlossary(query) {
+    const el = document.getElementById('sb-glossary-result');
+    if (!el) return;
+    const q = query.trim().toLowerCase();
+    if (!q) { el.innerHTML = ''; return; }
+    const matches = glossaryTerms.filter(t =>
+      t.term.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q)
+    );
+    if (!matches.length) {
+      el.innerHTML = '<span style="color:var(--muted)">לא נמצא</span>';
+      return;
+    }
+    el.innerHTML = matches.slice(0, 3).map(t =>
+      `<div style="margin-bottom:6px"><strong style="color:var(--accent)">${t.term}</strong><br>${t.desc.slice(0, 120)}${t.desc.length > 120 ? '...' : ''}</div>`
+    ).join('');
   },
 
   // ═══════════════════════════════════════════════════════════════
@@ -320,6 +435,25 @@ const App = {
     html += '</div>';
 
     html += '</div>'; // close bottom-grid
+
+    // ── Resources Footer ──
+    html += '<div class="data-panel" style="margin-top:24px"><div class="panel-header"><span class="panel-title">משאבים שימושיים</span></div>';
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;padding:4px 0">';
+    for (const group of resourceGroups) {
+      html += `<div>`;
+      html += `<div style="font-size:11px;color:var(--muted);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">${group.title}</div>`;
+      html += `<div style="display:flex;flex-wrap:wrap;gap:6px">`;
+      for (const item of group.items) {
+        const tagColor = item.cls === 'free' ? 'var(--good)' : 'var(--warn)';
+        html += `<a href="${item.url}" target="_blank" class="resource-chip" style="display:inline-flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--border);padding:4px 10px;border-radius:8px;font-size:11px;color:var(--text);text-decoration:none;transition:all .15s;white-space:nowrap" title="${item.desc}">`;
+        html += `<span style="width:6px;height:6px;border-radius:50%;background:${tagColor};flex-shrink:0"></span>`;
+        html += `${item.title}`;
+        html += `</a>`;
+      }
+      html += `</div></div>`;
+    }
+    html += '</div></div>';
+
     main.innerHTML = html;
   },
 
@@ -446,6 +580,9 @@ const App = {
       return;
     }
 
+    // Set current checklist zone for persistence
+    this._currentChecklistZone = zoneId;
+
     document.title = zone.name + ' · התחדשות.AI';
 
     const statusCls = { yes: 'badge-good', maybe: 'badge-warn', no: 'badge-bad' }[zone.status] || 'badge-neutral';
@@ -499,57 +636,14 @@ const App = {
     html += renderSearchButtons(links);
     html += '</div></div>';
 
-    main.innerHTML = html;
-  },
+    // ── Inline Tools ──
 
-  _renderZoneListings(zoneId, zone) {
-    if (!_listingsCache || !_listingsCache.byZone) return '';
-    const list = _listingsCache.byZone[zoneId] || [];
-    if (!list.length) return '';
-
-    const avgPpsqm = parsePpsqmRange(zone.prices.rows);
-    const updated = _listingsCache._meta && _listingsCache._meta.updated ? ' · עודכן ' + _listingsCache._meta.updated : '';
-
-    let html = '<div class="data-panel">';
-    html += `<div class="panel-header"><span class="panel-title">דירות לדוגמה במתחם${updated}</span></div>`;
-    html += '<div class="listings-grid">';
-    for (const l of list) {
-      html += formatListingCard(l, avgPpsqm);
-    }
-    html += '</div></div>';
-    return html;
-  },
-
-  // ═══════════════════════════════════════════════════════════════
-  //  TOOLS
-  // ═══════════════════════════════════════════════════════════════
-  toggleTool(id) {
-    document.getElementById('tool-' + id)?.classList.toggle('open');
-  },
-
-  renderTools(section) {
-    document.title = 'כלים · התחדשות.AI';
-    const main = document.getElementById('main');
-    const allZones = getAllZonesFlat();
-
-    // Zone options for dropdowns
-    const zoneOpts = allZones.map(z => {
-      const price = parsePriceMin(z.priceLabel);
-      return `<option value="${price}" data-zone-id="${z.zoneId}">${z.zone} (${z.city}) — ${z.priceLabel}</option>`;
-    }).join('');
-
-    // ── Section 1: Mortgage Calculator ──
-    const calcHtml = `
-      <div class="calc-row">
-        <label>בחר מתחם (אופציונלי)</label>
-        <select id="calc-zone" onchange="if(this.value){document.getElementById('calc-price').value=this.value;App._calcMortgage()}">
-          <option value="">— בחר מתחם למילוי אוטומטי —</option>
-          ${zoneOpts}
-        </select>
-      </div>
+    // A. Inline Calculator
+    const entryPrice = (zone.prices && zone.prices.rows && zone.prices.rows.length) ? parsePriceMin(zone.prices.rows[0][1]) : 3500000;
+    const calcContent = `
       <div class="calc-row">
         <label>מחיר הדירה (₪)</label>
-        <input type="number" id="calc-price" value="3500000" step="100000" oninput="App._calcMortgage()">
+        <input type="number" id="calc-price" value="${entryPrice}" step="100000" oninput="App._calcMortgage()">
       </div>
       <div class="calc-row">
         <label>הון עצמי (₪)</label>
@@ -588,7 +682,12 @@ const App = {
         <strong style="color:var(--warn)">זהירות:</strong> מס רכישה מחושב לפי מדרגות 2026 (דירה יחידה — 0% עד 2.1M, 3.5% עד 2.5M, 5% עד 6.05M, 8% עד 20.2M, 10% מעל. משקיע — 8% עד 6.05M, 10% עד 20.2M, 12% מעל). היטל השבחה, עו"ד, ושמאי לא כלולים.
       </div>`;
 
-    // ── Section 2: Opportunity Scorer ──
+    html += `<div class="tools-section" id="tool-calc">
+      <button class="tools-header" onclick="App.toggleTool('calc')">מחשבון משכנתא <span class="chevron">▼</span></button>
+      <div class="tools-body">${calcContent}</div>
+    </div>`;
+
+    // B. Inline Scorer
     const factors = [
       { name: 'stage', weight: 25, title: '1. באיזה שלב נמצא הפרויקט?', help: 'ככל שהפרויקט מתקדם יותר — כך הסיכון הרגולטורי קטן יותר.', options: [
         ['100', 'יש היתר בנייה מלא והיזם כבר משווק'],
@@ -660,7 +759,12 @@ const App = {
     </aside>`;
     scoreHtml += '</div>';
 
-    // ── Section 3: Checklist ──
+    html += `<div class="tools-section" id="tool-scorer">
+      <button class="tools-header" onclick="App.toggleTool('scorer')">ניקוד הזדמנות <span class="chevron">▼</span></button>
+      <div class="tools-body">${scoreHtml}</div>
+    </div>`;
+
+    // C. Inline Checklist
     const phases = [
       { num: 1, title: 'סינון ראשוני — מוצאים נכס ובודקים רקע', sub: 'לפני שמשלמים כסף על עו"ד או שמאי', items: [
         ['בדקתי במבא"ת אם יש תוכנית פעילה על הכתובת', 'חפש לפי כתובת או גוש/חלקה. אם אין תוכנית — אין פרויקט.'],
@@ -699,9 +803,10 @@ const App = {
     ];
     const totalItems = phases.reduce((s, p) => s + p.items.length, 0);
     let itemIdx = 0;
+    const zoneName = zone.name.split('·')[0].trim();
     let checkHtml = `<div class="check-progress" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:14px">
-        <span><strong id="checkNum">0</strong> / ${totalItems} סעיפים</span>
+        <span><strong id="checkNum">0</strong> / ${totalItems} סעיפים עבור ${zoneName}</span>
         <span id="checkPct">0%</span>
       </div>
       <div style="height:10px;background:var(--bg-2);border-radius:10px;overflow:hidden">
@@ -725,193 +830,70 @@ const App = {
     }
     checkHtml += `<button onclick="App._resetChecklist()" style="display:block;margin:16px auto 0;background:var(--bg-2);border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:13px">איפוס כל הצ'קליסט</button>`;
 
-    // ── Section 4: Search Builder ──
-    const allHoods = [];
-    for (const slug of this.state.cities) {
-      const city = CITIES[slug];
-      if (!city) continue;
-      for (const z of city.zones) {
-        if (z.hood && !allHoods.includes(z.hood)) allHoods.push(z.hood);
-      }
-    }
-    let searchHtml = `<div style="margin-bottom:16px">
-      <div style="font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:600">שכונות</div>
-      <div class="hood-chips" style="display:flex;flex-wrap:wrap;gap:8px">
-        ${allHoods.map(h => `<button type="button" class="hood-chip" onclick="App._toggleHoodChip(this,'${h.replace(/'/g, "\\'")}')">${h}</button>`).join('')}
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      <div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600">חדרים</div>
-        <select id="search-rooms" style="width:100%;background:var(--bg-2);border:1px solid var(--border);padding:12px;border-radius:10px;color:var(--text);font-family:inherit;font-size:15px">
-          <option value="">לא משנה</option>
-          <option value="2-3">2-3 חדרים</option>
-          <option value="3-3">3 חדרים בלבד</option>
-          <option value="3-4">3-4 חדרים</option>
-          <option value="4-4">4 חדרים בלבד</option>
-          <option value="4-5">4-5 חדרים</option>
-          <option value="5-99">5+ חדרים</option>
-        </select>
-      </div>
-      <div>
-        <div style="font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600">מחיר מקסימלי (₪)</div>
-        <input type="number" id="search-max-price" placeholder="למשל 4000000" step="100000" style="width:100%;background:var(--bg-2);border:1px solid var(--border);padding:12px;border-radius:10px;color:var(--text);font-family:inherit;font-size:15px;box-sizing:border-box">
-      </div>
-    </div>
-    <button onclick="App._buildSearch()" style="background:var(--gradient);color:var(--bg);border:none;padding:12px 28px;border-radius:10px;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer">חפש דירות</button>
-    <div id="search-results" style="margin-top:18px"></div>`;
+    html += `<div class="tools-section" id="tool-checklist">
+      <button class="tools-header" onclick="App.toggleTool('checklist')">צ'קליסט רכישה <span class="chevron">▼</span></button>
+      <div class="tools-body">${checkHtml}</div>
+    </div>`;
 
-    // ── Section 5: Glossary ──
-    const glossaryTerms = [
-      { id: 'pinui', term: 'פינוי-בינוי', tr: 'Pinui-Binui · Evacuation and Reconstruction',
-        desc: 'מסלול להתחדשות עירונית שבו הורסים לגמרי בניינים ישנים ובונים חדשים במקומם — בדרך כלל גבוהים ועם יותר דירות. הדיירים הישנים מקבלים דירה חדשה ואת ההפרש היזם מוכר בשוק החופשי.',
-        example: 'AIR — שני בניינים בני 3 קומות פונו, נבנה במקומם מגדל מגורים עם 333 דירות.' },
-      { id: 'tama', term: 'תמ"א 38', tr: 'Tama 38 · National Master Plan 38',
-        desc: 'תוכנית ארצית שאפשרה חיזוק מבנים ישנים נגד רעידות אדמה תמורת תוספת דירות. 38/1 (חיזוק + תוספת קומות) ו-38/2 (הריסה ובנייה מחדש). התוכנית הסתיימה ב-2022.',
-        example: 'אם יש מודעה שמבטיחה "תמ"א 38" — תבדוק מתי הוגשה הבקשה. אחרי 2022 זה לא אופציה חדשה.' },
-      { id: 'tochnit', term: 'תב"ע — תוכנית בניין עיר', tr: 'Tochnit Binyan Ir · Local Building Plan',
-        desc: 'המסמך התכנוני המרכזי שמגדיר "מה מותר לבנות כאן" — כמה קומות, אילו שימושים, זכויות בנייה, דרכים. כדי שפרויקט פינוי-בינוי ייצא לדרך, חייבת להיות תב"ע מאושרת.',
-        example: 'שלבי החיים של תב"ע: הכנה → הגשה → הפקדה → דיון → אישור → תוקף.' },
-      { id: 'hefkada', term: 'תוכנית מופקדת / מאושרת', tr: '',
-        desc: 'מופקדת = התב"ע הוגשה רשמית ופתוחה 60 יום להתנגדויות. עדיין לא מחייבת. מאושרת = אחרי הפקדה ודיון, התוכנית אושרה סופית ותקפה.',
-        example: 'הפער בין "לקראת הפקדה" ל"מאושרת" יכול להיות 3-5 שנים.' },
-      { id: 'mavat', term: 'מבא"ת', tr: 'MAVAT · Government Planning Database',
-        desc: 'המערכת הממשלתית המרכזית לכל התוכניות בישראל. אפשר לחפש לפי גוש/חלקה, שם רחוב, או שם תוכנית, ולקבל את כל המסמכים.',
-        example: 'לפני שקונים דירה — מחפשים את כתובתה ב-mavat.iplan.gov.il ורואים אם יש תב"ע פעילה.' },
-      { id: 'vaada', term: 'ועדה מקומית / ועדה מחוזית', tr: '',
-        desc: 'ועדה מקומית = של העירייה, מאשרת היתרי בנייה ותוכניות קטנות. ועדה מחוזית = של המחוז, מאשרת תוכניות גדולות כמו תב"ע לפינוי-בינוי מתחמי.',
-        example: 'יזם מגיש תב"ע לוועדה המחוזית → אישור → מגיש בקשה להיתר לוועדה המקומית → אישור → בונה.' },
-      { id: 'heter', term: 'היתר בנייה', tr: '',
-        desc: 'האישור הסופי של העירייה שמאפשר פיזית להתחיל לבנות. זה המסמך הכי חשוב — בלעדיו הכל רק על הנייר.',
-        example: 'יזם שאומר "ההיתר יגיע תוך שבועיים" אבל כבר חודשיים לא קרה כלום — בקש לראות את המסמך הרשמי.' },
-      { id: 'sarvan', term: 'דייר סרבן', tr: '',
-        desc: 'דייר שמסרב לחתום על הסכם הפינוי-בינוי. פרויקט חייב תמיכה של 80% מבעלי הדירות כדי להתחיל. יש מנגנון משפטי (סעיף 23) להסיר סרבן יחיד.',
-        example: '"כמה דיירים חתמו?" אם פחות מ-70% — הסיכון גבוה.' },
-      { id: '66', term: 'רוב 66% / 80%', tr: '',
-        desc: '66% = הרוב הדרוש להתחיל תהליך מקדים. 80% = הרוב הנדרש בפועל כדי להחיל את הפרויקט על כל הדיירים (כולל הסרבנים).',
-        example: '"מתחם" = קבוצה של בניינים שעל פי התב"ע מתחדשים יחד. לפעמים 2 בניינים, לפעמים 20.' },
-      { id: 'saif23', term: 'סעיף 23 לחוק פינוי-בינוי', tr: '',
-        desc: 'הסעיף שמאפשר לתבוע דייר סרבן יחיד אם הוא מונע מ-80% מהשכנים להתחדש. בית המשפט יכול לחייב אותו להצטרף לפרויקט. מסלול ארוך — 1-3 שנים.',
-        example: 'אם יש 1-2 סרבנים — הפרויקט יקרה, אבל לא מחר.' },
-      { id: 'hitnagdut', term: 'התנגדויות', tr: '',
-        desc: 'מסמכים שתושבים, שכנים, או העירייה מגישים נגד תוכנית מופקדת. במהלך 60 יום של הפקדה — כל אחד יכול להגיש. התנגדויות יכולות לדחות, לשנות או לבטל תוכנית.',
-        example: 'תוכנית ארלוזורוב (שני מגדלים בני 15 קומות) נמצאת בסטטוס התנגדויות — זו הסיבה שהמתחם מסומן כ"עדיין לא".' },
-      { id: 'arvut', term: 'ערבות בנקאית', tr: '',
-        desc: 'מסמך מהבנק שמבטיח שאם היזם פשט רגל או לא יסיים לבנות — הרוכש יקבל את כספו חזרה. בישראל זה חובה. לעולם לא לשלם סכום משמעותי ליזם בלי ערבות.',
-        example: '"חוק המכר דירות" — מחייב את היזם לתת ערבות על כל תשלום מעל 7% משווי הדירה.' },
-      { id: 'hashvaha', term: 'היטל השבחה', tr: '',
-        desc: 'מס שהעירייה גובה כשערך הנכס עלה בגלל אישור תוכנית חדשה. בפרויקטי פינוי-בינוי — היזם בדרך כלל נושא בהיטל.',
-        example: 'גובה ההיטל: 50% מההפרש בין שווי הנכס לפני התוכנית לאחריה.' },
-      { id: 'shevach', term: 'מס שבח', tr: '',
-        desc: 'מס על רווח ההון ממכירת דירה. בפינוי-בינוי — יש פטור לבעל דירה יחידה שמקבל דירה חדשה במקום הישנה.',
-        example: 'אם בעוד 7 שנים תקבל דירה חדשה תמורת הישנה — בדרך כלל הפטור חל גם עליך אם זו דירתך היחידה.' },
-      { id: 'rechisha', term: 'מס רכישה', tr: '',
-        desc: 'מס שמשלם הקונה בעת רכישת דירה. לדירה יחידה — מדרגות ותעריפים נוחים (0%-5%). לדירה שנייה או משקיע — 8%-10% מהשקל הראשון.',
-        example: 'אם קונה דירה ישנה במתחם לצורך השקעה — מס רכישה של משקיע (8%+). זה משפיע על המשוואה.' },
-      { id: 'nesach', term: 'נסח טאבו', tr: '',
-        desc: 'מסמך רשמי מרשם המקרקעין שמראה: מי הבעלים, משכנתאות, עיקולים, הערות אזהרה. חובה להוציא לפני כל קנייה.',
-        example: 'באתר טאבו אונליין או דרך עורך הדין שלך. עלות ~15 ש"ח.' },
-      { id: 'gush', term: 'גוש / חלקה', tr: '',
-        desc: 'המספר הרשמי של הקרקע במפות הקדסטר של ישראל. "גוש" = אזור, "חלקה" = חלקת קרקע ספציפית. זו הדרך הכי מדויקת לחפש תוכניות.',
-        example: 'מוצאים את המספרים בנסח הטאבו, ברישיונות הבנייה, או ב-nadlan.gov.il.' },
-      { id: 'rashut', term: 'הרשות הממשלתית להתחדשות עירונית', tr: '',
-        desc: 'הגוף המרכזי במדינה שאחראי על פרויקטי פינוי-בינוי. מכריז על מתחמים רשמיים, מלווה דיירים, ומקיים מאגר פרויקטים פתוח.',
-        example: 'אתר הרשות: gov.il/urban-renewal — רשימה של מתחמים מוכרזים.' }
-    ];
-    let glossaryHtml = '';
-    for (const t of glossaryTerms) {
-      glossaryHtml += `<div class="glossary-term" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:10px;cursor:pointer" onclick="this.classList.toggle('expanded')">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h3 style="color:var(--accent);margin:0;font-size:16px">${t.term}</h3>
-          <span style="color:var(--muted);font-size:12px;transition:transform .2s">${t.tr ? t.tr : ''} ▼</span>
-        </div>
-        <div class="glossary-body" style="display:none;margin-top:12px">
-          <p style="font-size:15px;line-height:1.7;margin-bottom:10px">${t.desc}</p>
-          <div style="background:var(--bg-2);border-right:3px solid var(--accent);padding:12px 14px;border-radius:8px;font-size:14px;color:var(--muted);margin-top:10px"><strong style="color:var(--text)">דוגמה:</strong> ${t.example}</div>
-        </div>
-      </div>`;
-    }
-
-    // ── Section 6: Resources ──
-    const resourceGroups = [
-      { title: 'תוכניות ורגולציה', items: [
-        { tag: 'חינם · רשמי', cls: 'free', title: 'מבא"ת — מערכת התכנון הארצית', desc: 'חיפוש מרכזי של כל התוכניות. חיפוש לפי כתובת, גוש/חלקה או מס\' תוכנית.', url: 'https://mavat.iplan.gov.il', label: 'mavat.iplan.gov.il' },
-        { tag: 'חינם · רשמי', cls: 'free', title: 'הרשות להתחדשות עירונית', desc: 'רשימת מתחמי פינוי-בינוי מוכרזים, הטבות מס, מדריכים.', url: 'https://www.gov.il/he/departments/government_authority_for_urban_renewal', label: 'gov.il/urban-renewal' },
-        { tag: 'חינם · רשמי', cls: 'free', title: 'מינהל התכנון', desc: 'מסמכי מדיניות, הנחיות, תמ"אות ותוכניות ארציות.', url: 'https://www.gov.il/he/departments/ministry_of_interior_planning_administration', label: 'gov.il/planning' }
-      ]},
-      { title: 'עסקאות ושווי נדל"ן', items: [
-        { tag: 'חינם · רשמי', cls: 'free', title: 'nadlan.gov.il — עסקאות אמת', desc: 'כל עסקאות הנדל"ן שדווחו לרשות המיסים. הבסיס להערכת מחיר אמיתי.', url: 'https://www.nadlan.gov.il', label: 'nadlan.gov.il' },
-        { tag: 'חלקי חינם', cls: 'paid', title: 'Madlan', desc: 'דירות למכירה + מפות חמות של מחירי שוק.', url: 'https://www.madlan.co.il', label: 'madlan.co.il' },
-        { tag: 'חלקי חינם', cls: 'paid', title: 'Yad2 נדל"ן', desc: 'הלוח הגדול בישראל. דירות למכירה, השכרה, מודעות מקבלנים.', url: 'https://www.yad2.co.il/realestate', label: 'yad2.co.il' },
-        { tag: 'חינם · API', cls: 'free', title: 'data.gov.il — API CKAN', desc: 'גישה פרוגרמטית לעסקאות, נתוני למ"ס, רשימת רחובות.', url: 'https://data.gov.il/dataset', label: 'data.gov.il' }
-      ]},
-      { title: 'מסמכים משפטיים', items: [
-        { tag: '~15 ש"ח', cls: 'paid', title: 'טאבו אונליין — נסחים', desc: 'הוצאת נסח טאבו בתשלום נמוך, תוך דקות. חובה לפני כל קנייה.', url: 'https://www.gov.il/he/departments/general/real_estate_registration', label: 'טאבו אונליין' },
-        { tag: 'חינם · רשמי', cls: 'free', title: 'חוק פינוי-בינוי — נוסח מלא', desc: 'הנוסח המעודכן של החוק, כולל סעיף 23 על דייר סרבן.', url: 'https://www.nevo.co.il', label: 'nevo.co.il' },
-        { tag: 'חינם · ספריה', cls: 'free', title: 'פסקי דין בפינוי-בינוי', desc: 'מאגר פסקי דין של בתי משפט בעניין סעיף 23 וסרבנים.', url: 'https://www.takdin.co.il', label: 'takdin.co.il' }
-      ]},
-      { title: 'מיסוי', items: [
-        { tag: 'חינם · רשמי', cls: 'free', title: 'מחשבון מס רכישה', desc: 'המחשבון הרשמי של רשות המיסים.', url: 'https://www.gov.il/he/service/purchase-tax-calculator', label: 'gov.il/purchase-tax' },
-        { tag: 'חינם · רשמי', cls: 'free', title: 'מס שבח — הנחיות', desc: 'פטורים בפינוי-בינוי, חישוב מס שבח למשקיעים, טפסים.', url: 'https://www.gov.il/he/departments/topics/real_estate_taxes', label: 'gov.il/real-estate-taxes' }
-      ]},
-      { title: 'חדשות ומעקב', items: [
-        { tag: 'מנוי', cls: 'paid', title: 'גלובס — נדל"ן', desc: 'חדשות עסקיות עדכניות על פרויקטים, יזמים, עסקאות.', url: 'https://www.globes.co.il/news/RealEstate.aspx', label: 'globes.co.il' },
-        { tag: 'חינם', cls: 'free', title: 'ynet — נדל"ן', desc: 'כיסוי נרחב של התחדשות עירונית, תמ"אות, שוק הנדל"ן.', url: 'https://www.ynet.co.il/real-estate', label: 'ynet.co.il' },
-        { tag: 'מנוי', cls: 'paid', title: 'TheMarker — נדל"ן', desc: 'ניתוחים מעמיקים, שמות יזמים, מעקב פרויקטים.', url: 'https://www.themarker.com/realestate', label: 'themarker.com' }
-      ]},
-      { title: 'כלי AI / MCP לסריקה', items: [
-        { tag: 'ב-Cowork', cls: 'free', title: 'Claude in Chrome', desc: 'סוכן שמדפדף עבורך ב-mavat, nadlan, יד2. טוב לסריקה חוזרת.', url: 'https://www.claude.com', label: 'claude.com' },
-        { tag: 'רישום חינם', cls: 'free', title: 'data.gov.il / CKAN API', desc: 'לבניית סקריפט שמושך עסקאות חדשות מדי לילה.', url: 'https://data.gov.il/dataset', label: 'data.gov.il' },
-        { tag: 'חינם · עברית', cls: 'free', title: 'agentskills.co.il — אינדקס', desc: 'אינדקס מפותח של סקילים ו-MCP בעברית.', url: 'https://agentskills.co.il/he', label: 'agentskills.co.il' }
-      ]}
-    ];
-    let resourcesHtml = '';
-    for (const group of resourceGroups) {
-      resourcesHtml += `<div style="margin-bottom:24px"><div style="font-size:13px;color:var(--muted);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px">${group.title}</div><div class="resource-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">`;
-      for (const item of group.items) {
-        const tagCls = item.cls === 'free' ? 'background:rgba(46,229,157,.15);color:var(--good)' : 'background:rgba(255,181,71,.15);color:var(--warn)';
-        resourcesHtml += `<div class="resource-card" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;display:flex;flex-direction:column;transition:all .2s">
-          <span style="${tagCls};display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:8px;width:fit-content">${item.tag}</span>
-          <h3 style="font-size:17px;margin-bottom:6px">${item.title}</h3>
-          <p style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:14px;flex:1">${item.desc}</p>
-          <a href="${item.url}" target="_blank" style="background:var(--bg-2);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;text-align:center;display:block">${item.label} ←</a>
-        </div>`;
-      }
-      resourcesHtml += '</div></div>';
-    }
-
-    // ── Assemble all sections ──
-    const sections = [
-      { id: 'calc', title: 'מחשבון משכנתא', content: calcHtml },
-      { id: 'scorer', title: 'ניקוד הזדמנות', content: scoreHtml },
-      { id: 'checklist', title: 'צ\'קליסט רכישה', content: checkHtml },
-      { id: 'search', title: 'חיפוש דירות', content: searchHtml },
-      { id: 'glossary', title: 'מילון מונחים', content: glossaryHtml },
-      { id: 'resources', title: 'משאבים', content: resourcesHtml }
-    ];
-
-    let html = '<h1 style="font-size:24px;margin-bottom:24px">כלים</h1>';
-    for (const s of sections) {
-      const isOpen = section === s.id;
-      html += `<div class="tools-section${isOpen ? ' open' : ''}" id="tool-${s.id}">
-        <button class="tools-header" onclick="App.toggleTool('${s.id}')">
-          ${s.title} <span class="chevron">▼</span>
-        </button>
-        <div class="tools-body">${s.content}</div>
-      </div>`;
-    }
     main.innerHTML = html;
 
-    // Post-render: run calculator, load checklist, set up glossary expand
+    // Post-render hooks
     this._calcMortgage();
     this._loadChecklist();
-    this._setupGlossaryExpand();
 
-    // Auto-open section from hash
-    if (section) {
-      const el = document.getElementById('tool-' + section);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Pre-fill scorer based on zone data
+    setTimeout(() => {
+      // Stage pre-fill
+      if (zone.status === 'yes') {
+        const radio = document.querySelector('input[name="score_stage"][value="100"]');
+        if (radio) { radio.checked = true; }
+      } else if (zone.status === 'maybe') {
+        const factsStr = zone.facts.map(f => f[1]).join(' ');
+        if (factsStr.includes('מאושרת')) {
+          const radio = document.querySelector('input[name="score_stage"][value="80"]');
+          if (radio) { radio.checked = true; }
+        } else if (factsStr.includes('מופקדת')) {
+          const radio = document.querySelector('input[name="score_stage"][value="55"]');
+          if (radio) { radio.checked = true; }
+        }
+      }
+      // Developer pre-fill
+      if (dev) {
+        if (dev.tier === 'A') {
+          const radio = document.querySelector('input[name="score_developer"][value="100"]');
+          if (radio) { radio.checked = true; }
+        } else if (dev.tier === 'B') {
+          const radio = document.querySelector('input[name="score_developer"][value="70"]');
+          if (radio) { radio.checked = true; }
+        }
+      }
+      this._updateScore();
+    }, 0);
+  },
+
+  _renderZoneListings(zoneId, zone) {
+    if (!_listingsCache || !_listingsCache.byZone) return '';
+    const list = _listingsCache.byZone[zoneId] || [];
+    if (!list.length) return '';
+
+    const avgPpsqm = parsePpsqmRange(zone.prices.rows);
+    const updated = _listingsCache._meta && _listingsCache._meta.updated ? ' · עודכן ' + _listingsCache._meta.updated : '';
+
+    let html = '<div class="data-panel">';
+    html += `<div class="panel-header"><span class="panel-title">דירות לדוגמה במתחם${updated}</span></div>`;
+    html += '<div class="listings-grid">';
+    for (const l of list) {
+      html += formatListingCard(l, avgPpsqm);
     }
+    html += '</div></div>';
+    return html;
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  //  TOOLS (collapsible sections used in zone detail)
+  // ═══════════════════════════════════════════════════════════════
+  toggleTool(id) {
+    document.getElementById('tool-' + id)?.classList.toggle('open');
   },
 
   // ── Tools Helpers ──────────────────────────────────────────────
@@ -1024,14 +1006,16 @@ const App = {
     const fillEl = document.getElementById('checkFill');
     if (fillEl) fillEl.style.width = pct + '%';
 
-    // Save to sessionStorage
+    // Save to sessionStorage per-zone
+    const key = this._currentChecklistZone ? 'pinui_checklist_' + this._currentChecklistZone : 'pinui_checklist';
     const states = [...boxes].map(cb => cb.checked);
-    try { sessionStorage.setItem('pinui_checklist', JSON.stringify(states)); } catch (e) {}
+    try { sessionStorage.setItem(key, JSON.stringify(states)); } catch (e) {}
   },
 
   _loadChecklist() {
+    const key = this._currentChecklistZone ? 'pinui_checklist_' + this._currentChecklistZone : 'pinui_checklist';
     try {
-      const saved = sessionStorage.getItem('pinui_checklist');
+      const saved = sessionStorage.getItem(key);
       if (saved) {
         const states = JSON.parse(saved);
         const boxes = document.querySelectorAll('#tool-checklist .check-item input[type=checkbox]');
@@ -1044,7 +1028,8 @@ const App = {
   _resetChecklist() {
     document.querySelectorAll('#tool-checklist .check-item input[type=checkbox]').forEach(cb => cb.checked = false);
     this._onCheckChange();
-    try { sessionStorage.removeItem('pinui_checklist'); } catch (e) {}
+    const key = this._currentChecklistZone ? 'pinui_checklist_' + this._currentChecklistZone : 'pinui_checklist';
+    try { sessionStorage.removeItem(key); } catch (e) {}
   },
 
   _selectedHood: '',
