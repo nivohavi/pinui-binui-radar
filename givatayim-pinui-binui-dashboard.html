@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>גבעתיים · מצפה הזדמנויות פינוי-בינוי</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#0a0e1a; --bg-2:#0f1525; --card:#141b2e; --card-hi:#1a2338;
+    --border:#253050; --text:#e8eefc; --muted:#8a9bbf; --accent:#00d4ff;
+    --accent-2:#7c5cff; --good:#2ee59d; --warn:#ffb547; --bad:#ff5978;
+    --gradient:linear-gradient(135deg,#00d4ff 0%,#7c5cff 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:'Heebo',system-ui,sans-serif;min-height:100vh;line-height:1.6;font-weight:400}
+  body{background:
+    radial-gradient(ellipse at top left,rgba(124,92,255,.08),transparent 50%),
+    radial-gradient(ellipse at bottom right,rgba(0,212,255,.06),transparent 50%),
+    var(--bg);
+  }
+  .wrap{max-width:1280px;margin:0 auto;padding:24px}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:48px;backdrop-filter:blur(10px)}
+  .logo{font-size:20px;font-weight:800;background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.5px}
+  .nav-links{display:flex;gap:24px;font-size:14px;color:var(--muted)}
+  .nav-links a{color:var(--muted);text-decoration:none;transition:color .2s}
+  .nav-links a:hover{color:var(--text)}
+
+  /* HERO */
+  .hero{text-align:right;margin-bottom:64px;position:relative}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--accent);background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.3);padding:6px 14px;border-radius:20px;margin-bottom:20px;font-weight:600;letter-spacing:.5px}
+  .kicker::before{content:"";width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px var(--accent);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  h1{font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.1;margin-bottom:20px;letter-spacing:-1.5px}
+  h1 .accent{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{font-size:18px;color:var(--muted);max-width:640px;margin-bottom:32px}
+
+  /* STATS */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:72px}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s}
+  .stat:hover{transform:translateY(-2px);border-color:var(--accent)}
+  .stat::before{content:"";position:absolute;top:0;right:0;width:80px;height:80px;background:var(--gradient);opacity:.06;border-radius:50%;filter:blur(30px)}
+  .stat-label{font-size:13px;color:var(--muted);margin-bottom:8px;font-weight:500}
+  .stat-value{font-size:36px;font-weight:800;letter-spacing:-1px}
+  .stat-sub{font-size:12px;color:var(--muted);margin-top:6px}
+  .stat-sub.up{color:var(--good)}
+
+  /* SECTION HEADER */
+  section{margin-bottom:80px}
+  .section-head{margin-bottom:32px;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  .section-head h2{font-size:32px;font-weight:800;letter-spacing:-1px}
+  .section-head .sub{color:var(--muted);font-size:15px;margin-top:6px}
+  .badge{background:rgba(124,92,255,.15);color:#b4a5ff;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:600}
+
+  /* ZONE CARDS */
+  .zones{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+  .zone{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+  .zone:hover{border-color:var(--accent);background:var(--card-hi);transform:translateY(-2px)}
+  .zone-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px}
+  .zone-name{font-size:19px;font-weight:700}
+  .zone-stage{font-size:11px;padding:4px 10px;border-radius:10px;font-weight:600;white-space:nowrap}
+  .stage-approved{background:rgba(46,229,157,.15);color:var(--good)}
+  .stage-deposit{background:rgba(255,181,71,.15);color:var(--warn)}
+  .stage-planning{background:rgba(124,92,255,.15);color:#b4a5ff}
+  .stage-permit{background:rgba(0,212,255,.15);color:var(--accent)}
+  .zone-desc{color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.6}
+  .zone-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:12px}
+  .meta-chip{background:var(--bg-2);border:1px solid var(--border);padding:4px 10px;border-radius:8px;color:var(--muted)}
+  .meta-chip strong{color:var(--text);font-weight:600}
+
+  /* SCORING */
+  .calculator{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;display:grid;grid-template-columns:1fr 320px;gap:32px}
+  @media (max-width:900px){.calculator{grid-template-columns:1fr}}
+  .calc-form{display:flex;flex-direction:column;gap:18px}
+  .field{display:flex;flex-direction:column;gap:8px}
+  .field label{font-size:14px;color:var(--text);font-weight:600;display:flex;justify-content:space-between;align-items:center}
+  .field label .weight{font-size:11px;color:var(--muted);font-weight:400}
+  .field .hint{font-size:12px;color:var(--muted);margin-top:-4px}
+  .slider-row{display:flex;align-items:center;gap:12px}
+  input[type=range]{flex:1;appearance:none;height:6px;background:var(--bg-2);border-radius:3px;outline:none;border:1px solid var(--border)}
+  input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;background:var(--gradient);border-radius:50%;cursor:pointer;border:2px solid var(--card);box-shadow:0 0 10px rgba(0,212,255,.5)}
+  .range-val{min-width:40px;text-align:center;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  select,input[type=text],input[type=number]{width:100%;padding:10px 12px;border-radius:8px;background:var(--bg-2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:14px}
+  select:focus,input:focus{outline:none;border-color:var(--accent)}
+
+  /* SCORE RESULT */
+  .score-panel{background:var(--bg-2);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:sticky;top:24px;height:fit-content}
+  .score-circle{width:180px;height:180px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%), var(--bg) 0);display:flex;align-items:center;justify-content:center;margin-bottom:16px;transition:all .5s;position:relative}
+  .score-circle::before{content:"";position:absolute;inset:10px;background:var(--bg-2);border-radius:50%}
+  .score-inner{position:relative;z-index:1;text-align:center}
+  .score-num{font-size:48px;font-weight:800;font-family:'JetBrains Mono',monospace;letter-spacing:-2px;line-height:1}
+  .score-max{color:var(--muted);font-size:14px}
+  .score-label{font-size:16px;font-weight:700;margin-top:12px}
+  .score-rec{font-size:13px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.5}
+  .score-verdict{margin-top:20px;padding:12px 16px;border-radius:10px;font-size:13px;font-weight:600;text-align:center;width:100%}
+  .v-go{background:rgba(46,229,157,.15);color:var(--good);border:1px solid rgba(46,229,157,.3)}
+  .v-caution{background:rgba(255,181,71,.15);color:var(--warn);border:1px solid rgba(255,181,71,.3)}
+  .v-stop{background:rgba(255,89,120,.15);color:var(--bad);border:1px solid rgba(255,89,120,.3)}
+
+  /* CHECKLIST */
+  .checklist{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px}
+  .phase{margin-bottom:32px}
+  .phase:last-child{margin-bottom:0}
+  .phase-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+  .phase-num{width:32px;height:32px;background:var(--gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#0a0e1a}
+  .phase-title{font-size:18px;font-weight:700}
+  .phase-pct{margin-right:auto;font-family:'JetBrains Mono',monospace;color:var(--muted);font-size:13px}
+  .check-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;cursor:pointer;transition:background .15s;border-radius:8px;padding:10px}
+  .check-row:hover{background:var(--card-hi)}
+  .check-row input[type=checkbox]{appearance:none;width:20px;height:20px;min-width:20px;border:2px solid var(--border);border-radius:5px;cursor:pointer;margin-top:2px;transition:all .2s;position:relative;background:var(--bg-2)}
+  .check-row input:checked{background:var(--gradient);border-color:var(--accent)}
+  .check-row input:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#0a0e1a;font-weight:900;font-size:13px}
+  .check-row .ctext{flex:1}
+  .check-row .title{font-weight:600;font-size:14px}
+  .check-row input:checked ~ .ctext .title{text-decoration:line-through;color:var(--muted)}
+  .check-row .tool{font-size:12px;color:var(--accent);margin-top:2px;font-family:'JetBrains Mono',monospace}
+
+  /* WORKFLOW */
+  .workflow{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;overflow-x:auto}
+  .flow-row{display:grid;grid-template-columns:140px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+  .flow-row:last-child{border-bottom:0}
+  .flow-phase{background:var(--bg-2);padding:12px 16px;border-radius:10px;border:1px solid var(--border);text-align:center}
+  .flow-phase .num{font-family:'JetBrains Mono',monospace;color:var(--accent);font-size:11px;letter-spacing:1px;margin-bottom:4px}
+  .flow-phase .name{font-weight:700;font-size:14px}
+  .flow-tools{display:flex;flex-direction:column;gap:8px}
+  .flow-tool{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;font-size:13px}
+  .flow-tool .type{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
+  .type-mcp{background:rgba(0,212,255,.15);color:var(--accent)}
+  .type-skill{background:rgba(124,92,255,.15);color:#b4a5ff}
+  .flow-tool .tname{font-weight:600;color:var(--text)}
+  .flow-tool .tdesc{color:var(--muted);flex:1}
+  .flow-tool a{color:var(--muted);text-decoration:none;font-size:18px;opacity:.5;transition:opacity .2s}
+  .flow-tool a:hover{opacity:1;color:var(--accent)}
+
+  /* PROJECTS */
+  .projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .project{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+  .project .dev{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:1px;margin-bottom:8px}
+  .project .addr{font-size:16px;font-weight:700;margin-bottom:8px}
+  .project .detail{font-size:13px;color:var(--muted);line-height:1.6}
+  .project .detail strong{color:var(--text)}
+
+  /* RESOURCES */
+  .resources{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .res{display:flex;flex-direction:column;gap:6px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-decoration:none;color:var(--text);transition:all .2s}
+  .res:hover{border-color:var(--accent);background:var(--card-hi);transform:translateY(-2px)}
+  .res-title{font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px}
+  .res-title::after{content:"↗";color:var(--muted);font-size:12px;margin-right:auto}
+  .res-desc{font-size:12px;color:var(--muted)}
+
+  /* CHART */
+  .chart-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;height:360px;position:relative}
+
+  /* FOOTER */
+  footer{margin-top:80px;padding:32px 0;border-top:1px solid var(--border);color:var(--muted);font-size:13px;text-align:center;line-height:1.8}
+  footer a{color:var(--accent);text-decoration:none}
+  footer .disclaimer{background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.2);border-radius:12px;padding:16px;margin-bottom:24px;color:var(--warn);font-size:12px}
+
+  /* UTILITIES */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media (max-width:900px){.grid-2{grid-template-columns:1fr}}
+  .text-muted{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="nav">
+    <div class="logo">⬡ Givatayim Pinui Radar</div>
+    <div class="nav-links">
+      <a href="#zones">מתחמים</a>
+      <a href="#score">ניקוד</a>
+      <a href="#checklist">צ'קליסט</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#resources">משאבים</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="kicker">Live · מעודכן אפריל 2026</span>
+    <h1>מצפה הזדמנויות<br><span class="accent">פינוי-בינוי בגבעתיים</span></h1>
+    <p>העיר הצפופה בישראל עומדת בפני גל התחדשות עירונית בהיקף חסר תקדים. הדשבורד הזה ממפה מתחמים פעילים, נותן לך כלי לניקוד הזדמנויות, וצ'קליסט due diligence מלא — הכל מחובר ל-MCPs וסקילים ישראליים.</p>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">יח"ד מתוכננות</div>
+      <div class="stat-value">4,000+</div>
+      <div class="stat-sub up">▲ בתוכנית מזרח גבעתיים בלבד</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">יח"ד קיימות בהריסה</div>
+      <div class="stat-value">1,900</div>
+      <div class="stat-sub">בתוכניות המאושרות</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">מתחמים פעילים</div>
+      <div class="stat-value">7</div>
+      <div class="stat-sub">בשלבי תכנון שונים</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">צפיפות בעיר</div>
+      <div class="stat-value">#1</div>
+      <div class="stat-sub">הצפופה ביותר בישראל (צפויה)</div>
+    </div>
+  </div>
+
+  <!-- ZONES -->
+  <section id="zones">
+    <div class="section-head">
+      <div>
+        <h2>מתחמים פעילים בגבעתיים</h2>
+        <div class="sub">נכון לאפריל 2026 · מקור: עיריית גבעתיים, ynet, Globes, Times of Israel</div>
+      </div>
+      <span class="badge">7 מתחמים</span>
+    </div>
+
+    <div class="zones">
+
+      <div class="zone">
+        <div class="zone-head">
+          <div class="zone-name">גבעת רמב"ם</div>
+          <span class="zone-stage stage-approved">תוכנית מאושרת</span>
+        </div>
+        <div class="zone-desc">הוועדה המחוזית ת"א אישרה תוכנית התחדשות על 340 דונם. בנייה נמוכה במרכז השכונה, פינוי-בינוי בשוליים. אחד המתחמים הבשלים בעיר.</div>
+        <div class="zone-meta">
+          <span class="meta-chip">📐 <strong>340 דונם</strong></span>
+          <span class="meta-chip">🏛️ מחוזית ת"א</span>
+          <span class="meta-chip">⚡ בשלה</span>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head">
+          <div class="zone-name">רצועת בן גוריון</div>
+          <span class="zone-stage stage-planning">בתכנון מתקדם</span>
+        </div>
+        <div class="zone-desc">תוכנית מתארית בסמכות מחוזית שעיריית גבעתיים מקדמת יחד עם הרשות הממשלתית להתחדשות עירונית. מסדרון התחבורה הראשי של העיר.</div>
+        <div class="zone-meta">
+          <span class="meta-chip">🏛️ תוכנית מתארית</span>
+          <span class="meta-chip">🛣️ ציר ראשי</span>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head">
+          <div class="zone-name">מתחם ההסתדרות</div>
+          <span class="zone-stage stage-permit">היתרי בנייה</span>
+        </div>
+        <div class="zone-desc">פרויקט "אביב בגבעתיים" של אביב מליסרון ברחוב ההסתדרות — אחרי שנים של תכנון יוצא לדרך. אחד הבשלים בעיר.</div>
+        <div class="zone-meta">
+          <span class="meta-chip">🏗️ <strong>אביב מליסרון</strong></span>
+          <span class="meta-chip">📋 היתר</span>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head">
+          <div class="zone-name">AIR · גבעתיים</div>
+          <span class="zone-stage stage-permit">היתרי בנייה מלאים</span>
+        </div>
+        <div class="zone-desc">333 יח"ד בפרויקט שקיבל היתר בנייה מלא. אחת ההזדמנויות הבשלות ביותר לאיתור דירות חלופיות או השקעה סמוכה.</div>
+        <div class="zone-meta">
+          <span class="meta-chip">🏠 <strong>333 יח"ד</strong></span>
+          <span class="meta-chip">✅ היתר מלא</span>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head">
+          <div class="zone-name">מזרח גבעתיים · מתחם מזרחי</div>
+          <span class="zone-stage stage-deposit">להפקדה</span>
+        </div>
+        <div class="zone-desc">העירייה אישרה להפקדה תוכנית ענקית עם 4,000 יח"ד במגדלים בני 15-30 קומות, במקום 1,900 דירות ישנות. התוכנית הדגל של העיר.</div>
+        <div class="zone-meta">
+          <span class="meta-chip">🏙️ <strong>4,000 יח"ד</strong></span>
+          <span class="meta-chip">🏗️ 15-30 קומות</span>
+          <span class="meta-chip">📍 גבול מזרחי</span>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head">
+          <div class="zone-name">ארלוזורוב</div>
+          <span class="zone-stage stage-planning">בתכנון · מחלוקת</span>
+        </div>
+        <div class="zone-desc">שני מגדלי 15 קומות מוצעים במרחק 11 מטר מחלונות דיירים קיימים (ינואר 2026). אזור רגיש — התנגדויות דיירים פעילות.</div>
+        <div class="zone-meta">
+          <span class="meta-chip">⚠️ התנגדויות</span>
+          <span class="meta-chip">🏢 2×15 קומות</span>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head">
+          <div class="zone-name">יבנאלי 24-28 · Yavne'eli</div>
+          <span class="zone-stage stage-approved">הושלם · קרסו נדל"ן</span>
+        </div>
+        <div class="zone-desc">דוגמה להתחדשות שהסתיימה: 3 בניינים ישנים נהרסו ובמקומם 2 בניינים של 7 קומות עם 51 דירות. Benchmark מצוין לחישוב ערך עתידי.</div>
+        <div class="zone-meta">
+          <span class="meta-chip">🏗️ <strong>קרסו נדל"ן</strong></span>
+          <span class="meta-chip">✅ הושלם</span>
+          <span class="meta-chip">🏠 51 דירות</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CHART -->
+  <section>
+    <div class="section-head">
+      <div>
+        <h2>התפלגות מתחמים לפי שלב בשלות</h2>
+        <div class="sub">ככל שהמתחם "בשל" יותר (היתר/אישור), הסיכון קטן אבל גם הרווח הפוטנציאלי</div>
+      </div>
+    </div>
+    <div class="chart-box">
+      <canvas id="stageChart"></canvas>
+    </div>
+  </section>
+
+  <!-- SCORING CALCULATOR -->
+  <section id="score">
+    <div class="section-head">
+      <div>
+        <h2>מחשבון ניקוד הזדמנות</h2>
+        <div class="sub">הזן את הפרמטרים של הדירה המועמדת — קבל ציון 0-100 והמלצה</div>
+      </div>
+      <span class="badge">🧮 Interactive</span>
+    </div>
+
+    <div class="calculator">
+      <div class="calc-form">
+
+        <div class="field">
+          <label>איזה מתחם? <span class="weight">משקל: 15%</span></label>
+          <select id="zone">
+            <option value="10">גבעת רמב"ם (מאושר)</option>
+            <option value="10">AIR · היתר מלא</option>
+            <option value="9">מתחם ההסתדרות (אביב)</option>
+            <option value="7">רצועת בן גוריון (מתארית)</option>
+            <option value="6">מזרח גבעתיים (להפקדה)</option>
+            <option value="4">ארלוזורוב (מחלוקת)</option>
+            <option value="3">מתחם אחר / לא זוהה</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>שלב תכנוני <span class="weight">משקל: 20%</span></label>
+          <div class="slider-row">
+            <input type="range" min="1" max="10" value="5" id="stage">
+            <span class="range-val" id="stageV">5</span>
+          </div>
+          <span class="hint">1=רעיון · 4=תב"ע בהכנה · 7=תב"ע מופקדת · 10=היתר בנייה</span>
+        </div>
+
+        <div class="field">
+          <label>אחוז הסכמת דיירים <span class="weight">משקל: 18%</span></label>
+          <div class="slider-row">
+            <input type="range" min="0" max="100" value="50" id="consent">
+            <span class="range-val" id="consentV">50%</span>
+          </div>
+          <span class="hint">חוק פינוי-בינוי דורש 66% · תמ"א/תמ"א חלופית דורשות רוב שונה</span>
+        </div>
+
+        <div class="field">
+          <label>איתנות היזם <span class="weight">משקל: 12%</span></label>
+          <div class="slider-row">
+            <input type="range" min="1" max="10" value="6" id="dev">
+            <span class="range-val" id="devV">6</span>
+          </div>
+          <span class="hint">בדוק ברשם החברות · פרויקטים קודמים שהושלמו · ערבויות בנקאיות</span>
+        </div>
+
+        <div class="field">
+          <label>יחס מחיר לשווי אחרי-בנייה (Loan-to-Future-Value)<span class="weight">משקל: 15%</span></label>
+          <div class="slider-row">
+            <input type="range" min="30" max="90" value="60" id="ltv">
+            <span class="range-val" id="ltvV">60%</span>
+          </div>
+          <span class="hint">כמה אתה משלם היום לעומת ההערכה לאחר הבנייה · נמוך יותר = טוב יותר</span>
+        </div>
+
+        <div class="field">
+          <label>זמן צפוי עד כניסה לדירה חדשה (שנים) <span class="weight">משקל: 10%</span></label>
+          <div class="slider-row">
+            <input type="range" min="2" max="15" value="6" id="years">
+            <span class="range-val" id="yearsV">6</span>
+          </div>
+          <span class="hint">כולל התכנון שנשאר, הפקדה, הריסה, ובנייה</span>
+        </div>
+
+        <div class="field">
+          <label>מצב משפטי · דיירים סרבנים / תביעות <span class="weight">משקל: 10%</span></label>
+          <div class="slider-row">
+            <input type="range" min="1" max="10" value="7" id="legal">
+            <span class="range-val" id="legalV">7</span>
+          </div>
+          <span class="hint">1=תביעות פתוחות · 5=סרבנים בודדים · 10=נקי</span>
+        </div>
+
+      </div>
+
+      <div class="score-panel">
+        <div class="score-circle" id="scoreRing" style="--p:60">
+          <div class="score-inner">
+            <div class="score-num" id="scoreNum">60</div>
+            <div class="score-max">/ 100</div>
+          </div>
+        </div>
+        <div class="score-label" id="scoreLabel">הזדמנות בינונית</div>
+        <div class="score-rec" id="scoreRec">כדאי לבדוק לעומק. לא ברור שיש מספיק אפסייד.</div>
+        <div class="score-verdict v-caution" id="scoreVerdict">⚠️ זהירות — בדיקה נוספת נדרשת</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CHECKLIST -->
+  <section id="checklist">
+    <div class="section-head">
+      <div>
+        <h2>Due Diligence Checklist</h2>
+        <div class="sub">7 שלבים · 26 פעולות לוודא לפני רכישה · מתקדם מלמעלה למטה</div>
+      </div>
+      <span class="badge">אינטראקטיבי</span>
+    </div>
+
+    <div class="checklist" id="checklistBox">
+
+      <div class="phase" data-phase="1">
+        <div class="phase-head">
+          <div class="phase-num">1</div>
+          <div class="phase-title">זיהוי ראשוני של המתחם</div>
+          <div class="phase-pct" data-pct>0%</div>
+        </div>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">אימות שהכתובת נמצאת באחד ממתחמי ההתחדשות של עיריית גבעתיים</div>
+            <div class="tool">↳ אתר עיריית גבעתיים · givatayim.muni.il/735</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">חיפוש התוכנית במבא"ת (מאגר תוכניות)</div>
+            <div class="tool">↳ mavat.iplan.gov.il · עם Claude in Chrome</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">בדיקת סטטוס ברשות הממשלתית להתחדשות עירונית</div>
+            <div class="tool">↳ gov.il/he/departments/moch-renew</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="phase" data-phase="2">
+        <div class="phase-head">
+          <div class="phase-num">2</div>
+          <div class="phase-title">ניתוח נתוני עסקאות והיסטוריה</div>
+          <div class="phase-pct" data-pct>0%</div>
+        </div>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">שליפת כל העסקאות ב-24 החודשים האחרונים ברדיוס 300מ'</div>
+            <div class="tool">↳ MCP: nadlan · כלי: get_recent_transactions_by_radius</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">חיפוש בגוש/חלקה הספציפי של הבניין</div>
+            <div class="tool">↳ MCP: nadlan · כלי: search_by_gush_helka</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">השוואה למדד מחירי הדירות לאזור</div>
+            <div class="tool">↳ MCP: israel-statistics / israeli-cbs</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">בדיקת מכרזי רמ"י בסביבה (סימן לפעילות תכנונית)</div>
+            <div class="tool">↳ MCP: remy-land-authority · סקיל: israeli-land-tenders</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="phase" data-phase="3">
+        <div class="phase-head">
+          <div class="phase-num">3</div>
+          <div class="phase-title">בדיקת היזם</div>
+          <div class="phase-pct" data-pct>0%</div>
+        </div>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">זיהוי היזם/חברת הבנייה — רשם החברות</div>
+            <div class="tool">↳ סקיל: israeli-company-lookup · MCP: israel-amutot (אם חל"צ)</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">בדיקת track record — פרויקטים שהושלמו בעבר</div>
+            <div class="tool">↳ Claude in Chrome על אתר היזם + Google News</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">הון עצמי, ערבויות בנקאיות, ביטוח בדק</div>
+            <div class="tool">↳ דורש עיון במסמכי החוזה · סקיל: hebrew-legal-research</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">חיפוש תביעות משפטיות נגד היזם</div>
+            <div class="tool">↳ סקיל: hebrew-legal-research · israel-law MCP</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="phase" data-phase="4">
+        <div class="phase-head">
+          <div class="phase-num">4</div>
+          <div class="phase-title">מצב חתימות ודיירים</div>
+          <div class="phase-pct" data-pct>0%</div>
+        </div>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">% הדיירים שחתמו — האם עברנו את הסף החוקי (66%/80%)</div>
+            <div class="tool">↳ יש לבקש מהיזם/עו"ד המייצג · לא במקורות פתוחים</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">זיהוי דיירים סרבנים וסיבותיהם</div>
+            <div class="tool">↳ תיק בית משפט מחוזי · Claude in Chrome + פסקי דין</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">קריאת חוזה ההתקשרות עם היזם (תמורה, לוחות זמנים, ערבויות)</div>
+            <div class="tool">↳ סקיל: israeli-bureaucracy-decoder + עו"ד נדל"ן</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="phase" data-phase="5">
+        <div class="phase-head">
+          <div class="phase-num">5</div>
+          <div class="phase-title">סטטוס תכנוני</div>
+          <div class="phase-pct" data-pct>0%</div>
+        </div>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">סטטוס תב"ע — רעיון/הכנה/מופקדת/מאושרת</div>
+            <div class="tool">↳ mavat.iplan.gov.il</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">התנגדויות שהוגשו לתוכנית</div>
+            <div class="tool">↳ Claude in Chrome על מבא"ת + עיון מסמכים</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">ועדה מחוזית / מקומית — מתי נדון בפעם הבאה</div>
+            <div class="tool">↳ פרוטוקולים באתר מינהל התכנון</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">היתרי בנייה — האם כבר הונפקו</div>
+            <div class="tool">↳ אתר עיריית גבעתיים + רישיונות עסק</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="phase" data-phase="6">
+        <div class="phase-head">
+          <div class="phase-num">6</div>
+          <div class="phase-title">פיננסי ומשפטי אישי</div>
+          <div class="phase-pct" data-pct>0%</div>
+        </div>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">בדיקת משכנתא — בנקים לא תמיד נותנים על בניין בהריסה</div>
+            <div class="tool">↳ סקיל: israeli-mortgage-comparator</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">מס רכישה + היטל השבחה (חישוב תרחישים)</div>
+            <div class="tool">↳ סקיל: israeli-tax-returns · israeli-arnona-optimizer</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">תכנון תקציב אישי — כולל תקופת "מגורים חלופיים"</div>
+            <div class="tool">↳ סקיל: israeli-budget-planner</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">ייעוץ משפטי מעו"ד מתמחה בפינוי-בינוי (חובה!)</div>
+            <div class="tool">↳ לא להסתמך על AI בלבד</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">שמאות מקרקעין — הערכת שווי נוכחי ועתידי</div>
+            <div class="tool">↳ שמאי מוסמך + תאריך השמאות</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="phase" data-phase="7">
+        <div class="phase-head">
+          <div class="phase-num">7</div>
+          <div class="phase-title">אסטרטגיה ומעקב</div>
+          <div class="phase-pct" data-pct>0%</div>
+        </div>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">החלטה — להיכנס לפרויקט פעיל או דירה שכנה שתהנה מההשבחה</div>
+            <div class="tool">↳ שתי אסטרטגיות שונות לגמרי</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">הגדרת "תנאי פירוק" אישיים — מתי יוצאים</div>
+            <div class="tool">↳ למשל: אם תוך X שנים לא עוברים להפקדה</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">Schedule — תזכורת רבעונית לעדכון סטטוס הפרויקט</div>
+            <div class="tool">↳ סקיל: schedule (זמין לך ב-Cowork)</div>
+          </div>
+        </label>
+        <label class="check-row"><input type="checkbox" class="cbox">
+          <div class="ctext">
+            <div class="title">התראה על שינויים תכנוניים</div>
+            <div class="tool">↳ RSS של מבא"ת + alerting</div>
+          </div>
+        </label>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section id="workflow">
+    <div class="section-head">
+      <div>
+        <h2>Workflow — איזה כלי בכל שלב</h2>
+        <div class="sub">מיפוי של כל ה-MCPs והסקילים הרלוונטיים מ-agentskills.co.il לשלבי התהליך</div>
+      </div>
+    </div>
+
+    <div class="workflow">
+
+      <div class="flow-row">
+        <div class="flow-phase"><div class="num">PHASE 01</div><div class="name">גילוי</div></div>
+        <div class="flow-tools">
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">DataGov Israel</span><span class="tdesc">חיפוש datasets של "התחדשות עירונית"</span><a href="https://agentskills.co.il/he/mcp/datagov-israel" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">Tel Aviv City</span><span class="tdesc">דאטה עירונית — ככל שיש דבר דומה לגבעתיים</span><a href="https://agentskills.co.il/he/mcp/tel-aviv-city" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israel-gov-api</span><span class="tdesc">גישה רחבה יותר ל-data.gov.il</span><a href="https://agentskills.co.il/he/skills/government-services/israel-gov-api" target="_blank">↗</a></div>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-phase"><div class="num">PHASE 02</div><div class="name">ניתוח עסקאות</div></div>
+        <div class="flow-tools">
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">nadlan</span><span class="tdesc">עסקאות, גוש/חלקה, מגמות ברחוב/שכונה · הכי קריטי</span><a href="https://agentskills.co.il/he/mcp/nadlan" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">remy-land-authority</span><span class="tdesc">מכרזי קרקע של רמ"י באזור</span><a href="https://agentskills.co.il/he/mcp/remy-land-authority" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-real-estate</span><span class="tdesc">הערכת שווי וניתוח שוק</span><a href="https://agentskills.co.il/he/skills/government-services/israeli-real-estate" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">israel-statistics</span><span class="tdesc">מדד מחירי דירות הלמ"ס לאזור</span><a href="https://agentskills.co.il/he/mcp/israel-statistics" target="_blank">↗</a></div>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-phase"><div class="num">PHASE 03</div><div class="name">בדיקת היזם</div></div>
+        <div class="flow-tools">
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-company-lookup</span><span class="tdesc">רשם החברות — איתנות פיננסית</span><a href="https://agentskills.co.il/he/skills/government-services/israeli-company-lookup" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">hebrew-legal-research</span><span class="tdesc">פסקי דין ותביעות נגד היזם</span><a href="https://agentskills.co.il/he/skills/security-compliance/hebrew-legal-research" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-bureaucracy-decoder</span><span class="tdesc">פענוח חוזים ומסמכי יזם</span><a href="https://agentskills.co.il/he/skills/government-services/israeli-bureaucracy-decoder" target="_blank">↗</a></div>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-phase"><div class="num">PHASE 04</div><div class="name">משפטי/תכנוני</div></div>
+        <div class="flow-tools">
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">israel-law</span><span class="tdesc">חוק פינוי-בינוי, חוק הרשות להתחדשות</span><a href="https://agentskills.co.il/he/mcp/israel-law" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">knesset</span><span class="tdesc">תיקוני חקיקה רלוונטיים · ועדות</span><a href="https://agentskills.co.il/he/mcp/knesset" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-rental-agreements</span><span class="tdesc">חוזי מגורים חלופיים לתקופת הבנייה</span><a href="https://agentskills.co.il/he/skills/legal-tech/israeli-rental-agreements" target="_blank">↗</a></div>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-phase"><div class="num">PHASE 05</div><div class="name">פיננסי</div></div>
+        <div class="flow-tools">
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-mortgage-comparator</span><span class="tdesc">השוואת משכנתאות · אילו בנקים כן ייתנו</span><a href="https://agentskills.co.il/he/skills/tax-and-finance/israeli-mortgage-comparator" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-budget-planner</span><span class="tdesc">תכנון תקציב כולל תקופה חלופית</span><a href="https://agentskills.co.il/he/skills/tax-and-finance/israeli-budget-planner" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-tax-returns</span><span class="tdesc">מס רכישה · היטל השבחה · מס שבח</span><a href="https://agentskills.co.il/he/skills/tax-and-finance/israeli-tax-returns" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-mcp">MCP</span><span class="tname">boi-exchange / boi-economic-data</span><span class="tdesc">ריבית, מאקרו · תזמון קנייה</span><a href="https://agentskills.co.il/he/mcp/boi-exchange" target="_blank">↗</a></div>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-phase"><div class="num">PHASE 06</div><div class="name">מעקב</div></div>
+        <div class="flow-tools">
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">schedule (Cowork)</span><span class="tdesc">תזכורות רבעוניות לבדיקת סטטוס</span><a href="#" target="_blank">↗</a></div>
+          <div class="flow-tool"><span class="type type-skill">SKILL</span><span class="tname">israeli-apartment-hunting</span><span class="tdesc">חיפוש מתמשך של מועמדים חדשים</span><a href="https://agentskills.co.il/he/skills/localization/israeli-apartment-hunting" target="_blank">↗</a></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- VERIFIED PROJECTS -->
+  <section>
+    <div class="section-head">
+      <div>
+        <h2>פרויקטים ספציפיים מאומתים</h2>
+        <div class="sub">מקורות: Globes, ynet, Times of Israel, אתרי יזמים — אפריל 2026</div>
+      </div>
+    </div>
+
+    <div class="projects">
+      <div class="project">
+        <div class="dev">אביב מליסרון</div>
+        <div class="addr">אביב בגבעתיים · הסתדרות ג'</div>
+        <div class="detail">פרויקט פינוי-בינוי ברחוב ההסתדרות. יוצא לדרך אחרי שנים ארוכות של תכנון. סטטוס: <strong>שיווק</strong>.</div>
+      </div>
+      <div class="project">
+        <div class="dev">קרסו נדל"ן</div>
+        <div class="addr">Yavne'eli · יבנאלי 24-28</div>
+        <div class="detail">הושלם. 3 בניינים ישנים נהרסו, הוקמו 2 בניינים של 7 קומות, <strong>51 יח"ד חדשות</strong>. מודל השוואה טוב.</div>
+      </div>
+      <div class="project">
+        <div class="dev">לא פורסם רשמית</div>
+        <div class="addr">AIR · גבעתיים</div>
+        <div class="detail">קיבל <strong>היתרי בנייה מלאים · 333 יח"ד</strong>. אחד הבשלים בעיר. דירות שכנות נהנות מהשבחה מיידית.</div>
+      </div>
+      <div class="project">
+        <div class="dev">רותם שני</div>
+        <div class="addr">מספר פרויקטים · 20+ שנה</div>
+        <div class="detail">פעילות ותיקה בגבעתיים. מסקרן לבדוק קונקרטית איזה פרויקטים פתוחים אצלם כרגע · Claude in Chrome.</div>
+      </div>
+      <div class="project">
+        <div class="dev">עיריית גבעתיים</div>
+        <div class="addr">מכרז 27/2026 · מנהל יח' התחדשות</div>
+        <div class="detail">מלמד על <strong>השקעה מוסדית</strong> של העירייה בהאצת התחדשות. סיגנל חיובי למשקיעים.</div>
+      </div>
+      <div class="project">
+        <div class="dev">מגוון יזמים</div>
+        <div class="addr">גבול מזרחי · תוכנית 4,000 יח"ד</div>
+        <div class="detail">התוכנית להפקדה · <strong>4,000 יח"ד במגדלי 15-30 קומות</strong> תחת 1,900 דירות ישנות. פרויקט הדגל — טווח 8-15 שנה.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources">
+    <div class="section-head">
+      <div>
+        <h2>משאבים וקישורים</h2>
+        <div class="sub">המקורות הרשמיים שצריך לעקוב אחריהם ידנית (כי אין MCP עדיין)</div>
+      </div>
+    </div>
+
+    <div class="resources">
+      <a class="res" href="https://www.givatayim.muni.il/735/" target="_blank">
+        <div class="res-title">מתחמי פינוי-בינוי · גבעתיים</div>
+        <div class="res-desc">הרשימה הרשמית של העירייה</div>
+      </a>
+      <a class="res" href="https://www.givatayim.muni.il/298/" target="_blank">
+        <div class="res-title">אגף התחדשות עירונית · גבעתיים</div>
+        <div class="res-desc">הודעות, עדכונים, מסמכי תוכניות</div>
+      </a>
+      <a class="res" href="https://mavat.iplan.gov.il/" target="_blank">
+        <div class="res-title">מבא"ת · מאגר תוכניות בניין עיר</div>
+        <div class="res-desc">חיפוש תוכניות לפי גוש/חלקה</div>
+      </a>
+      <a class="res" href="https://www.gov.il/he/departments/guides/moch-renew" target="_blank">
+        <div class="res-title">הרשות הממשלתית להתחדשות עירונית</div>
+        <div class="res-desc">רגולציה, סבסודים, פרויקטים</div>
+      </a>
+      <a class="res" href="https://www.nadlan.gov.il/" target="_blank">
+        <div class="res-title">נדל"ן · רשות המיסים</div>
+        <div class="res-desc">מאגר עסקאות נדל"ן רשמי</div>
+      </a>
+      <a class="res" href="https://www.cbs.gov.il/he/subjects/Pages/%D7%9E%D7%97%D7%99%D7%A8%D7%99-%D7%93%D7%99%D7%A8%D7%95%D7%AA.aspx" target="_blank">
+        <div class="res-title">מדד מחירי דירות · הלמ"ס</div>
+        <div class="res-desc">נתוני מגמה דו-חודשיים</div>
+      </a>
+      <a class="res" href="https://agentskills.co.il/he/skills?category=tax-and-finance" target="_blank">
+        <div class="res-title">סקילים פיננסיים · Skills IL</div>
+        <div class="res-desc">כל הכלים למימון, מס, תקציב</div>
+      </a>
+      <a class="res" href="https://agentskills.co.il/he/mcp" target="_blank">
+        <div class="res-title">כל שרתי ה-MCP</div>
+        <div class="res-desc">44 שרתים, מתעדכן שוטף</div>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="disclaimer">
+      ⚠️ <strong>גילוי נאות:</strong> כלי זה הוא עזר מחקרי בלבד. אין לראות בתכנים המלצת השקעה, ייעוץ משפטי או ייעוץ פיננסי. פינוי-בינוי הוא עסקה מורכבת עם סיכונים משמעותיים (דיירים סרבנים, יזמים בחדלות פרעון, פרויקטים נתקעים שנים). תמיד יש להיוועץ בעו"ד נדל"ן מתמחה ובשמאי מקרקעין מוסמך לפני כל החלטה.
+    </div>
+    נבנה באמצעות כלי Cowork · נתונים מ-<a href="https://agentskills.co.il/he">agentskills.co.il</a>, עיריית גבעתיים, Globes, ynet, Times of Israel · אפריל 2026
+  </footer>
+
+</div>
+
+<script>
+// ========== SCORING CALCULATOR ==========
+const weights = {zone:15, stage:20, consent:18, dev:12, ltv:15, years:10, legal:10};
+const inputs = ['zone','stage','consent','dev','ltv','years','legal'];
+const valueEls = {stage:'stageV',consent:'consentV',dev:'devV',ltv:'ltvV',years:'yearsV',legal:'legalV'};
+
+function normalize(id, raw){
+  const v = parseFloat(raw);
+  switch(id){
+    case 'zone': return v; // already 0-10
+    case 'stage': return v;
+    case 'consent': return v/10; // 0-100 -> 0-10
+    case 'dev': return v;
+    case 'ltv': return 10 - ((v-30)/60 * 10); // invert: lower = better
+    case 'years': return 10 - ((v-2)/13 * 10); // invert: shorter = better
+    case 'legal': return v;
+  }
+}
+
+function updateScore(){
+  let total = 0;
+  for(const id of inputs){
+    const el = document.getElementById(id);
+    if(!el) continue;
+    const raw = el.value;
+    const norm = normalize(id, raw);
+    total += norm * (weights[id]/10);
+    if(valueEls[id]){
+      const disp = (id==='consent'||id==='ltv') ? raw+'%' : raw;
+      document.getElementById(valueEls[id]).textContent = disp;
+    }
+  }
+  const score = Math.round(Math.max(0, Math.min(100, total)));
+  document.getElementById('scoreNum').textContent = score;
+  document.getElementById('scoreRing').style.setProperty('--p', score);
+
+  const label = document.getElementById('scoreLabel');
+  const rec = document.getElementById('scoreRec');
+  const v = document.getElementById('scoreVerdict');
+  v.className = 'score-verdict';
+  if(score >= 75){
+    label.textContent = 'הזדמנות חזקה';
+    rec.textContent = 'הפרמטרים נראים טוב. המשך ל-due diligence מלא ומעורבות עו"ד.';
+    v.textContent = '✓ GO — בדיקה מעמיקה';
+    v.classList.add('v-go');
+  } else if(score >= 55){
+    label.textContent = 'הזדמנות בינונית';
+    rec.textContent = 'יש פוטנציאל אבל יש חולשות. בדוק מה מושך את הציון למטה.';
+    v.textContent = '⚠️ זהירות — בדיקה נוספת נדרשת';
+    v.classList.add('v-caution');
+  } else {
+    label.textContent = 'סיכון גבוה';
+    rec.textContent = 'הפרמטרים לא תומכים בהשקעה. שקול אלטרנטיבות.';
+    v.textContent = '✕ STOP — סיכון מוגבר';
+    v.classList.add('v-stop');
+  }
+}
+
+for(const id of inputs){
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('input', updateScore);
+}
+updateScore();
+
+// ========== CHECKLIST PROGRESS ==========
+function updateChecklist(){
+  const phases = document.querySelectorAll('#checklistBox .phase');
+  phases.forEach(phase => {
+    const checks = phase.querySelectorAll('.cbox');
+    const done = phase.querySelectorAll('.cbox:checked').length;
+    const total = checks.length;
+    const pct = total ? Math.round(done/total*100) : 0;
+    phase.querySelector('[data-pct]').textContent = pct+'% · ('+done+'/'+total+')';
+  });
+}
+document.querySelectorAll('#checklistBox .cbox').forEach(c=>{
+  c.addEventListener('change', updateChecklist);
+});
+updateChecklist();
+
+// ========== STAGE CHART ==========
+const ctx = document.getElementById('stageChart');
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['רעיון','בתכנון','להפקדה','מופקדת','מאושרת','היתר בנייה','בבנייה'],
+    datasets: [{
+      label: 'מתחמים בגבעתיים',
+      data: [0, 2, 1, 0, 1, 2, 1],
+      backgroundColor: [
+        'rgba(124,92,255,0.4)',
+        'rgba(124,92,255,0.5)',
+        'rgba(255,181,71,0.6)',
+        'rgba(255,181,71,0.75)',
+        'rgba(0,212,255,0.7)',
+        'rgba(0,212,255,0.85)',
+        'rgba(46,229,157,0.85)'
+      ],
+      borderColor: '#253050',
+      borderWidth: 1,
+      borderRadius: 8
+    }]
+  },
+  options: {
+    maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+      legend: {display:false},
+      tooltip: {backgroundColor:'#141b2e', titleColor:'#e8eefc', bodyColor:'#8a9bbf', borderColor:'#253050', borderWidth:1}
+    },
+    scales: {
+      x: {
+        ticks:{color:'#8a9bbf', font:{family:'Heebo'}},
+        grid:{color:'rgba(37,48,80,0.4)'}
+      },
+      y: {
+        beginAtZero:true, ticks:{color:'#8a9bbf', stepSize:1}, grid:{color:'rgba(37,48,80,0.4)'}
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>

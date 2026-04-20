@@ -148,7 +148,7 @@ const App = {
 
       // Status chips
       html += '<div class="sb-section-label">סטטוס</div><div class="sb-chips">';
-      const statusList = [['yes','כן'],['maybe','אולי'],['no','לא']];
+      const statusList = [['yes','לקנות'],['maybe','לעקוב'],['no','לחכות']];
       for (const [key, label] of statusList) {
         const on = this.state.statuses.includes(key) ? ' on' : '';
         html += `<button class="sb-chip${on}" data-status="${key}" onclick="App.toggleStatus('${key}')">${label}</button>`;
@@ -264,7 +264,7 @@ const App = {
 
     sorted.forEach((z, i) => {
       const statusCls = { yes: 'badge-good', maybe: 'badge-warn', no: 'badge-bad' }[z.status] || 'badge-neutral';
-      const statusLabel = { yes: 'כן', maybe: 'אולי', no: 'לא' }[z.status] || z.status;
+      const statusLabel = { yes: 'לקנות', maybe: 'לעקוב', no: 'לחכות' }[z.status] || z.status;
       const scoreCls = z.valueScore != null ? (z.valueScore >= 3 ? 'badge-good' : z.valueScore >= 1.5 ? 'badge-accent' : 'badge-neutral') : 'badge-neutral';
       html += `<tr onclick="App.navigate('zone','${z.zoneId}')">`;
       html += `<td class="rank">${i + 1}</td>`;
