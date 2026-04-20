@@ -105,6 +105,8 @@ const App = {
     statuses: JSON.parse(localStorage.getItem('pinui_statuses') || '["yes","maybe"]'),
     sortCol: 'score',
     sortAsc: false,
+    dealsSortCol: 'ratio',
+    dealsSortAsc: true,
     toolsOpen: {}
   },
 
@@ -181,6 +183,12 @@ const App = {
     if (this.state.sortCol === col) this.state.sortAsc = !this.state.sortAsc;
     else { this.state.sortCol = col; this.state.sortAsc = false; }
     this.renderDashboard();
+  },
+
+  sortDealsBy(col) {
+    if (this.state.dealsSortCol === col) this.state.dealsSortAsc = !this.state.dealsSortAsc;
+    else { this.state.dealsSortCol = col; this.state.dealsSortAsc = true; }
+    this.renderDeals();
   },
 
   // ── Master Render ──────────────────────────────────────────────
@@ -546,10 +554,20 @@ const App = {
     document.title = 'מציאות · התחדשות.AI';
     const main = document.getElementById('main');
     const filteredDeals = this._getFilteredDeals();
+    const s = this.state;
 
-    let html = '<div class="deals-header" style="margin-bottom:24px">';
-    html += '<h1 style="font-size:24px;font-weight:800;margin-bottom:4px">מציאות נדל״ן</h1>';
-    html += `<p style="color:var(--muted);font-size:14px">מצאנו ${filteredDeals.length} מציאות שעונות על הסינון שלך (מחיר למ״ר נמוך מ-92% מממוצע המתחם)</p>`;
+    let html = '<div class="deals-header" style="margin-bottom:24px; display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap">';
+    html += '<div><h1 style="font-size:24px;font-weight:800;margin-bottom:4px">מציאות נדל״ן</h1>';
+    html += `<p style="color:var(--muted);font-size:14px">מצאנו ${filteredDeals.length} מציאות שעונות על הסינון שלך (מחיר למ״ר נמוך מ-92% מממוצע המתחם)</p></div>`;
+    
+    // Sort Select
+    html += '<div style="display:flex; align-items:center; gap:8px">';
+    html += '<span style="font-size:12px; color:var(--muted)">מיין לפי:</span>';
+    html += `<select class="sb-input" style="width:140px; margin:0" onchange="App.sortDealsBy(this.value)">
+      <option value="ratio" ${s.dealsSortCol==='ratio'?'selected':''}>הדיל הטוב ביותר</option>
+      <option value="price" ${s.dealsSortCol==='price'?'selected':''}>המחיר הנמוך ביותר</option>
+      <option value="sqm" ${s.dealsSortCol==='sqm'?'selected':''}>השטח הגדול ביותר</option>
+    </select></div>`;
     html += '</div>';
 
     if (filteredDeals.length === 0) {
@@ -596,15 +614,24 @@ const App = {
             deals.push({ 
               html: formatListingCard(l, avgPpsqm), 
               ppsqmRatio: ppsqm / avgPpsqm,
-              price: price
+              price: price,
+              sqm: sqm
             });
           }
         }
       }
     }
 
-    // Sort by "best deal" (lowest ratio) first
-    deals.sort((a, b) => a.ppsqmRatio - b.ppsqmRatio);
+    // Sort based on state
+    deals.sort((a, b) => {
+      let va, vb;
+      if (s.dealsSortCol === 'ratio') { va = a.ppsqmRatio; vb = b.ppsqmRatio; }
+      else if (s.dealsSortCol === 'price') { va = a.price; vb = b.price; }
+      else if (s.dealsSortCol === 'sqm') { va = b.sqm; vb = a.sqm; } // Default desc for sqm
+      
+      return s.dealsSortAsc ? va - vb : vb - va;
+    });
+    
     return deals;
   },
 
