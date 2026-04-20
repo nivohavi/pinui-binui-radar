@@ -524,7 +524,7 @@ const App = {
       }
     }
     deals.sort((a, b) => a.ppsqmRatio - b.ppsqmRatio);
-    return deals.slice(0, 6);
+    return deals.slice(0, 24);
   },
 
   _findZoneData(zoneId) {
