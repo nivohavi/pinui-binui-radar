@@ -77,6 +77,11 @@ const App = {
     }
   },
 
+  scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  },
+
   sortBy(col) {
     if (this.state.sortCol === col) this.state.sortAsc = !this.state.sortAsc;
     else { this.state.sortCol = col; this.state.sortAsc = false; }
@@ -231,15 +236,15 @@ const App = {
     const deals = this._countDeals();
 
     let html = '<div class="kpi-row">';
-    html += this._kpi('מתחמים בתקציב', inBudget, `מתוך ${getAllZonesFlat().length} מתחמים`);
-    html += this._kpi('ציון ערך מוביל', topScore ? topScore.valueScore.toFixed(1) : '-', topScore ? topScore.zone : '', 'accent');
-    html += this._kpi('ממוצע ₪/מ"ר', avgPpsqm ? '₪' + Math.round(avgPpsqm / 1000) + 'K' : '-', 'ממוצע מתחמים מסוננים');
-    html += this._kpi('מציאות', deals, 'מחיר < 92% ממוצע מתחם');
+    html += this._kpi('מתחמים בתקציב', inBudget, `מתוך ${getAllZonesFlat().length} מתחמים`, '', `App.scrollToSection('zone-table')`);
+    html += this._kpi('ציון ערך מוביל', topScore ? topScore.valueScore.toFixed(1) : '-', topScore ? topScore.zone : '', 'accent', topScore ? `App.navigate('zone','${topScore.zoneId}')` : '');
+    html += this._kpi('ממוצע ₪/מ"ר', avgPpsqm ? '₪' + Math.round(avgPpsqm / 1000) + 'K' : '-', 'ממוצע מתחמים מסוננים', '', `App.scrollToSection('zone-table')`);
+    html += this._kpi('מציאות', deals, 'מחיר < 92% ממוצע מתחם', '', `App.scrollToSection('deals-section')`);
     html += '</div>';
 
     // ── Ranked Table ──
     const sorted = this._sortZones(zones);
-    html += '<div class="data-panel">';
+    html += '<div class="data-panel" id="zone-table">';
     html += '<div class="panel-header"><span class="panel-title">דירוג מתחמים</span><span class="panel-subtitle">' + zones.length + ' מתחמים</span></div>';
     html += '<table class="zone-table"><thead><tr>';
 
@@ -284,7 +289,7 @@ const App = {
     html += '<div class="bottom-grid">';
 
     // Left: Fresh deals
-    html += '<div class="data-panel"><div class="panel-header"><span class="panel-title">מציאות טריות</span></div>';
+    html += '<div class="data-panel" id="deals-section"><div class="panel-header"><span class="panel-title">מציאות טריות</span></div>';
     html += '<div class="listings-grid">';
     const freshDeals = this._getFreshDeals();
     if (freshDeals.length) {
@@ -319,11 +324,13 @@ const App = {
   },
 
   // ── Dashboard Helpers ──
-  _kpi(label, value, sub, cls) {
-    return `<div class="kpi">
+  _kpi(label, value, sub, cls, onclick) {
+    const clickAttr = onclick ? ` onclick="${onclick}" style="cursor:pointer"` : '';
+    const hoverCls = onclick ? ' kpi-clickable' : '';
+    return `<div class="kpi${hoverCls}"${clickAttr}>
       <div class="kpi-label">${label}</div>
       <div class="kpi-value${cls ? ' ' + cls : ''}">${value}</div>
-      <div class="kpi-sub">${sub}</div>
+      <div class="kpi-sub">${sub}${onclick ? ' →' : ''}</div>
     </div>`;
   },
 

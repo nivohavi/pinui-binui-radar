@@ -104,6 +104,8 @@ input, select { font-family: inherit; }
 .kpi-sub { font-size: 9px; color: var(--muted); margin-top: 4px; }
 .kpi-value.accent { color: var(--accent); }
 .kpi-value.good { color: var(--good); }
+.kpi-clickable { transition: all 0.15s; }
+.kpi-clickable:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(6,182,212,.1); }
 
 /* ── Data Table ── */
 .data-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; }
