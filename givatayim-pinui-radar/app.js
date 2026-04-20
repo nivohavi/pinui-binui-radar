@@ -114,7 +114,7 @@ const App = {
     const v = this.state.view;
 
     // Logo
-    let html = '<div class="sb-logo"><span>⬡</span><span>רדאר</span></div>';
+    let html = '<div class="sb-logo"><span>⬡</span><span>התחדשות.AI</span></div>';
 
     // Nav
     const navItems = [
@@ -219,7 +219,7 @@ const App = {
   //  DASHBOARD
   // ═══════════════════════════════════════════════════════════════
   renderDashboard() {
-    document.title = 'סקירה · רדאר פינוי-בינוי';
+    document.title = 'סקירה · התחדשות.AI';
     const main = document.getElementById('main');
     const zones = this.getFilteredZones();
 
@@ -429,7 +429,7 @@ const App = {
   //  ZONE DETAIL
   // ═══════════════════════════════════════════════════════════════
   renderZoneDetail(zoneId) {
-    document.title = 'מתחם · רדאר פינוי-בינוי';
+    document.title = 'מתחם · התחדשות.AI';
     const main = document.getElementById('main');
     const zone = this._findZoneData(zoneId);
     const city = this._findZoneCity(zoneId);
@@ -439,7 +439,7 @@ const App = {
       return;
     }
 
-    document.title = zone.name + ' · רדאר פינוי-בינוי';
+    document.title = zone.name + ' · התחדשות.AI';
 
     const statusCls = { yes: 'badge-good', maybe: 'badge-warn', no: 'badge-bad' }[zone.status] || 'badge-neutral';
     const score = computeValueScore(zone);
@@ -521,7 +521,7 @@ const App = {
   },
 
   renderTools(section) {
-    document.title = 'כלים · רדאר פינוי-בינוי';
+    document.title = 'כלים · התחדשות.AI';
     const main = document.getElementById('main');
     const allZones = getAllZonesFlat();
 
