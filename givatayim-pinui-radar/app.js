@@ -495,7 +495,7 @@ const App = {
       const zone = this._findZoneData(zoneId);
       if (!zone) continue;
       
-      // Filter by city
+      // Filter by city only for deals
       if (s.cities.length > 0 && !s.cities.includes(zone.citySlug)) continue;
 
       const avgPpsqm = parsePpsqmRange(zone.prices.rows);
