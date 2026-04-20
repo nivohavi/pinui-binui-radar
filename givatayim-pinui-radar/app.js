@@ -357,7 +357,7 @@ const App = {
     html += this._kpi('מתחמים בתקציב', inBudget, `מתוך ${getAllZonesFlat().length} מתחמים`, '', `App.scrollToSection('zone-table')`);
     html += this._kpi('ציון ערך מוביל', topScore ? topScore.valueScore.toFixed(1) : '-', topScore ? topScore.zone : '', 'accent', topScore ? `App.navigate('zone','${topScore.zoneId}')` : '');
     html += this._kpi('ממוצע ₪/מ"ר', avgPpsqm ? '₪' + Math.round(avgPpsqm / 1000) + 'K' : '-', 'ממוצע מתחמים מסוננים', '', `App.scrollToSection('zone-table')`);
-    html += this._kpi('מציאות', deals, 'מחיר < 92% ממוצע מתחם', '', `App.scrollToSection('deals-section')`);
+    html += this._kpi('מציאות', deals, 'מחיר < 92% ממוצע מתחם', '', `App.navigate('deals')`);
     html += '</div>';
 
     // ── Ranked Table ──
@@ -489,15 +489,24 @@ const App = {
 
   _countDeals() {
     if (!_listingsCache || !_listingsCache.byZone) return 0;
+    const s = this.state;
     let count = 0;
     for (const [zoneId, listings] of Object.entries(_listingsCache.byZone)) {
       const zone = this._findZoneData(zoneId);
       if (!zone) continue;
+      
+      // Filter by city
+      if (s.cities.length > 0 && !s.cities.includes(zone.citySlug)) continue;
+
       const avgPpsqm = parsePpsqmRange(zone.prices.rows);
       if (!avgPpsqm) continue;
       for (const l of listings) {
         const sqm = parseInt(l.sqm) || 0;
         const price = parseInt((l.price || '').replace(/[^\d]/g, '')) || 0;
+
+        // Filter by budget
+        if (s.budget && price > s.budget) continue;
+
         if (sqm > 0 && price > 0) {
           const ppsqm = price / sqm;
           if (ppsqm / avgPpsqm < 0.92) count++;
