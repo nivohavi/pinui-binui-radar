@@ -115,6 +115,7 @@ const App = {
   parseHash() {
     const h = location.hash.slice(1) || 'dashboard';
     if (h.startsWith('zone/')) return { view: 'zone', zoneId: h.slice(5) };
+    if (h === 'deals') return { view: 'deals' };
     // Redirect old tools routes to dashboard
     if (h === 'tools' || h.startsWith('tools/')) return { view: 'dashboard' };
     return { view: 'dashboard' };
@@ -193,6 +194,7 @@ const App = {
     main.style.opacity = '0';
     setTimeout(() => {
       if (parsed.view === 'zone') this.renderZoneDetail(parsed.zoneId);
+      else if (parsed.view === 'deals') this.renderDeals();
       else this.renderDashboard();
       main.style.opacity = '1';
     }, 50);
@@ -214,10 +216,11 @@ const App = {
     // Logo
     let html = '<div class="sb-logo"><span>⬡</span><span>התחדשות.AI</span></div>';
 
-    // Nav — only 2 items now
+    // Nav — 3 items now
     const navItems = [
       { view: 'dashboard', icon: '⊞', label: 'סקירה' },
-      { view: 'zone',      icon: '◎', label: 'מתחמים' }
+      { view: 'zone',      icon: '◎', label: 'מתחמים' },
+      { view: 'deals',     icon: '🔍', label: 'מציאות' }
     ];
     html += '<nav class="sb-nav">';
     for (const n of navItems) {
@@ -227,8 +230,8 @@ const App = {
     }
     html += '</nav>';
 
-    // Filters — dashboard only
-    if (v === 'dashboard') {
+    // Filters — dashboard and deals
+    if (v === 'dashboard' || v === 'deals') {
       html += '<div class="sb-filters">';
       html += '<div class="sb-section-label">תקציב</div>';
       html += `<input type="text" class="sb-input" id="sb-budget" value="${this.state.budget.toLocaleString('he-IL')}"
@@ -525,6 +528,75 @@ const App = {
     }
     deals.sort((a, b) => a.ppsqmRatio - b.ppsqmRatio);
     return deals.slice(0, 24);
+  },
+
+  // ═══════════════════════════════════════════════════════════════
+  //  DEALS (FINDINGS)
+  // ═══════════════════════════════════════════════════════════════
+  renderDeals() {
+    document.title = 'מציאות · התחדשות.AI';
+    const main = document.getElementById('main');
+    const filteredDeals = this._getFilteredDeals();
+
+    let html = '<div class="deals-header" style="margin-bottom:24px">';
+    html += '<h1 style="font-size:24px;font-weight:800;margin-bottom:4px">מציאות נדל״ן</h1>';
+    html += `<p style="color:var(--muted);font-size:14px">מצאנו ${filteredDeals.length} מציאות שעונות על הסינון שלך (מחיר למ״ר נמוך מ-92% מממוצע המתחם)</p>`;
+    html += '</div>';
+
+    if (filteredDeals.length === 0) {
+      html += '<div class="data-panel" style="padding:48px;text-align:center;color:var(--muted)">';
+      html += '<div style="font-size:48px;margin-bottom:16px">🔍</div>';
+      html += '<div>לא נמצאו מציאות שתואמות את התקציב או הערים שבחרת.</div>';
+      html += '</div>';
+    } else {
+      html += '<div class="listings-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">';
+      for (const d of filteredDeals) {
+        html += d.html;
+      }
+      html += '</div>';
+    }
+
+    main.innerHTML = html;
+  },
+
+  _getFilteredDeals() {
+    if (!_listingsCache || !_listingsCache.byZone) return [];
+    const s = this.state;
+    const deals = [];
+    
+    for (const [zoneId, listings] of Object.entries(_listingsCache.byZone)) {
+      const zoneData = this._findZoneData(zoneId);
+      if (!zoneData) continue;
+
+      // Filter by city
+      if (s.cities.length > 0 && !s.cities.includes(zoneData.citySlug)) continue;
+
+      const avgPpsqm = parsePpsqmRange(zoneData.prices.rows);
+      if (!avgPpsqm) continue;
+
+      for (const l of listings) {
+        const sqm = parseInt(l.sqm) || 0;
+        const price = parseInt((l.price || '').replace(/[^\d]/g, '')) || 0;
+
+        // Filter by budget
+        if (s.budget && price > s.budget) continue;
+
+        if (sqm > 0 && price > 0) {
+          const ppsqm = price / sqm;
+          if (ppsqm / avgPpsqm < 0.92) {
+            deals.push({ 
+              html: formatListingCard(l, avgPpsqm), 
+              ppsqmRatio: ppsqm / avgPpsqm,
+              price: price
+            });
+          }
+        }
+      }
+    }
+
+    // Sort by "best deal" (lowest ratio) first
+    deals.sort((a, b) => a.ppsqmRatio - b.ppsqmRatio);
+    return deals;
   },
 
   _findZoneData(zoneId) {
