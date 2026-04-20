@@ -831,7 +831,7 @@ function buildFacebookLinks(city, opts) {
 let _listingsCache = null;
 function loadListings() {
   if (_listingsCache) return Promise.resolve(_listingsCache);
-  return fetch('listings.json?v=2026042024')
+  return fetch('listings.json?v=202604202143')
     .then(r => r.ok ? r.json() : { byZone: {}, _meta: {} })
     .then(data => { _listingsCache = data; return data; })
     .catch(() => { _listingsCache = { byZone: {}, _meta: {} }; return _listingsCache; });
