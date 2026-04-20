@@ -640,47 +640,50 @@ const App = {
 
     // A. Inline Calculator
     const entryPrice = (zone.prices && zone.prices.rows && zone.prices.rows.length) ? parsePriceMin(zone.prices.rows[0][1]) : 3500000;
-    const calcContent = `
-      <div class="calc-row">
-        <label>מחיר הדירה (₪)</label>
-        <input type="number" id="calc-price" value="${entryPrice}" step="100000" oninput="App._calcMortgage()">
+    const calcContent = `<div class="calc-layout">
+      <div class="calc-inputs">
+        <div class="calc-row">
+          <label>מחיר הדירה (₪)</label>
+          <input type="number" id="calc-price" value="${entryPrice}" step="100000" oninput="App._calcMortgage()">
+        </div>
+        <div class="calc-row">
+          <label>הון עצמי (₪)</label>
+          <input type="number" id="calc-equity" value="1000000" step="50000" oninput="App._calcMortgage()">
+        </div>
+        <div class="calc-row">
+          <label>סטטוס דירה</label>
+          <select id="calc-status" onchange="App._calcMortgage()">
+            <option value="first">דירה יחידה</option>
+            <option value="second">דירה שנייה / משקיע</option>
+          </select>
+        </div>
+        <div class="calc-row">
+          <label>ריבית שנתית (%)</label>
+          <input type="number" id="calc-rate" value="4.5" step="0.1" oninput="App._calcMortgage()">
+        </div>
+        <div class="calc-row">
+          <label>תקופה (שנים)</label>
+          <input type="number" id="calc-years" value="25" step="5" oninput="App._calcMortgage()">
+        </div>
       </div>
-      <div class="calc-row">
-        <label>הון עצמי (₪)</label>
-        <input type="number" id="calc-equity" value="1000000" step="50000" oninput="App._calcMortgage()">
+      <div class="calc-results">
+        <div class="calc-result">
+          <div class="calc-result-label">מס רכישה</div>
+          <div class="calc-result-value" id="calc-res-tax">—</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-label">החזר חודשי</div>
+          <div class="calc-result-value" id="calc-res-monthly">—</div>
+          <div class="calc-result-sub" id="calc-res-loan">—</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-label">עלות כוללת (כולל ריבית)</div>
+          <div class="calc-result-value" id="calc-res-total">—</div>
+          <div class="calc-result-sub" id="calc-res-interest">—</div>
+        </div>
       </div>
-      <div class="calc-row">
-        <label>סטטוס דירה</label>
-        <select id="calc-status" onchange="App._calcMortgage()">
-          <option value="first">דירה יחידה</option>
-          <option value="second">דירה שנייה / משקיע</option>
-        </select>
-      </div>
-      <div class="calc-row">
-        <label>ריבית משכנתא שנתית (%)</label>
-        <input type="number" id="calc-rate" value="4.5" step="0.1" oninput="App._calcMortgage()">
-      </div>
-      <div class="calc-row">
-        <label>תקופת משכנתא (שנים)</label>
-        <input type="number" id="calc-years" value="25" step="5" oninput="App._calcMortgage()">
-      </div>
-      <div class="calc-result">
-        <div class="res-label">מס רכישה</div>
-        <div class="res-val" id="calc-res-tax">—</div>
-      </div>
-      <div class="calc-result">
-        <div class="res-label">החזר חודשי · משכנתא</div>
-        <div class="res-val" id="calc-res-monthly">—</div>
-        <div class="res-sub" id="calc-res-loan">—</div>
-      </div>
-      <div class="calc-result">
-        <div class="res-label">סה"כ עלות אמיתית (כולל ריבית)</div>
-        <div class="res-val" id="calc-res-total">—</div>
-        <div class="res-sub" id="calc-res-interest">—</div>
-      </div>
-      <div class="warning-box" style="margin-top:18px;font-size:13px;line-height:1.7;background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.3);border-radius:12px;padding:14px">
-        <strong style="color:var(--warn)">זהירות:</strong> מס רכישה מחושב לפי מדרגות 2026 (דירה יחידה — 0% עד 2.1M, 3.5% עד 2.5M, 5% עד 6.05M, 8% עד 20.2M, 10% מעל. משקיע — 8% עד 6.05M, 10% עד 20.2M, 12% מעל). היטל השבחה, עו"ד, ושמאי לא כלולים.
-      </div>`;
+      <div class="calc-warning">מדרגות 2026: דירה יחידה 0%→3.5%→5%→8%→10%. משקיע 8%→10%→12%. היטל השבחה, עו"ד ושמאי לא כלולים.</div>
+    </div>`;
 
     html += `<div class="tools-section" id="tool-calc">
       <button class="tools-header" onclick="App.toggleTool('calc')">מחשבון משכנתא <span class="chevron">▼</span></button>
@@ -804,31 +807,33 @@ const App = {
     const totalItems = phases.reduce((s, p) => s + p.items.length, 0);
     let itemIdx = 0;
     const zoneName = zone.name.split('·')[0].trim();
-    let checkHtml = `<div class="check-progress" style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:20px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:14px">
-        <span><strong id="checkNum">0</strong> / ${totalItems} סעיפים עבור ${zoneName}</span>
-        <span id="checkPct">0%</span>
+    let checkHtml = `<div class="check-progress-bar">
+      <div class="check-progress-header">
+        <span><strong id="checkNum">0</strong> / ${totalItems} עבור ${zoneName}</span>
+        <span id="checkPct" style="font-weight:700;color:var(--accent)">0%</span>
       </div>
-      <div style="height:10px;background:var(--bg-2);border-radius:10px;overflow:hidden">
-        <div id="checkFill" style="height:100%;background:var(--gradient);width:0%;transition:width .3s;border-radius:10px"></div>
+      <div class="check-progress-track">
+        <div class="check-progress-fill" id="checkFill" style="width:0%"></div>
       </div>
     </div>`;
+    checkHtml += '<div class="check-phases">';
     for (const phase of phases) {
-      checkHtml += `<div class="phase" style="margin-bottom:24px">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)">
-          <div style="width:36px;height:36px;background:var(--gradient);color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0">${phase.num}</div>
-          <div><div style="font-size:18px;font-weight:800">${phase.title}</div><div style="font-size:13px;color:var(--muted);margin-top:2px">${phase.sub}</div></div>
+      checkHtml += `<div class="check-phase">
+        <div class="check-phase-head">
+          <div class="check-phase-num">${phase.num}</div>
+          <div><div class="check-phase-title">${phase.title}</div><div class="check-phase-sub">${phase.sub}</div></div>
         </div>`;
       for (const [title, help] of phase.items) {
-        checkHtml += `<label class="check-item" style="display:flex;align-items:flex-start;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .15s">
-          <input type="checkbox" data-idx="${itemIdx}" onchange="App._onCheckChange()" style="margin-top:3px;accent-color:var(--good);width:18px;height:18px;cursor:pointer;flex-shrink:0">
-          <div style="flex:1"><div style="font-weight:600;font-size:15px;margin-bottom:4px">${title}</div><div style="color:var(--muted);font-size:13px;line-height:1.6">${help}</div></div>
+        checkHtml += `<label class="check-item">
+          <input type="checkbox" data-idx="${itemIdx}" onchange="App._onCheckChange()">
+          <div><div class="check-item-title">${title}</div><div class="check-item-help">${help}</div></div>
         </label>`;
         itemIdx++;
       }
       checkHtml += '</div>';
     }
-    checkHtml += `<button onclick="App._resetChecklist()" style="display:block;margin:16px auto 0;background:var(--bg-2);border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:13px">איפוס כל הצ'קליסט</button>`;
+    checkHtml += '</div>';
+    checkHtml += `<div style="text-align:center;margin-top:12px"><button onclick="App._resetChecklist()" style="background:var(--bg);border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;font-size:11px">איפוס</button></div>`;
 
     html += `<div class="tools-section" id="tool-checklist">
       <button class="tools-header" onclick="App.toggleTool('checklist')">צ'קליסט רכישה <span class="chevron">▼</span></button>
