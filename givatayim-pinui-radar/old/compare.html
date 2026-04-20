@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>השוואת מתחמים · רדאר פינוי-בינוי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20260418e">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">רדאר פינוי-בינוי</div>
+  <div class="nav-links">
+    <a href="index.html">בית</a>
+    <a href="zones.html">מתחמים</a>
+    <a href="prices.html">מחירים</a>
+    <a href="compare.html" class="active">השוואה</a>
+    <a href="search.html">חיפוש</a>
+    <a href="score.html">ניקוד</a>
+    <a href="checklist.html">צ'קליסט</a>
+    <a href="workflow.html">תהליך</a>
+    <a href="glossary.html">מילון</a>
+    <a href="resources.html">משאבים</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<h1>השוואת כל המתחמים</h1>
+<p class="lead">כל המתחמים מכל שלוש הערים בטבלה אחת — ממוינים לפי ציון כדאיות. ככל שהציון גבוה יותר, היחס בין הפוטנציאל, הזמן והסיכון טוב יותר.</p>
+
+<!-- ── Cross-city comparison table ── -->
+<div style="overflow-x:auto;margin:24px 0">
+<table class="compare-table" id="compare-table">
+  <thead>
+    <tr>
+      <th data-col="city">עיר <span class="sort-arrow">⇅</span></th>
+      <th data-col="zone">מתחם <span class="sort-arrow">⇅</span></th>
+      <th data-col="status">סטטוס <span class="sort-arrow">⇅</span></th>
+      <th data-col="price">מחיר כניסה <span class="sort-arrow">⇅</span></th>
+      <th data-col="premium">פרמיה <span class="sort-arrow">⇅</span></th>
+      <th data-col="timeline">אופק זמן <span class="sort-arrow">⇅</span></th>
+      <th data-col="score" class="sorted">ציון כדאיות <span class="sort-arrow">▼</span></th>
+    </tr>
+  </thead>
+  <tbody id="compare-body"></tbody>
+</table>
+</div>
+
+<!-- ── Budget comparison ── -->
+<h2 style="margin-top:48px">מה אפשר לקנות בתקציב שלך?</h2>
+<p class="sub">הכנס תקציב ותראה אילו מתחמים פתוחים בכל עיר.</p>
+<div style="margin:16px 0">
+  <label>תקציב (₪)</label>
+  <input type="number" id="budget-input" value="3000000" step="100000" style="padding:10px;border-radius:8px;background:var(--surface);color:#fff;border:1px solid var(--border);font-family:'Heebo';font-size:16px;width:200px;margin-inline-start:8px">
+</div>
+<div class="budget-cols" id="budget-cols"></div>
+
+<!-- ── Timeline gantt ── -->
+<h2 style="margin-top:48px">ציר זמן — מתי כל מתחם יניב ערך?</h2>
+<p class="sub">כל פס מייצג את טווח הזמן המשוער. ירוק = אפשר לקנות, כתום = סיכון, אדום = לא מומלץ עכשיו.</p>
+<div class="timeline-wrap">
+  <canvas id="timelineChart"></canvas>
+</div>
+
+<footer>
+  <div class="disclaimer">⚠️ הנתונים מבוססים על מידע פומבי (ינואר-אפריל 2026). הציון הוא אינדיקציה בלבד — לא ייעוץ פיננסי.</div>
+</footer>
+
+</div>
+
+<script src="cities.js?v=20260418e"></script>
+<script>
+(function(){
+  preserveCityInLinks();
+
+  // ── Comparison table ──
+  const zones = getAllZonesFlat();
+  let sortCol = 'score';
+  let sortAsc = false;
+
+  const sortFns = {
+    city: (a,b) => a.city.localeCompare(b.city,'he'),
+    zone: (a,b) => a.zone.localeCompare(b.zone,'he'),
+    status: (a,b) => {const o={yes:0,maybe:1,no:2}; return (o[a.status]||9)-(o[b.status]||9);},
+    price: (a,b) => a.entryPriceMin - b.entryPriceMin,
+    premium: (a,b) => a.premiumMid - b.premiumMid,
+    timeline: (a,b) => a.timelineMidYears - b.timelineMidYears,
+    score: (a,b) => (a.valueScore||0) - (b.valueScore||0)
+  };
+
+  function renderTable() {
+    const sorted = [...zones].sort((a,b) => {
+      const v = (sortFns[sortCol] || sortFns.score)(a,b);
+      return sortAsc ? v : -v;
+    });
+    const statusBadge = s => {
+      const cls = s === 'yes' ? 'ready-yes' : s === 'maybe' ? 'ready-maybe' : 'ready-no';
+      const lbl = s === 'yes' ? 'כן' : s === 'maybe' ? 'אולי' : 'לא';
+      return `<span class="badge ${cls}">${lbl}</span>`;
+    };
+    const scoreBadge = v => {
+      if (v === null || v === undefined) return '-';
+      const cls = v >= 3.5 ? 'vs-high' : v >= 1.5 ? 'vs-mid' : 'vs-low';
+      return `<span class="value-score ${cls}">${v}</span>`;
+    };
+    document.getElementById('compare-body').innerHTML = sorted.map(z =>
+      `<tr>
+        <td class="city-col">${z.city}</td>
+        <td><a href="zones.html?city=${z.citySlug}#${z.zoneId}">${z.zone}</a></td>
+        <td>${statusBadge(z.status)}</td>
+        <td>${z.priceLabel}</td>
+        <td>${z.premiumLabel}</td>
+        <td>${z.timelineLabel}</td>
+        <td>${scoreBadge(z.valueScore)}</td>
+      </tr>`
+    ).join('');
+    // Update header arrows
+    document.querySelectorAll('.compare-table th').forEach(th => {
+      const col = th.dataset.col;
+      th.classList.toggle('sorted', col === sortCol);
+      const arrow = th.querySelector('.sort-arrow');
+      if (arrow) arrow.textContent = col === sortCol ? (sortAsc ? '▲' : '▼') : '⇅';
+    });
+  }
+
+  document.querySelectorAll('.compare-table th').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (sortCol === col) sortAsc = !sortAsc;
+      else { sortCol = col; sortAsc = col === 'score' ? false : true; }
+      renderTable();
+    });
+  });
+  renderTable();
+
+  // ── Budget comparison ──
+  function renderBudget() {
+    const budget = +document.getElementById('budget-input').value || 3000000;
+    const results = whatBudgetBuys(budget);
+    document.getElementById('budget-cols').innerHTML = results.map(r => {
+      const zoneCards = r.zones.length ? r.zones.map(z => {
+        const cls = z.status === 'yes' ? 'border-color:rgba(46,229,157,.4)' : z.status === 'maybe' ? 'border-color:rgba(255,181,71,.4)' : '';
+        const scoreBadge = z.valueScore ? `<span class="value-score ${z.valueScore >= 3.5 ? 'vs-high' : z.valueScore >= 1.5 ? 'vs-mid' : 'vs-low'}">${z.valueScore}</span>` : '';
+        return `<div class="budget-zone" style="${cls}">
+          <div class="bz-name">${z.zone} ${scoreBadge}</div>
+          <div class="bz-meta">${z.priceLabel} · פרמיה ${z.premium}</div>
+        </div>`;
+      }).join('') : '<div class="bz-meta" style="padding:8px">אין מתחמים בתקציב הזה</div>';
+      return `<div class="budget-col card"><h3>${r.city}</h3>${zoneCards}</div>`;
+    }).join('');
+  }
+  document.getElementById('budget-input').addEventListener('input', renderBudget);
+  renderBudget();
+
+  // ── Timeline gantt chart ──
+  const timelineZones = zones.filter(z => z.timelineMidYears > 0);
+  timelineZones.sort((a,b) => a.timelineMidYears - b.timelineMidYears);
+
+  const parseRange = label => {
+    const m = label.match(/(\d+)[–\-](\d+)/);
+    return m ? [parseInt(m[1]), parseInt(m[2])] : [0, 0];
+  };
+
+  new Chart(document.getElementById('timelineChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: timelineZones.map(z => z.zone.split('·')[0].trim() + ' (' + z.city + ')'),
+      datasets: [{
+        label: 'אופק זמן (שנים)',
+        data: timelineZones.map(z => {
+          const [min, max] = parseRange(z.timelineLabel);
+          return [min, max];
+        }),
+        backgroundColor: timelineZones.map(z =>
+          z.status === 'yes' ? 'rgba(46,229,157,.6)' :
+          z.status === 'maybe' ? 'rgba(255,181,71,.6)' : 'rgba(255,89,120,.5)'
+        ),
+        borderRadius: 6
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: c => {
+              const [min,max] = c.raw;
+              return `${min}-${max} שנים`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'שנים מהיום', color: '#8794a8', font: { family: 'Heebo' } },
+          min: 0, max: 15,
+          ticks: { color: '#8794a8' },
+          grid: { color: 'rgba(255,255,255,.05)' }
+        },
+        y: {
+          ticks: { color: '#c3cad9', font: { family: 'Heebo', size: 12 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>

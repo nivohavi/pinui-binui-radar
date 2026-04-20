@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>משאבים · רדאר פינוי-בינוי גבעתיים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.res-group{margin-bottom:32px}
+.res-group-title{font-size:13px;color:var(--muted);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.res-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all .2s;display:flex;flex-direction:column}
+.res-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.res-card h3{font-size:17px;margin-bottom:6px}
+.res-card .res-desc{color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:14px;flex:1}
+.res-card .res-link{background:var(--bg-2);border:1px solid var(--border);padding:8px 14px;border-radius:8px;font-size:13px;color:var(--accent);text-decoration:none;font-weight:600;text-align:center;display:block}
+.res-card .res-link:hover{background:var(--gradient);color:var(--bg);text-decoration:none;border-color:transparent}
+.res-tag{display:inline-block;background:rgba(124,92,255,.15);color:#b4a5ff;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:8px}
+.res-tag.free{background:rgba(46,229,157,.15);color:var(--good)}
+.res-tag.paid{background:rgba(255,181,71,.15);color:var(--warn)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <div class="nav-top">
+    <div class="logo"><a href="index.html">⬡ רדאר פינוי-בינוי</a></div>
+    <div id="city-selector-slot"></div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">בית</a>
+    <a href="zones.html">מתחמים</a>
+    <a href="prices.html">מחירים</a>
+    <a href="compare.html">השוואה</a>
+    <a href="search.html">חיפוש דירות</a>
+    <a href="glossary.html">מונחים</a>
+    <a href="score.html">ניקוד הזדמנות</a>
+    <a href="checklist.html">צ'קליסט</a>
+    <a href="workflow.html">איך עובדים</a>
+    <a href="resources.html" class="active">משאבים</a>
+  </div>
+</nav>
+
+<header>
+  <div class="kicker">כל הקישורים במקום אחד</div>
+  <h1>המשאבים <span class="accent">הרשמיים</span> שצריך לגלוש בהם</h1>
+  <p class="lead">כל הקישורים שיופיעו בדיאלוג שלך עם עו"ד מקרקעין, שמאי או יועץ מס. סודרו לפי שימוש: תוכניות, נדל"ן, מיסוי, משפטי, חדשות.</p>
+</header>
+
+<div class="res-group">
+  <div class="res-group-title">תוכניות ורגולציה</div>
+  <div class="res-grid">
+    <div class="res-card">
+      <span class="res-tag free">חינם · רשמי</span>
+      <h3>מבא"ת — מערכת התכנון הארצית</h3>
+      <p class="res-desc">החיפוש המרכזי של כל התוכניות במדינה. חיפוש לפי כתובת, גוש/חלקה או מס' תוכנית. כולל תשריטים והוראות.</p>
+      <a class="res-link" href="https://mavat.iplan.gov.il" target="_blank">mavat.iplan.gov.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · רשמי</span>
+      <h3>הרשות להתחדשות עירונית</h3>
+      <p class="res-desc">רשימת מתחמי פינוי-בינוי מוכרזים, הטבות מס, מדריכים לדיירים וליזמים.</p>
+      <a class="res-link" href="https://www.gov.il/he/departments/government_authority_for_urban_renewal" target="_blank">gov.il/urban-renewal ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · עירוני</span>
+      <h3>עיריית גבעתיים — הנדסה</h3>
+      <p class="res-desc">פרוטוקולי ועדה מקומית, תוכניות בתכנון, היתרי בנייה שהתקבלו, מידע מיוחד על גבעתיים.</p>
+      <a class="res-link" href="https://www.givatayim.muni.il" target="_blank">givatayim.muni.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · רשמי</span>
+      <h3>מינהל התכנון</h3>
+      <p class="res-desc">מסמכי מדיניות, הנחיות, תמ"אות ותוכניות ארציות הרלוונטיות גם לגבעתיים.</p>
+      <a class="res-link" href="https://www.gov.il/he/departments/ministry_of_interior_planning_administration" target="_blank">gov.il/planning ←</a>
+    </div>
+  </div>
+</div>
+
+<div class="res-group">
+  <div class="res-group-title">עסקאות ושווי נדל"ן</div>
+  <div class="res-grid">
+    <div class="res-card">
+      <span class="res-tag free">חינם · רשמי</span>
+      <h3>nadlan.gov.il — עסקאות אמת</h3>
+      <p class="res-desc">כל עסקאות הנדל"ן שדווחו לרשות המיסים. הבסיס להערכת מחיר אמיתי באזור.</p>
+      <a class="res-link" href="https://www.nadlan.gov.il" target="_blank">nadlan.gov.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag paid">חלקי חינם</span>
+      <h3>Madlan</h3>
+      <p class="res-desc">דירות למכירה + מפות חמות של מחירי שוק. טוב להערכה ראשונית.</p>
+      <a class="res-link" href="https://www.madlan.co.il" target="_blank">madlan.co.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag paid">חלקי חינם</span>
+      <h3>Yad2 נדל"ן</h3>
+      <p class="res-desc">הלוח הגדול בישראל. כולל דירות למכירה, השכרה, ומודעות מקבלני/יזמים.</p>
+      <a class="res-link" href="https://www.yad2.co.il/realestate" target="_blank">yad2.co.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · API</span>
+      <h3>data.gov.il — API CKAN</h3>
+      <p class="res-desc">גישה פרוגרמטית לעסקאות, נתוני למ"ס, רשימת רחובות ועוד. לשימוש מתקדם.</p>
+      <a class="res-link" href="https://data.gov.il/dataset" target="_blank">data.gov.il ←</a>
+    </div>
+  </div>
+</div>
+
+<div class="res-group">
+  <div class="res-group-title">מסמכים משפטיים</div>
+  <div class="res-grid">
+    <div class="res-card">
+      <span class="res-tag paid">~15 ש"ח</span>
+      <h3>טאבו אונליין — נסחים</h3>
+      <p class="res-desc">הוצאת נסח טאבו בתשלום נמוך, תוך דקות. חובה לפני כל קנייה.</p>
+      <a class="res-link" href="https://www.gov.il/he/departments/general/real_estate_registration" target="_blank">טאבו אונליין ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · רשמי</span>
+      <h3>חוק פינוי-בינוי — נוסח מלא</h3>
+      <p class="res-desc">הנוסח המעודכן של החוק, כולל סעיף 23 על דייר סרבן.</p>
+      <a class="res-link" href="https://www.nevo.co.il" target="_blank">nevo.co.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · ספריה</span>
+      <h3>פסקי דין בפינוי-בינוי</h3>
+      <p class="res-desc">מאגר פסקי דין של בתי משפט בעניין סעיף 23 וסרבנים. עולה רבע שעה ללמוד.</p>
+      <a class="res-link" href="https://www.takdin.co.il" target="_blank">takdin.co.il ←</a>
+    </div>
+  </div>
+</div>
+
+<div class="res-group">
+  <div class="res-group-title">מיסוי</div>
+  <div class="res-grid">
+    <div class="res-card">
+      <span class="res-tag free">חינם · רשמי</span>
+      <h3>מחשבון מס רכישה</h3>
+      <p class="res-desc">המחשבון הרשמי של רשות המיסים. בדוק לפי סטטוס דירה יחידה או משקיע.</p>
+      <a class="res-link" href="https://www.gov.il/he/service/purchase-tax-calculator" target="_blank">gov.il/purchase-tax ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · רשמי</span>
+      <h3>מס שבח — הנחיות</h3>
+      <p class="res-desc">פטורים בפינוי-בינוי, חישוב מס שבח למשקיעים, טפסים.</p>
+      <a class="res-link" href="https://www.gov.il/he/departments/topics/real_estate_taxes" target="_blank">gov.il/real-estate-taxes ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם</span>
+      <h3>אגרות ועדת תכנון</h3>
+      <p class="res-desc">כשמגישים התנגדות או בקשת מידע — יש אגרות. הטבלה הרשמית באתר העירייה.</p>
+      <a class="res-link" href="https://www.givatayim.muni.il" target="_blank">givatayim.muni.il ←</a>
+    </div>
+  </div>
+</div>
+
+<div class="res-group">
+  <div class="res-group-title">חדשות ומעקב</div>
+  <div class="res-grid">
+    <div class="res-card">
+      <span class="res-tag paid">מנוי</span>
+      <h3>גלובס — נדל"ן</h3>
+      <p class="res-desc">חדשות עסקיות עדכניות על פרויקטים, יזמים, עסקאות בגבעתיים ובמרכז.</p>
+      <a class="res-link" href="https://www.globes.co.il/news/RealEstate.aspx" target="_blank">globes.co.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם</span>
+      <h3>ynet — נדל"ן</h3>
+      <p class="res-desc">כיסוי נרחב של התחדשות עירונית, תמ"אות, שוק הנדל"ן הכללי.</p>
+      <a class="res-link" href="https://www.ynet.co.il/real-estate" target="_blank">ynet.co.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag paid">מנוי</span>
+      <h3>TheMarker — נדל"ן</h3>
+      <p class="res-desc">ניתוחים מעמיקים, שמות יזמים, מעקב פרויקטים גדולים.</p>
+      <a class="res-link" href="https://www.themarker.com/realestate" target="_blank">themarker.com ←</a>
+    </div>
+  </div>
+</div>
+
+<div class="res-group">
+  <div class="res-group-title">כלי AI / MCP לסריקה</div>
+  <div class="res-grid">
+    <div class="res-card">
+      <span class="res-tag free">ב-Cowork</span>
+      <h3>Claude in Chrome</h3>
+      <p class="res-desc">סוכן שמדפדף עבורך ב-mavat, nadlan, יד2. טוב לסריקה חוזרת של עדכונים.</p>
+      <a class="res-link" href="https://www.claude.com" target="_blank">claude.com ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">רישום חינם</span>
+      <h3>data.gov.il / CKAN API</h3>
+      <p class="res-desc">לבניית סקריפט שמושך עסקאות חדשות בגבעתיים מדי לילה לטבלה שלך.</p>
+      <a class="res-link" href="https://data.gov.il/dataset" target="_blank">data.gov.il ←</a>
+    </div>
+    <div class="res-card">
+      <span class="res-tag free">חינם · עברית</span>
+      <h3>agentskills.co.il — אינדקס</h3>
+      <p class="res-desc">אינדקס מפותח של סקילים ו-MCP בעברית — אולי תמצא שם סקיל למחקר נדל"ן.</p>
+      <a class="res-link" href="https://agentskills.co.il/he" target="_blank">agentskills.co.il ←</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="disclaimer">
+    ⚠️ הקישורים נבדקו בתאריך הכנת הדף. אתרי הממשלה משתנים לעיתים — אם הקישור לא עובד, חפש את שם השירות ב-gov.il.
+  </div>
+  <div>© 2026 · כלי עזר לאיתור הזדמנויות פינוי-בינוי בגבעתיים · לא ייעוץ משפטי או פיננסי</div>
+</footer>
+
+</div>
+<script src="cities.js?v=20260418e"></script>
+<script>
+(function(){
+  const city = getCurrentCity();
+  document.getElementById('city-selector-slot').innerHTML = buildCitySelector(city.slug);
+  preserveCityInLinks();
+})();
+</script>
+</body>
+</html>

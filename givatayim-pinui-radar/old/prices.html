@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>מחירים · רדאר פינוי-בינוי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+.big-num-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:32px}
+.big-num{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+.big-num .val{font-size:28px;font-weight:900;letter-spacing:-1px;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+.big-num .lbl{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+.big-num .trend{display:inline-block;margin-top:4px;font-size:11px;padding:2px 8px;border-radius:6px;background:rgba(46,229,157,.15);color:var(--good);font-weight:600}
+.price-table{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:24px}
+.price-table table{width:100%;border-collapse:collapse}
+.price-table th{background:var(--bg-2);padding:12px 14px;text-align:right;font-weight:700;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border)}
+.price-table td{padding:14px;border-bottom:1px solid var(--border);font-size:14px}
+.price-table tr:last-child td{border-bottom:none}
+.price-table tr:hover{background:var(--bg-2)}
+.price-table .zone-name{font-weight:700;color:var(--text)}
+.price-table .price-val{font-weight:700;color:var(--accent);font-family:'Heebo',sans-serif}
+.price-table .old{color:var(--muted)}
+.price-table .new{color:var(--good);font-weight:700}
+.price-table .delta{font-size:12px;padding:2px 6px;border-radius:5px;background:rgba(124,92,255,.15);color:#b4a5ff;font-weight:600}
+.chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:28px}
+.chart-wrap h3{margin-bottom:16px}
+.chart-container{height:340px;position:relative}
+.price-calc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:28px}
+.calc-row{display:grid;grid-template-columns:1fr 140px;gap:14px;margin-bottom:14px;align-items:center}
+.calc-row label{font-size:14px;color:var(--text)}
+.calc-row input, .calc-row select{background:var(--bg-2);border:1px solid var(--border);padding:10px 12px;border-radius:8px;color:var(--text);font-family:inherit;font-size:14px;text-align:center}
+.calc-row input:focus, .calc-row select:focus{outline:none;border-color:var(--accent)}
+.calc-result{background:var(--bg-2);border-right:3px solid var(--accent);padding:16px 18px;border-radius:10px;margin-top:18px}
+.calc-result .res-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.calc-result .res-val{font-size:24px;font-weight:800;color:var(--text)}
+.calc-result .res-sub{font-size:13px;color:var(--muted);margin-top:4px}
+.warning-box{background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.3);border-radius:12px;padding:18px;margin:24px 0;font-size:14px;line-height:1.7}
+.warning-box strong{color:var(--warn)}
+.bottom-card{border:1px solid var(--border);background:var(--card);border-radius:14px;padding:24px}
+.bottom-card .price-tag{color:var(--good);font-weight:700;margin-bottom:6px;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <div class="nav-top">
+    <div class="logo"><a href="index.html">⬡ רדאר פינוי-בינוי</a></div>
+    <div id="city-selector-slot"></div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">בית</a>
+    <a href="zones.html">מתחמים</a>
+    <a href="prices.html" class="active">מחירים</a>
+    <a href="compare.html">השוואה</a>
+    <a href="search.html">חיפוש דירות</a>
+    <a href="glossary.html">מונחים</a>
+    <a href="score.html">ניקוד הזדמנות</a>
+    <a href="checklist.html">צ'קליסט</a>
+    <a href="workflow.html">איך עובדים</a>
+    <a href="resources.html">משאבים</a>
+  </div>
+</nav>
+
+<header>
+  <div class="kicker">מה באמת משלמים · נתונים מ-2025-2026</div>
+  <h1>כמה זה <span class="accent">עולה</span> ב<span id="city-name-hero"></span> — ובאיזה אזור המחיר שווה</h1>
+  <p class="lead">המחירים הרשמיים של כל שכונה, מחירי פתיחה של הפרויקטים החדשים, ומחשבון שמראה לך מה תשלם בפועל. הנתונים מבוססים על דיווחי nadlan.gov.il, מדלן, גלובס, כלכליסט, ואתרי היזמים (ינואר-אפריל 2026).</p>
+</header>
+
+<div class="big-num-row" id="big-nums"></div>
+
+<h2 style="font-size:22px;margin-bottom:14px">מחיר למ"ר לפי שכונה</h2>
+<div class="price-table">
+  <table>
+    <thead>
+      <tr>
+        <th>שכונה</th>
+        <th>יד שנייה · ישנה</th>
+        <th>יד שנייה · משופצת/חדשה</th>
+        <th>פרמיית פינוי-בינוי</th>
+      </tr>
+    </thead>
+    <tbody id="neighborhoods-body"></tbody>
+  </table>
+</div>
+
+<div class="warning-box">
+  <strong>איך לקרוא את הטבלה:</strong> "יד שנייה ישנה" = דירה בבניין מ-1960-80 ללא שיפוץ. "משופצת/חדשה" = דירה חדשה מקבלן או משופצת משמעותית. "פרמיית פינוי-בינוי" = כמה יותר משלמים בדירה ישנה שנמצאת במתחם שמיועד להתחדש — כלומר, המחיר כבר מגלם חלק מהפוטנציאל.
+</div>
+
+<h2 style="font-size:22px;margin:32px 0 14px">מחירי דירות חדשות לפי פרויקט</h2>
+<div class="price-table">
+  <table>
+    <thead>
+      <tr>
+        <th>פרויקט</th>
+        <th>3 חדרים</th>
+        <th>4 חדרים</th>
+        <th>5 חדרים</th>
+        <th>6 חד' / פנטהאוז</th>
+      </tr>
+    </thead>
+    <tbody id="projects-body"></tbody>
+  </table>
+</div>
+
+<div class="chart-wrap">
+  <h3>מחיר למ"ר · השוואה בין שכונות</h3>
+  <div class="chart-container"><canvas id="priceChart"></canvas></div>
+</div>
+
+<h2 style="font-size:22px;margin:32px 0 14px">מחשבון — כמה באמת תשלם</h2>
+
+<div class="price-calc">
+  <div class="calc-row">
+    <label>בחר מתחם (אופציונלי)</label>
+    <select class="zone-select" id="zone-select">
+      <option value="">— בחר מתחם למילוי אוטומטי —</option>
+    </select>
+  </div>
+  <div class="calc-row">
+    <label>מחיר הדירה (מבוקש)</label>
+    <input type="number" id="price" value="3500000" step="100000">
+  </div>
+  <div class="calc-row">
+    <label>הון עצמי</label>
+    <input type="number" id="equity" value="1000000" step="50000">
+  </div>
+  <div class="calc-row">
+    <label>סטטוס דירה</label>
+    <select id="status">
+      <option value="first">דירה יחידה</option>
+      <option value="second">דירה שנייה / משקיע</option>
+    </select>
+  </div>
+  <div class="calc-row">
+    <label>ריבית משכנתא (שנתית)</label>
+    <input type="number" id="rate" value="4.5" step="0.1">
+  </div>
+  <div class="calc-row">
+    <label>תקופת משכנתא (שנים)</label>
+    <input type="number" id="years" value="25" step="5">
+  </div>
+
+  <div class="calc-result">
+    <div class="res-label">מס רכישה</div>
+    <div class="res-val" id="resTax">—</div>
+  </div>
+  <div class="calc-result">
+    <div class="res-label">החזר חודשי · משכנתא</div>
+    <div class="res-val" id="resMonthly">—</div>
+    <div class="res-sub" id="resLoan">—</div>
+  </div>
+  <div class="calc-result">
+    <div class="res-label">סה"כ עלות אמיתית (כולל ריבית)</div>
+    <div class="res-val" id="resTotal">—</div>
+    <div class="res-sub" id="resInterest">—</div>
+  </div>
+</div>
+
+<div class="warning-box">
+  <strong>זהירות:</strong> המחשבון נותן טווח כללי. מס רכישה מחושב לפי מדרגות 2026 (דירה יחידה — 0% עד 2.1M, 3.5% עד 2.5M, 5% עד 6.05M, 8% עד 20.2M, 10% מעל. משקיע — 8% עד 6.05M, 10% עד 20.2M, 12% מעל). היטל השבחה, עו"ד, ושמאי לא כלולים.
+</div>
+
+<h2 style="font-size:22px;margin:32px 0 14px">השורה התחתונה — מה אפשר לקנות היום</h2>
+<div class="grid-2" id="bottom-line"></div>
+
+<footer>
+  <div class="disclaimer">
+    ⚠️ המחירים מבוססים על דיווחים פומביים בחודשים האחרונים (ינואר-אפריל 2026). השוק משתנה ותוכל לקבל טווח אמיתי רק מבדיקה ב-<a href="https://www.nadlan.gov.il" target="_blank">nadlan.gov.il</a> ומפגישות עם יזמים. לא ייעוץ פיננסי.
+  </div>
+  <div>© 2026 · כלי עזר לאיתור הזדמנויות פינוי-בינוי · לא ייעוץ משפטי או פיננסי</div>
+</footer>
+
+</div>
+
+<script src="cities.js?v=20260418e"></script>
+<script>
+(function(){
+  const city = getCurrentCity();
+
+  // Zone selector for auto-fill
+  const zsel = document.getElementById('zone-select');
+  city.zones.forEach(z => {
+    const min = parsePriceMin(z.prices.rows[0] ? z.prices.rows[0][1] : '0');
+    if (min > 0) {
+      const opt = document.createElement('option');
+      opt.value = min;
+      opt.textContent = z.name + ' (' + z.prices.rows[0][1] + ')';
+      zsel.appendChild(opt);
+    }
+  });
+  zsel.addEventListener('change', function() {
+    if (this.value) {
+      document.getElementById('price').value = this.value;
+      calc();
+    }
+  });
+
+  document.title = `מחירים · ${city.name} · רדאר פינוי-בינוי`;
+  document.getElementById('city-name-hero').textContent = city.name;
+
+  // Big nums
+  document.getElementById('big-nums').innerHTML = city.prices.bigNums.map(([val,lbl,trend]) =>
+    `<div class="big-num">
+      <div class="val">${val}</div>
+      <div class="lbl">${lbl}</div>
+      ${trend ? `<span class="trend">${trend}</span>` : ''}
+    </div>`
+  ).join('');
+
+  // Neighborhoods
+  document.getElementById('neighborhoods-body').innerHTML = city.prices.neighborhoods.map(([name,oldP,newP,delta]) =>
+    `<tr>
+      <td class="zone-name">${name}</td>
+      <td class="old">${oldP}</td>
+      <td class="new">${newP}</td>
+      <td><span class="delta">${delta}</span></td>
+    </tr>`
+  ).join('');
+
+  // Projects
+  document.getElementById('projects-body').innerHTML = city.prices.projects.map(([name,note,r3,r4,r5,r6]) =>
+    `<tr>
+      <td class="zone-name">${name}<br><span style="font-size:12px;color:var(--muted);font-weight:400">${note}</span></td>
+      <td class="price-val">${r3}</td>
+      <td class="price-val">${r4}</td>
+      <td class="price-val">${r5}</td>
+      <td class="price-val">${r6}</td>
+    </tr>`
+  ).join('');
+
+  // Bottom line cards
+  const bottomColors = ['rgba(46,229,157,.3)', 'rgba(255,181,71,.3)'];
+  const bottomHeads = ['var(--good)', 'var(--warn)'];
+  const bottomLabels = ['בטוח', 'סיכון/תשואה'];
+  document.getElementById('bottom-line').innerHTML = city.prices.bottomLine.map(([price, title, desc], i) =>
+    `<div class="card" style="border-color:${bottomColors[i]||'var(--border)'}">
+      <div class="price-tag" style="color:${bottomHeads[i]||'var(--accent)'}">${bottomLabels[i]||''} · ${price}</div>
+      <h3>${title}</h3>
+      <p class="sub">${desc}</p>
+    </div>`
+  ).join('');
+
+  // Chart
+  const ctx = document.getElementById('priceChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: city.prices.chartLabels,
+      datasets: [
+        {label:'יד שנייה ישנה',data:city.prices.chartOld,backgroundColor:'rgba(124,92,255,.6)',borderRadius:6},
+        {label:'חדש/משופץ',data:city.prices.chartNew,backgroundColor:'rgba(0,212,255,.7)',borderRadius:6}
+      ]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{color:'#c3cad9',font:{family:'Heebo',size:13}}},
+        tooltip:{callbacks:{label:c=>c.dataset.label+': ₪'+c.parsed.y+'K למ"ר'}}
+      },
+      scales:{
+        y:{ticks:{color:'#8794a8',callback:v=>'₪'+v+'K'},grid:{color:'rgba(255,255,255,.05)'}},
+        x:{ticks:{color:'#8794a8',font:{family:'Heebo'}},grid:{display:false}}
+      }
+    }
+  });
+
+  // Calculator
+  function calc(){
+    const price = +document.getElementById('price').value || 0;
+    const equity = +document.getElementById('equity').value || 0;
+    const status = document.getElementById('status').value;
+    const rate = (+document.getElementById('rate').value || 0)/100/12;
+    const years = +document.getElementById('years').value || 25;
+    const months = years*12;
+    const loan = Math.max(0,price-equity);
+
+    let tax = 0;
+    if(status==='first'){
+      const brackets=[[2100000,0],[2500000,.035],[6055000,.05],[20185000,.08],[Infinity,.1]];
+      let prev=0;
+      for(const [limit,r] of brackets){
+        if(price<=limit){tax+=(price-prev)*r;break}
+        else{tax+=(limit-prev)*r;prev=limit}
+      }
+    } else {
+      const brackets=[[6055000,.08],[20185000,.1],[Infinity,.12]];
+      let prev=0;
+      for(const [limit,r] of brackets){
+        if(price<=limit){tax+=(price-prev)*r;break}
+        else{tax+=(limit-prev)*r;prev=limit}
+      }
+    }
+
+    const monthly = rate>0 ? loan*rate*Math.pow(1+rate,months)/(Math.pow(1+rate,months)-1) : loan/months;
+    const totalInterest = monthly*months - loan;
+    const totalCost = price + tax + totalInterest;
+
+    const fmt = n => '₪'+Math.round(n).toLocaleString('he-IL');
+    document.getElementById('resTax').textContent = fmt(tax);
+    document.getElementById('resMonthly').textContent = fmt(monthly) + ' / חודש';
+    document.getElementById('resLoan').textContent = 'משכנתא של ' + fmt(loan) + ' ל-' + years + ' שנים';
+    document.getElementById('resTotal').textContent = fmt(totalCost);
+    document.getElementById('resInterest').textContent = 'ריבית מצטברת: ' + fmt(totalInterest);
+  }
+  ['price','equity','status','rate','years'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
+  calc();
+
+  // City selector
+  document.getElementById('city-selector-slot').innerHTML = buildCitySelector(city.slug);
+  preserveCityInLinks();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>איך עובדים · רדאר פינוי-בינוי גבעתיים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.step{display:grid;grid-template-columns:60px 1fr;gap:20px;margin-bottom:20px}
+@media(max-width:700px){.step{grid-template-columns:1fr}}
+.step-num{width:60px;height:60px;background:var(--gradient);color:var(--bg);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;flex-shrink:0}
+.step-body{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px}
+.step-body h3{margin-bottom:8px}
+.step-body p{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:12px}
+.step-body p:last-child{margin-bottom:0}
+.tools-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tool{background:var(--bg-2);border:1px solid var(--border);padding:6px 12px;border-radius:8px;font-size:12px;color:var(--text);display:inline-flex;align-items:center;gap:6px}
+.tool strong{color:var(--accent)}
+.mcp-explain{background:rgba(124,92,255,.08);border:1px solid rgba(124,92,255,.25);border-radius:12px;padding:20px;margin-bottom:32px}
+.mcp-explain h3{color:#b4a5ff;margin-bottom:10px}
+.mcp-explain p{font-size:14px;line-height:1.7;color:var(--text)}
+.divider{text-align:center;color:var(--muted);font-size:13px;margin:32px 0 20px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <div class="nav-top">
+    <div class="logo"><a href="index.html">⬡ רדאר פינוי-בינוי</a></div>
+    <div id="city-selector-slot"></div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">בית</a>
+    <a href="zones.html">מתחמים</a>
+    <a href="prices.html">מחירים</a>
+    <a href="compare.html">השוואה</a>
+    <a href="search.html">חיפוש דירות</a>
+    <a href="glossary.html">מונחים</a>
+    <a href="score.html">ניקוד הזדמנות</a>
+    <a href="checklist.html">צ'קליסט</a>
+    <a href="workflow.html" class="active">איך עובדים</a>
+    <a href="resources.html">משאבים</a>
+  </div>
+</nav>
+
+<header>
+  <div class="kicker">זרימת עבודה מומלצת</div>
+  <h1>איך <span class="accent">באמת</span> מוצאים הזדמנות — צעד אחר צעד</h1>
+  <p class="lead">הזרימה מחולקת ל-6 צעדים. לכל צעד — מה עושים בעברית פשוטה, ואילו כלים (אתרים, סקילים ו-MCPs) יכולים לחסוך לך שעות. אין חובה להשתמש בכל הכלים — גם עם מעט מהם תהיה יותר מוכן מרוב הקונים.</p>
+</header>
+
+<div class="mcp-explain">
+  <h3>מה זה סקיל? מה זה MCP?</h3>
+  <p><strong>סקיל</strong> = סט הוראות מוכנות ל-AI לבצע משימה ספציפית (למשל: "בנה מצגת", "בדוק קוד"). <strong>MCP</strong> (Model Context Protocol) = חיבור שמאפשר ל-AI לדבר עם שירות חיצוני (Google Drive, Gmail, או במקרה שלנו — מאגרי מידע ממשלתיים). בעולם פינוי-בינוי אין עדיין MCP ייעודי, אבל יש דרכים לאלתר — ראה למטה.</p>
+</div>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-body">
+    <h3>מיפוי האזורים הפעילים בגבעתיים</h3>
+    <p>המטרה: לדעת אילו מתחמים פעילים כרגע ומה הסטטוס שלהם. במקום להסתמך על שמועות — הולכים למקור.</p>
+    <p><strong>מה עושים:</strong> נכנסים ל-<a href="https://mavat.iplan.gov.il" target="_blank">מבא"ת</a>, מחפשים תוכניות פעילות במחוז תל אביב → גבעתיים. מסמנים על מפה את כל התוכניות שבהן הסטטוס הוא "מופקדת" או "מאושרת".</p>
+    <div class="tools-row">
+      <span class="tool"><strong>אתר:</strong> mavat.iplan.gov.il</span>
+      <span class="tool"><strong>Agent:</strong> Claude in Chrome — יכול לדפדף את המערכת ולשלוף רשימות</span>
+      <span class="tool"><strong>MCP:</strong> אין ייעודי — אבל MCP של filesystem לשמירת נתונים</span>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-body">
+    <h3>חיפוש עסקאות דומות — בסיס השוואה</h3>
+    <p>כדי לדעת אם מחיר סביר — צריך להשוות למה שנקנה באמת באזור, לא למה שמבקשים במודעות.</p>
+    <p><strong>מה עושים:</strong> חיפוש ב-<a href="https://www.nadlan.gov.il" target="_blank">nadlan.gov.il</a> לפי רחובות — קולטים את כל העסקאות ב-12 החודשים האחרונים. מייצרים טבלה עם מחיר למ"ר לפי קומה ושנה.</p>
+    <div class="tools-row">
+      <span class="tool"><strong>אתר:</strong> nadlan.gov.il</span>
+      <span class="tool"><strong>API:</strong> CKAN של data.gov.il (פתוח, בחינם)</span>
+      <span class="tool"><strong>סקיל:</strong> xlsx — לארגון הנתונים בגיליון</span>
+      <span class="tool"><strong>MCP:</strong> Google Sheets / Excel — לשמור ולעדכן</span>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-body">
+    <h3>זיהוי נכסים עם פוטנציאל פינוי-בינוי</h3>
+    <p>הצטלבות של התוכניות עם הנכסים למכירה — שם נמצאות ההזדמנויות האמיתיות.</p>
+    <p><strong>מה עושים:</strong> מפרסמים בלוחות Yad2/Madlan דירות ברחובות של המתחמים מצעד 1. מוסיפים עמודת "סטטוס תוכנית" לכל דירה. דירות במתחם מופקד/מאושר = מועמדות.</p>
+    <div class="tools-row">
+      <span class="tool"><strong>אתרים:</strong> Yad2, Madlan, OnMap, Homeless</span>
+      <span class="tool"><strong>Agent:</strong> Claude in Chrome — סריקה אוטומטית של לוחות</span>
+      <span class="tool"><strong>סקיל:</strong> web-scraping + תיוג אוטומטי</span>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">4</div>
+  <div class="step-body">
+    <h3>אימות סטטוס הפרויקט הספציפי</h3>
+    <p>כל שני בניינים במתחם אחד יכולים להיות במצבים שונים — אחד חתם עם יזם, השני עדיין לא.</p>
+    <p><strong>מה עושים:</strong> קוראים פרוטוקולי ועדה מקומית של עיריית גבעתיים (פורסמים באתר העירייה). מחפשים דיונים בתוכניות הרלוונטיות. מסמנים: האם יש יזם? כמה חתמו? מה התאריך?</p>
+    <div class="tools-row">
+      <span class="tool"><strong>אתר:</strong> givatayim.muni.il</span>
+      <span class="tool"><strong>סקיל:</strong> pdf — לקרוא את הפרוטוקולים</span>
+      <span class="tool"><strong>MCP:</strong> Notion / Monday — לתעד ממצאים</span>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">5</div>
+  <div class="step-body">
+    <h3>דירוג הזדמנויות — איזה פרויקט הכי משתלם</h3>
+    <p>אחרי שיש רשימה של 5-20 נכסים מועמדים — צריך למיין לפי פוטנציאל תשואה וסיכון.</p>
+    <p><strong>מה עושים:</strong> משתמשים ב<a href="score.html">מחשבון הניקוד</a> בדף הזה — עוברים נכס נכס, ממלאים את 7 הגורמים. ממיינים לפי ניקוד סופי. הראשונים ברשימה — יוצאים לסיבוב שני של בדיקה.</p>
+    <div class="tools-row">
+      <span class="tool"><strong>בדף:</strong> <a href="score.html">ניקוד הזדמנות</a></span>
+      <span class="tool"><strong>סקיל:</strong> xlsx לניהול טבלה מרכזית</span>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">6</div>
+  <div class="step-body">
+    <h3>בדיקות מעמיקות + עו"ד</h3>
+    <p>אחרי שסינני 3-5 מועמדות אמיתיות — לוקחים עו"ד מקרקעין עם ניסיון בפינוי-בינוי ומעבירים את הצ'קליסט.</p>
+    <p><strong>מה עושים:</strong> עוברים את <a href="checklist.html">26 סעיפי הצ'קליסט</a>. כל סעיף שלא סגור — או שהעו"ד עוזר לסגור, או שהוא דגל אדום. אם יותר משני דגלים אדומים — מחליפים נכס.</p>
+    <div class="tools-row">
+      <span class="tool"><strong>בדף:</strong> <a href="checklist.html">צ'קליסט 26 סעיפים</a></span>
+      <span class="tool"><strong>אנוש:</strong> עו"ד מקרקעין + שמאי</span>
+      <span class="tool"><strong>MCP:</strong> Google Drive לשיתוף מסמכים עם העו"ד</span>
+    </div>
+  </div>
+</div>
+
+<div class="divider">· · ·</div>
+
+<h2>פערים — מה אין כרגע ב-AI שיקל על המשימה</h2>
+<p class="lead">הנה הנקודות שבהן ה-AI עדיין לא מצליח לחסוך את כל העבודה — כדאי לדעת מראש.</p>
+
+<div class="grid-3">
+  <div class="card">
+    <h3>אין MCP למבא"ת</h3>
+    <p class="sub">אין חיבור אוטומטי שמאפשר ל-AI לשאול את מערכת מבא"ת שאלות. פתרון: Claude in Chrome גולש ומחלץ.</p>
+  </div>
+  <div class="card">
+    <h3>עסקאות נדל"ן בפיגור</h3>
+    <p class="sub">nadlan.gov.il מפרסם עסקאות עם פיגור של 2-4 חודשים. מה שהיה אתמול — יופיע רק בקיץ.</p>
+  </div>
+  <div class="card">
+    <h3>אין דירוג יזמים רשמי</h3>
+    <p class="sub">הרשות להתחדשות עירונית לא מדרגת יזמים. צריך למצוא בכוחות עצמך בחדשות / פורומים / עורכי דין.</p>
+  </div>
+</div>
+
+<footer>
+  <div class="disclaimer">
+    ⚠️ הזרימה מתארת גישה מובנית. היא לא מחליפה את הידע של מומחים — רק עוזרת להגיע אליהם יותר מוכן.
+  </div>
+  <div>© 2026 · כלי עזר לאיתור הזדמנויות פינוי-בינוי בגבעתיים · לא ייעוץ משפטי או פיננסי</div>
+</footer>
+
+</div>
+<script src="cities.js?v=20260418e"></script>
+<script>
+(function(){
+  const city = getCurrentCity();
+  document.getElementById('city-selector-slot').innerHTML = buildCitySelector(city.slug);
+  preserveCityInLinks();
+})();
+</script>
+</body>
+</html>

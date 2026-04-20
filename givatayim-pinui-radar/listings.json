@@ -1,0 +1,891 @@
+{
+  "_meta": {
+    "updated": "2026-04-18",
+    "source": "yad2.co.il (scraped via Chrome). כל הדירות לדוגמה מבוססות על מודעות Yad2 בלבד. מומלץ לחפש גם ב-Madlan, Facebook ו-nadlan.gov.il.",
+    "note": "דירות אמיתיות שממופות לפי שכונה לאזורי פינוי-בינוי הרלוונטיים ביותר. לא כל דירה היא בהכרח מועמדת לפינוי-בינוי — זו מערכת יחוס למחירים באזור."
+  },
+  "byZone": {
+    "east": [
+      {
+        "title": "עין גדי 16",
+        "price": "₪ 2,399,999",
+        "rooms": "3",
+        "sqm": "63",
+        "floor": "1",
+        "hood": "שינקין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/h4pg7erj",
+        "meta": "3 ח' · 63 מ״ר · ק' 1"
+      },
+      {
+        "title": "אפנר 6",
+        "price": "₪ 2,600,000",
+        "rooms": "3.5",
+        "sqm": "68",
+        "floor": "2",
+        "hood": "שינקין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/au12zguk",
+        "meta": "3.5 ח' · 68 מ״ר · ק' 2"
+      },
+      {
+        "title": "שיינקין",
+        "price": "₪ 2,650,000",
+        "rooms": "3.5",
+        "sqm": "100",
+        "floor": "3",
+        "hood": "שינקין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/txubitdc",
+        "meta": "3.5 ח' · 100 מ״ר · ק' 3"
+      },
+      {
+        "title": "אפנר 1",
+        "price": "₪ 2,740,000",
+        "rooms": "3",
+        "sqm": "93",
+        "floor": "1",
+        "hood": "שינקין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/sw2anlux",
+        "meta": "3 ח' · 93 מ״ר · ק' 1"
+      },
+      {
+        "title": "שיינקין 5",
+        "price": "₪ 2,850,000",
+        "rooms": "3",
+        "sqm": "73",
+        "floor": "3",
+        "hood": "שינקין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/yi0ejd8a",
+        "meta": "3 ח' · 73 מ״ר · ק' 3"
+      },
+      {
+        "title": "כצנלסון 107",
+        "price": "₪ 2,900,000",
+        "rooms": "4",
+        "sqm": "75",
+        "floor": "4",
+        "hood": "בורוכוב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/63rx2and",
+        "meta": "4 ח' · 75 מ״ר · ק' 4"
+      },
+      {
+        "title": "רמה 1",
+        "price": "₪ 2,950,000",
+        "rooms": "3",
+        "sqm": "90",
+        "floor": "2",
+        "hood": "גבעת קוזלובסקי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/ed75524w",
+        "meta": "3 ח' · 90 מ״ר · ק' 2"
+      },
+      {
+        "title": "שיינקין 48",
+        "price": "₪ 3,230,000",
+        "rooms": "3",
+        "sqm": "84",
+        "floor": "3",
+        "hood": "שינקין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/959hzg2v",
+        "meta": "3 ח' · 84 מ״ר · ק' 3"
+      }
+    ],
+    "aviv": [
+      {
+        "title": "כצנלסון",
+        "price": "₪ 2,290,000",
+        "rooms": "3",
+        "sqm": "90",
+        "floor": "6",
+        "hood": "פועלי הרכבת",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/sefjekgp",
+        "meta": "3 ח' · 90 מ״ר · ק' 6"
+      },
+      {
+        "title": "סירקין",
+        "price": "₪ 2,670,000",
+        "rooms": "4",
+        "sqm": "100",
+        "floor": "1",
+        "hood": "פועלי הרכבת",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/dh0txnao",
+        "meta": "4 ח' · 100 מ״ר · ק' 1"
+      },
+      {
+        "title": "סירקין 35",
+        "price": "₪ 2,950,000",
+        "rooms": "4",
+        "sqm": "90",
+        "floor": "1",
+        "hood": "פועלי הרכבת",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/45ad4ekm",
+        "meta": "4 ח' · 90 מ״ר · ק' 1"
+      },
+      {
+        "title": "פועלי הרכבת",
+        "price": "₪ 3,350,000",
+        "rooms": "4",
+        "sqm": "106",
+        "floor": "1",
+        "hood": "פועלי הרכבת",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/cdft6bym",
+        "meta": "4 ח' · 106 מ״ר · ק' 1"
+      }
+    ],
+    "bengurion": [
+      {
+        "title": "וייצמן 16",
+        "price": "₪ 2,360,000",
+        "rooms": "3",
+        "sqm": "71",
+        "floor": "1",
+        "hood": "הל\"ה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/ey1ie33d",
+        "meta": "3 ח' · 71 מ״ר · ק' 1"
+      },
+      {
+        "title": "גוש עציון",
+        "price": "₪ 2,550,000",
+        "rooms": "3",
+        "sqm": "80",
+        "floor": "2",
+        "hood": "הל\"ה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/56huhmvu",
+        "meta": "3 ח' · 80 מ״ר · ק' 2"
+      },
+      {
+        "title": "הל\"ה 2",
+        "price": "₪ 2,790,000",
+        "rooms": "3",
+        "sqm": "78",
+        "floor": "2",
+        "hood": "הל\"ה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/9hm49cxa",
+        "meta": "3 ח' · 78 מ״ר · ק' 2"
+      },
+      {
+        "title": "הל\"ה 54",
+        "price": "₪ 2,950,000",
+        "rooms": "3",
+        "sqm": "76",
+        "floor": "6",
+        "hood": "הל\"ה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/afku9jd5",
+        "meta": "3 ח' · 76 מ״ר · ק' 6"
+      }
+    ],
+    "yevneely": [
+      {
+        "title": "הרב הרצוג",
+        "price": "₪ 3,070,000",
+        "rooms": "3.5",
+        "sqm": "100",
+        "floor": "2",
+        "hood": "תל גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/8qvjni0r",
+        "meta": "3.5 ח' · 100 מ״ר · ק' 2"
+      },
+      {
+        "title": "קפלנסקי",
+        "price": "₪ 3,360,000",
+        "rooms": "4",
+        "sqm": "90",
+        "floor": "2",
+        "hood": "תל גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/i6hlfjxy",
+        "meta": "4 ח' · 90 מ״ר · ק' 2"
+      },
+      {
+        "title": "הרב הרצוג 14",
+        "price": "₪ 3,880,000",
+        "rooms": "3.5",
+        "sqm": "110",
+        "floor": "1",
+        "hood": "תל גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/ht2egx0w",
+        "meta": "3.5 ח' · 110 מ״ר · ק' 1"
+      },
+      {
+        "title": "ההסתדרות 9",
+        "price": "₪ 4,300,000",
+        "rooms": "3",
+        "sqm": "60",
+        "floor": "3",
+        "hood": "תל גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/1ho46f8x",
+        "meta": "3 ח' · 60 מ״ר · ק' 3",
+        "note": "מחיר גבוה במיוחד — ייתכן שמדובר בדירה חדשה בפרויקט יבנאלי שהושלם (₪71.6K/מ\"ר)"
+      },
+      {
+        "title": "קפלנסקי 6",
+        "price": "₪ 4,500,000",
+        "rooms": "4",
+        "sqm": "115",
+        "floor": "1",
+        "hood": "תל גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/ivehjy8i",
+        "meta": "4 ח' · 115 מ״ר · ק' 1"
+      }
+    ],
+    "rambam": [
+      {
+        "title": "אנצו סירני",
+        "price": "₪ 3,230,000",
+        "rooms": "3.5",
+        "sqm": "114",
+        "floor": "1",
+        "hood": "גבעת הרמבם",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/pobqtukm",
+        "meta": "3.5 ח' · 114 מ״ר · ק' 1"
+      },
+      {
+        "title": "ההגנה 40",
+        "price": "₪ 3,750,000",
+        "rooms": "3",
+        "sqm": "77",
+        "floor": "4",
+        "hood": "גבעת הרמבם",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/yxrqx8jr",
+        "meta": "3 ח' · 77 מ״ר · ק' 4"
+      },
+      {
+        "title": "חנה סנש 13",
+        "price": "₪ 4,280,000",
+        "rooms": "4",
+        "sqm": "95",
+        "floor": "1",
+        "hood": "גבעת הרמבם",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/p4psppgt",
+        "meta": "4 ח' · 95 מ״ר · ק' 1"
+      },
+      {
+        "title": "המגדל",
+        "price": "₪ 4,390,000",
+        "rooms": "4",
+        "sqm": "97",
+        "floor": "2",
+        "hood": "גבעת הרמבם",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/dtxw3nz8",
+        "meta": "4 ח' · 97 מ״ר · ק' 2"
+      }
+    ],
+    "air": [
+      {
+        "title": "אריאל שרון",
+        "price": "₪ 3,750,000",
+        "rooms": "4",
+        "sqm": "121",
+        "floor": "4",
+        "hood": "סיטי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/szmd6deu",
+        "meta": "4 ח' · 121 מ״ר · ק' 4"
+      },
+      {
+        "title": "אריאל שרון 6",
+        "price": "₪ 4,290,000",
+        "rooms": "4",
+        "sqm": "143",
+        "floor": "1",
+        "hood": "סיטי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/bd6tff7f",
+        "meta": "4 ח' · 143 מ״ר · ק' 1"
+      },
+      {
+        "title": "אריאל שרון 6",
+        "price": "₪ 4,390,000",
+        "rooms": "4",
+        "sqm": "125",
+        "floor": "9",
+        "hood": "סיטי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/054td57w",
+        "meta": "4 ח' · 125 מ״ר · ק' 9"
+      },
+      {
+        "title": "ערבי נחל 5",
+        "price": "₪ 4,400,000",
+        "rooms": "4",
+        "sqm": "114",
+        "floor": "3",
+        "hood": "סיטי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/no7e76nz",
+        "meta": "4 ח' · 114 מ״ר · ק' 3"
+      }
+    ],
+    "arlozorov": [
+      {
+        "title": "ברדיצ'בסקי",
+        "price": "₪ 2,990,000",
+        "rooms": "3.5",
+        "sqm": "100",
+        "floor": "3",
+        "hood": "ארלוזורוב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/2dcc1olk",
+        "meta": "3.5 ח' · 100 מ״ר · ק' 3"
+      },
+      {
+        "title": "ניצנה",
+        "price": "₪ 2,990,000",
+        "rooms": "4",
+        "sqm": "105",
+        "floor": "3",
+        "hood": "ארלוזורוב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/9qq9e68a",
+        "meta": "4 ח' · 105 מ״ר · ק' 3"
+      },
+      {
+        "title": "ארלוזורוב",
+        "price": "₪ 3,950,000",
+        "rooms": "4",
+        "sqm": "103",
+        "floor": "3",
+        "hood": "ארלוזורוב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/5dhmp9xp",
+        "meta": "4 ח' · 103 מ״ר · ק' 3"
+      },
+      {
+        "title": "ארלוזורוב 17",
+        "price": "₪ 3,990,000",
+        "rooms": "4",
+        "sqm": "97",
+        "floor": "1",
+        "hood": "ארלוזורוב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/6x0aq81h",
+        "meta": "4 ח' · 97 מ״ר · ק' 1"
+      }
+    ],
+    "rishonim": [
+      {
+        "title": "המעיין",
+        "price": "₪ 2,600,000",
+        "rooms": "3",
+        "sqm": "78",
+        "floor": "6",
+        "hood": "שכונת הראשונים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/266kncxq",
+        "meta": "3 ח' · 78 מ״ר · ק' 6"
+      },
+      {
+        "title": "חיבת ציון",
+        "price": "₪ 2,650,000",
+        "rooms": "3",
+        "sqm": "66",
+        "floor": "3",
+        "hood": "שכונת הלל",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/0ary7pbl",
+        "meta": "3 ח' · 66 מ״ר · ק' 3"
+      },
+      {
+        "title": "משה דיין 36",
+        "price": "₪ 2,800,000",
+        "rooms": "3",
+        "sqm": "75",
+        "floor": "6",
+        "hood": "אזור הבילויים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/qt8t22m8",
+        "meta": "3 ח' · 75 מ״ר · ק' 6"
+      },
+      {
+        "title": "שכונת הראשונים",
+        "price": "₪ 2,875,000",
+        "rooms": "3",
+        "sqm": "79",
+        "floor": "5",
+        "hood": "שכונת הראשונים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/8q5m2j8p",
+        "meta": "3 ח' · 79 מ״ר · ק' 5"
+      },
+      {
+        "title": "עלומים",
+        "price": "₪ 2,990,000",
+        "rooms": "4",
+        "sqm": "85",
+        "floor": "2",
+        "hood": "אזור הבילויים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/5nb0rjb2",
+        "meta": "4 ח' · 85 מ״ר · ק' 2"
+      },
+      {
+        "title": "בועז",
+        "price": "₪ 2,990,000",
+        "rooms": "3.5",
+        "sqm": "83",
+        "floor": "6",
+        "hood": "שכונת הראשונים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/viqk2vlt",
+        "meta": "3.5 ח' · 83 מ״ר · ק' 6"
+      },
+      {
+        "title": "מקדונלד 18",
+        "price": "₪ 3,280,000",
+        "rooms": "3",
+        "sqm": "70",
+        "floor": "5",
+        "hood": "תל בנימין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/56jzp4rd",
+        "meta": "3 ח' · 70 מ״ר · ק' 5"
+      },
+      {
+        "title": "חרוזים",
+        "price": "₪ 3,550,000",
+        "rooms": "4",
+        "sqm": "90",
+        "floor": "3",
+        "hood": "חרוזים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/cuf362gm",
+        "meta": "4 ח' · 90 מ״ר · ק' 3"
+      }
+    ],
+    "jerusalem80": [
+      {
+        "title": "רועי קליין 6",
+        "price": "₪ 2,700,000",
+        "rooms": "3",
+        "sqm": "88",
+        "floor": "9",
+        "hood": "קרית קריניצי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/x2ss6w5b",
+        "meta": "3 ח' · 88 מ״ר · ק' 9"
+      },
+      {
+        "title": "רועי קליין 7",
+        "price": "₪ 2,780,000",
+        "rooms": "3",
+        "sqm": "94",
+        "floor": "12",
+        "hood": "קרית קריניצי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/b1ih3xid",
+        "meta": "3 ח' · 94 מ״ר · ק' 12"
+      },
+      {
+        "title": "קרית קריניצי",
+        "price": "₪ 3,580,000",
+        "rooms": "4",
+        "sqm": "120",
+        "floor": "4",
+        "hood": "קרית קריניצי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/ud4az518",
+        "meta": "4 ח' · 120 מ״ר · ק' 4"
+      }
+    ],
+    "amidar": [
+      {
+        "title": "אריה בן אליעזר 31",
+        "price": "₪ 2,580,000",
+        "rooms": "4",
+        "sqm": "100",
+        "floor": "1",
+        "hood": "רמת עמידר",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/2n7m9h9x",
+        "meta": "4 ח' · 100 מ״ר · ק' 1"
+      },
+      {
+        "title": "עליות",
+        "price": "₪ 2,650,000",
+        "rooms": "3",
+        "sqm": "82",
+        "floor": "8",
+        "hood": "עליות",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/irys9pev",
+        "meta": "3 ח' · 82 מ״ר · ק' 8"
+      },
+      {
+        "title": "מלכי צדק 25",
+        "price": "₪ 2,850,000",
+        "rooms": "4",
+        "sqm": "100",
+        "floor": "6",
+        "hood": "רמת השקמה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/36bacqiy",
+        "meta": "4 ח' · 100 מ״ר · ק' 6"
+      }
+    ],
+    "hagapen": [
+      {
+        "title": "בר כוכבא 16",
+        "price": "₪ 2,590,000",
+        "rooms": "4",
+        "sqm": "90",
+        "floor": "1",
+        "hood": "תל יהודה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/wmdebqgs",
+        "meta": "4 ח' · 90 מ״ר · ק' 1"
+      },
+      {
+        "title": "השר משה 31",
+        "price": "₪ 3,200,000",
+        "rooms": "4",
+        "sqm": "80",
+        "floor": "1",
+        "hood": "נגבה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tlp6j9hw",
+        "meta": "4 ח' · 80 מ״ר · ק' 1"
+      },
+      {
+        "title": "סמטת אבני חושן",
+        "price": "₪ 3,200,000",
+        "rooms": "4",
+        "sqm": "118",
+        "floor": "8",
+        "hood": "גני מרום",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/q4zf5l1w",
+        "meta": "4 ח' · 118 מ״ר · ק' 8"
+      },
+      {
+        "title": "השר משה 8",
+        "price": "₪ 3,400,000",
+        "rooms": "4",
+        "sqm": "148",
+        "floor": "קרקע",
+        "hood": "נגבה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/ov6ujq8g",
+        "meta": "4 ח' · 148 מ״ר · ק' קרקע"
+      },
+      {
+        "title": "יד שלום 20",
+        "price": "₪ 3,440,000",
+        "rooms": "4",
+        "sqm": "103",
+        "floor": "4",
+        "hood": "תל יהודה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/k8fmbln9",
+        "meta": "4 ח' · 103 מ״ר · ק' 4"
+      },
+      {
+        "title": "שלומציון 10",
+        "price": "₪ 3,450,000",
+        "rooms": "4",
+        "sqm": "117",
+        "floor": "2",
+        "hood": "נגבה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/f6nvp6n5",
+        "meta": "4 ח' · 117 מ״ר · ק' 2"
+      },
+      {
+        "title": "מורדי הגטאות 2",
+        "price": "₪ 4,350,000",
+        "rooms": "4",
+        "sqm": "116",
+        "floor": "22",
+        "hood": "שכונת גפן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/zme1v6gu",
+        "meta": "4 ח' · 116 מ״ר · ק' 22"
+      }
+    ],
+    "amidar-gabay": [
+      {
+        "title": "יד לבנים",
+        "price": "₪ 1,950,000",
+        "rooms": "3",
+        "sqm": "63",
+        "floor": "1",
+        "hood": "יד לבנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/3nxm6rqm",
+        "meta": "3 ח' · 63 מ״ר · ק' 1"
+      },
+      {
+        "title": "חצור 9",
+        "price": "₪ 2,650,000",
+        "rooms": "3",
+        "sqm": "83",
+        "floor": "3",
+        "hood": "יד לבנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/ybahro2z",
+        "meta": "3 ח' · 83 מ״ר · ק' 3"
+      },
+      {
+        "title": "יד לבנים",
+        "price": "₪ 2,825,000",
+        "rooms": "4",
+        "sqm": "99",
+        "floor": "6",
+        "hood": "יד לבנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/avq200f8",
+        "meta": "4 ח' · 99 מ״ר · ק' 6"
+      },
+      {
+        "title": "דרך זאב ז'בוטינסקי 117",
+        "price": "₪ 3,250,000",
+        "rooms": "3.5",
+        "sqm": "85",
+        "floor": "3",
+        "hood": "נחלת גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/35re5j79",
+        "meta": "3.5 ח' · 85 מ״ר · ק' 3"
+      },
+      {
+        "title": "המבדיל 2",
+        "price": "₪ 3,290,000",
+        "rooms": "3",
+        "sqm": "100",
+        "floor": "7",
+        "hood": "נחלת גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/b3zddjuq",
+        "meta": "3 ח' · 100 מ״ר · ק' 7"
+      },
+      {
+        "title": "חצור 9",
+        "price": "₪ 3,400,000",
+        "rooms": "4",
+        "sqm": "111",
+        "floor": "2",
+        "hood": "יד לבנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/nn6lz5ol",
+        "meta": "4 ח' · 111 מ״ר · ק' 2"
+      },
+      {
+        "title": "דרך אבא הלל",
+        "price": "₪ 3,450,000",
+        "rooms": "4",
+        "sqm": "100",
+        "floor": "13",
+        "hood": "נחלת גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/4rog8sne",
+        "meta": "4 ח' · 100 מ״ר · ק' 13"
+      }
+    ],
+    "ramat-chen": [
+      {
+        "title": "גבעתי 70",
+        "price": "₪ 2,690,000",
+        "rooms": "4",
+        "sqm": "87",
+        "floor": "5",
+        "hood": "רמת חן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/4lrf3ium",
+        "meta": "4 ח' · 87 מ״ר · ק' 5"
+      }
+    ],
+    "shapira": [
+      {
+        "title": "יסוד המעלה 16",
+        "price": "₪ 2,870,000",
+        "rooms": "3",
+        "sqm": "58",
+        "floor": "4",
+        "hood": "נווה שאנן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/v874qy7y",
+        "meta": "3 ח' · 58 מ״ר · ק' 4"
+      },
+      {
+        "title": "שיבת ציון",
+        "price": "₪ 2,890,000",
+        "rooms": "3",
+        "sqm": "87",
+        "floor": "1",
+        "hood": "נווה שאנן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/gx6mx2hl",
+        "meta": "3 ח' · 87 מ״ר · ק' 1"
+      },
+      {
+        "title": "י.ל. פרץ 37",
+        "price": "₪ 2,950,000",
+        "rooms": "4",
+        "sqm": "84",
+        "floor": "2",
+        "hood": "נווה שאנן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/nr2i4y0q",
+        "meta": "4 ח' · 84 מ״ר · ק' 2"
+      },
+      {
+        "title": "ישראל מסלנט 16",
+        "price": "₪ 2,990,000",
+        "rooms": "3",
+        "sqm": "96",
+        "floor": "8",
+        "hood": "שפירא",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/eye5cw9b",
+        "meta": "3 ח' · 96 מ״ר · ק' 8"
+      },
+      {
+        "title": "הרצל 66",
+        "price": "₪ 3,790,000",
+        "rooms": "3",
+        "sqm": "76",
+        "floor": "1",
+        "hood": "פלורנטין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/cmv284kn",
+        "meta": "3 ח' · 76 מ״ר · ק' 1"
+      },
+      {
+        "title": "דרך שלמה",
+        "price": "₪ 3,890,000",
+        "rooms": "3",
+        "sqm": "90",
+        "floor": "6",
+        "hood": "פלורנטין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/19v6aqmo",
+        "meta": "3 ח' · 90 מ״ר · ק' 6"
+      },
+      {
+        "title": "זבולון 26",
+        "price": "₪ 4,100,000",
+        "rooms": "3",
+        "sqm": "80",
+        "floor": "1",
+        "hood": "פלורנטין",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/035vuugz",
+        "meta": "3 ח' · 80 מ״ר · ק' 1"
+      }
+    ],
+    "kiryat-shalom": [
+      {
+        "title": "ד\"ר אברהם אליהו הרכבי 3",
+        "price": "₪ 2,840,000",
+        "rooms": "3.5",
+        "sqm": "88",
+        "floor": "4",
+        "hood": "תל חיים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/sghjc4np",
+        "meta": "3.5 ח' · 88 מ״ר · ק' 4"
+      },
+      {
+        "title": "אסירי ציון 9",
+        "price": "₪ 3,395,000",
+        "rooms": "4",
+        "sqm": "98",
+        "floor": "7",
+        "hood": "קרית שלום",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/z4macovk",
+        "meta": "4 ח' · 98 מ״ר · ק' 7"
+      }
+    ],
+    "neve-eliezer": [
+      {
+        "title": "צוקרמן",
+        "price": "₪ 2,850,000",
+        "rooms": "4",
+        "sqm": "112",
+        "floor": "2",
+        "hood": "נווה אליעזר וכפר שלם מזרח",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/4icfukft",
+        "meta": "4 ח' · 112 מ״ר · ק' 2"
+      },
+      {
+        "title": "אריה אלטמן",
+        "price": "₪ 3,490,000",
+        "rooms": "4",
+        "sqm": "101",
+        "floor": "1",
+        "hood": "יד אליהו",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/4xli407u",
+        "meta": "4 ח' · 101 מ״ר · ק' 1"
+      },
+      {
+        "title": "אריה אלטמן 5",
+        "price": "₪ 3,500,000",
+        "rooms": "4",
+        "sqm": "112",
+        "floor": "קרקע",
+        "hood": "יד אליהו",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/og0yxnu6",
+        "meta": "4 ח' · 112 מ״ר · ק' קרקע"
+      },
+      {
+        "title": "עמינדב 18",
+        "price": "₪ 4,020,000",
+        "rooms": "4",
+        "sqm": "100",
+        "floor": "4",
+        "hood": "ביצרון ורמת ישראל",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/mywy1wtf",
+        "meta": "4 ח' · 100 מ״ר · ק' 4"
+      }
+    ],
+    "kfar-shalem-yafet": [
+      {
+        "title": "סנפיר 3",
+        "price": "₪ 2,099,000",
+        "rooms": "3",
+        "sqm": "71",
+        "floor": "2",
+        "hood": "נווה חן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/smpg9mu0",
+        "meta": "3 ח' · 71 מ״ר · ק' 2"
+      },
+      {
+        "title": "מעפילי אגוז 35",
+        "price": "₪ 2,890,000",
+        "rooms": "4",
+        "sqm": "102",
+        "floor": "6",
+        "hood": "נווה חן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/p76xw2qz",
+        "meta": "4 ח' · 102 מ״ר · ק' 6"
+      }
+    ]
+  }
+}

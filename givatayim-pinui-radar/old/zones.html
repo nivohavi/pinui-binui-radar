@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>מתחמים · רדאר פינוי-בינוי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:14px}
+.filter-btn{background:var(--bg-2);border:1px solid var(--border);color:var(--muted);padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+.filter-btn:hover{color:var(--text);border-color:var(--accent)}
+.filter-btn.active{background:var(--gradient);color:var(--bg);border-color:transparent}
+.zone-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:20px;scroll-margin-top:24px;transition:all .2s}
+.zone-card:hover{border-color:var(--accent)}
+.zone-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.zone-title{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.zone-sub{color:var(--muted);font-size:14px}
+.zone-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0;padding:16px;background:var(--bg-2);border-radius:10px}
+.fact-label{font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.fact-value{font-size:15px;font-weight:700}
+.zone-action{background:var(--bg-2);border-right:3px solid var(--accent);padding:14px 16px;border-radius:8px;margin-top:14px;font-size:14px;line-height:1.7}
+.zone-action strong{color:var(--text);display:block;margin-bottom:6px;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--accent)}
+.ready-yes-card{border-color:rgba(46,229,157,.4)}
+.ready-maybe-card{border-color:rgba(255,181,71,.3)}
+.ready-no-card{border-color:rgba(255,89,120,.3)}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:28px}
+.legend-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;font-size:13px;line-height:1.6}
+.legend-item .readiness{margin-bottom:8px}
+.prices-good{background:rgba(46,229,157,.08)!important;border:1px solid rgba(46,229,157,.25)!important}
+.prices-warn{background:rgba(255,181,71,.08)!important;border:1px solid rgba(255,181,71,.25)!important}
+.prices-bad{background:rgba(255,89,120,.08)!important;border:1px solid rgba(255,89,120,.25)!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <div class="nav-top">
+    <div class="logo"><a href="index.html">⬡ רדאר פינוי-בינוי</a></div>
+    <div id="city-selector-slot"></div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">בית</a>
+    <a href="zones.html" class="active">מתחמים</a>
+    <a href="prices.html">מחירים</a>
+    <a href="compare.html">השוואה</a>
+    <a href="search.html">חיפוש דירות</a>
+    <a href="glossary.html">מונחים</a>
+    <a href="score.html">ניקוד הזדמנות</a>
+    <a href="checklist.html">צ'קליסט</a>
+    <a href="workflow.html">איך עובדים</a>
+    <a href="resources.html">משאבים</a>
+  </div>
+</nav>
+
+<header>
+  <div class="kicker" id="kicker-count"></div>
+  <h1>אילו <span class="accent">מתחמים</span> פעילים עכשיו — ומה אפשר לעשות בכל אחד</h1>
+  <p class="lead">כל מתחם מסומן ברמזור: ירוק = אפשר לקנות היום, צהוב = אפשר עם סיכון / צריך סבלנות, אדום = עוד לא. לחץ על "מה אפשר לעשות עכשיו?" בכל כרטיס להסבר בעברית פשוטה.</p>
+</header>
+
+<div class="legend">
+  <div class="legend-item">
+    <span class="readiness ready-yes"><span class="ready-dot"></span>אפשר לקנות היום</span>
+    יש <a href="glossary.html#heter" class="term" data-tip="אישור רשמי של העירייה שמאשר לבנות. בלי זה — אי אפשר לבנות, והכל רק על הנייר.">היתר בנייה</a> או שהיזם כבר משווק דירות. הסיכון הרגולטורי מאחורינו.
+  </div>
+  <div class="legend-item">
+    <span class="readiness ready-maybe"><span class="ready-dot"></span>אפשר עם סיכון</span>
+    התוכנית קיימת ובשלבי אישור. אפשר לקנות דירה ישנה במתחם ולקוות — אבל זה יכול לקחת 5-10 שנים ולהיתקע.
+  </div>
+  <div class="legend-item">
+    <span class="readiness ready-no"><span class="ready-dot"></span>עדיין לא</span>
+    התוכנית במחלוקת, בערעור, או בשלבים מוקדמים מדי. לא שווה להיכנס עכשיו.
+  </div>
+</div>
+
+<div class="filter-bar" id="filter-bar"></div>
+
+<div id="zones-container"></div>
+
+<footer>
+  <div class="disclaimer">
+    ⚠️ המידע נאסף ממקורות פומביים ומייצג הערכות, לא התחייבות. לפני כל החלטת רכישה — לעשות בדיקת נאותות עצמאית ולהתייעץ עם עו"ד מקרקעין.
+  </div>
+  <div>© 2026 · כלי עזר לאיתור הזדמנויות פינוי-בינוי · לא ייעוץ משפטי או פיננסי</div>
+</footer>
+
+</div>
+
+<script src="cities.js?v=20260418e"></script>
+<script>
+(function(){
+  const city = getCurrentCity();
+  document.title = `מתחמים · ${city.name} · רדאר פינוי-בינוי`;
+
+  // Counts
+  const counts = {all:city.zones.length, yes:0, maybe:0, no:0};
+  city.zones.forEach(z => counts[z.status]++);
+
+  document.getElementById('kicker-count').textContent = `${counts.all} מתחמים פעילים ב${city.name}`;
+
+  // Filter bar
+  const filters = [['all',`הכל (${counts.all})`],['yes',`אפשר לקנות היום (${counts.yes})`],['maybe',`אפשר עם סיכון (${counts.maybe})`],['no',`עדיין לא (${counts.no})`]];
+  document.getElementById('filter-bar').innerHTML = filters.map(([v,label],i) =>
+    `<button class="filter-btn${i===0?' active':''}" data-filter="${v}">${label}</button>`
+  ).join('');
+
+  // Render zones
+  function priceBg(status){
+    return status==='yes' ? 'prices-good' : status==='maybe' ? 'prices-warn' : 'prices-bad';
+  }
+  function priceColor(status){
+    return status==='yes' ? 'var(--good)' : status==='maybe' ? 'var(--warn)' : 'var(--bad)';
+  }
+
+  function vsHTML(z) {
+    const s = computeValueScore(z);
+    if (s === null) return '';
+    const cls = s >= 3.5 ? 'vs-high' : s >= 1.5 ? 'vs-mid' : 'vs-low';
+    return `<span class="value-score ${cls}" title="ציון כדאיות שנתי">${s}</span>`;
+  }
+
+  function devHTML(z) {
+    const dev = findDeveloper(z);
+    if (!dev) return '';
+    return `<span class="dev-badge" title="${dev.note}"><span class="dev-tier">${dev.tier}</span> ${dev.short} · ${dev.completed} פרויקטים</span>`;
+  }
+
+  // Pre-load listings; render zones once they arrive (also works if fetch fails)
+  loadListings().then(listingsData => {
+    const zonesHtml = city.zones.map(z => {
+      const factsHtml = z.facts.map(([l,v]) => `<div><div class="fact-label">${l}</div><div class="fact-value">${v}</div></div>`).join('');
+      const priceRows = z.prices.rows.map(([l,v]) =>
+        `<div><div class="fact-label">${l}</div><div class="fact-value" style="color:${priceColor(z.status)}">${v}</div></div>`
+      ).join('');
+      const links = buildSearchLinks(city, { hood: z.hood || '' });
+      const searchHead = z.hood
+        ? `חפש דירות ב<span class="acc">${z.hood}</span> · ${city.name}`
+        : `חפש דירות ב<span class="acc">${city.name}</span>`;
+      const listingsHtml = renderListingsForZone(z.id, listingsData, z);
+      return `<article class="zone-card ready-${z.status}-card" data-status="${z.status}" id="${z.id}">
+        <div class="zone-head">
+          <div>
+            <div class="zone-title">${z.name} ${vsHTML(z)}</div>
+            <div class="zone-sub">${z.sub} ${devHTML(z)}</div>
+          </div>
+          <span class="readiness ready-${z.status}"><span class="ready-dot"></span>${z.statusLabel}</span>
+        </div>
+        <div class="zone-facts">${factsHtml}</div>
+        <div class="zone-facts ${priceBg(z.status)}">${priceRows}</div>
+        <p>${z.desc}</p>
+        <div class="zone-action">
+          <strong>מה אפשר לעשות עכשיו?</strong>
+          ${z.action}
+        </div>
+        ${listingsHtml}
+        <div class="search-row">
+          <div class="search-row-head">${searchHead}</div>
+          <a href="https://www.nadlan.gov.il/?search=${encodeURIComponent((z.hood || '') + ' ' + city.searchCodes.nadlanCity)}" target="_blank" rel="noopener" class="search-btn" style="--b:#2ee59d;margin-bottom:8px;display:inline-block">📊 עסקאות אמיתיות · nadlan.gov.il ↗</a>
+          ${renderSearchButtons(links, null, { expandFb: true, city, hood: z.hood || '' })}
+        </div>
+      </article>`;
+    }).join('');
+    document.getElementById('zones-container').innerHTML = zonesHtml;
+
+    // Filter logic — (attached after render so cards exist)
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        document.querySelectorAll('.zone-card').forEach(card => {
+          card.style.display = (f==='all' || card.dataset.status===f) ? '' : 'none';
+        });
+      });
+    });
+    preserveCityInLinks();  // re-apply to newly-rendered links
+  });
+
+  // City selector (independent of listings, render immediately)
+  document.getElementById('city-selector-slot').innerHTML = buildCitySelector(city.slug);
+})();
+</script>
+</body>
+</html>

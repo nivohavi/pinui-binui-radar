@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>צ'קליסט · רדאר פינוי-בינוי גבעתיים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.progress-bar{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:28px;position:sticky;top:20px;z-index:5;backdrop-filter:blur(8px);background:rgba(20,27,46,.95)}
+.progress-text{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:14px}
+.progress-track{height:10px;background:var(--bg-2);border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;background:var(--gradient);width:0%;transition:width .3s;border-radius:10px}
+.phase{margin-bottom:32px}
+.phase-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.phase-num{width:36px;height:36px;background:var(--gradient);color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.phase-title{font-size:20px;font-weight:800}
+.phase-sub{font-size:13px;color:var(--muted);margin-top:2px}
+.check-item{display:flex;align-items:flex-start;gap:14px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .15s}
+.check-item:hover{border-color:var(--accent)}
+.check-item.done{background:rgba(46,229,157,.05);border-color:rgba(46,229,157,.3)}
+.check-item input{margin-top:3px;accent-color:var(--good);width:18px;height:18px;cursor:pointer;flex-shrink:0}
+.check-item .item-content{flex:1}
+.check-item .item-title{font-weight:600;font-size:15px;margin-bottom:4px}
+.check-item.done .item-title{text-decoration:line-through;color:var(--muted)}
+.check-item .item-help{color:var(--muted);font-size:13px;line-height:1.6}
+.reset-all{display:block;margin:32px auto 0;background:var(--bg-2);border:1px solid var(--border);color:var(--muted);padding:10px 24px;border-radius:10px;cursor:pointer;font-family:inherit;font-size:13px}
+.reset-all:hover{color:var(--text);border-color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <div class="nav-top">
+    <div class="logo"><a href="index.html">⬡ רדאר פינוי-בינוי</a></div>
+    <div id="city-selector-slot"></div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">בית</a>
+    <a href="zones.html">מתחמים</a>
+    <a href="prices.html">מחירים</a>
+    <a href="compare.html">השוואה</a>
+    <a href="search.html">חיפוש דירות</a>
+    <a href="glossary.html">מונחים</a>
+    <a href="score.html">ניקוד הזדמנות</a>
+    <a href="checklist.html" class="active">צ'קליסט</a>
+    <a href="workflow.html">איך עובדים</a>
+    <a href="resources.html">משאבים</a>
+  </div>
+</nav>
+
+<header>
+  <div class="kicker">26 סעיפים · 4 שלבים</div>
+  <h1>צ'קליסט <span class="accent">בדיקה</span> — לפני שאתה חותם על כלום</h1>
+  <p class="lead">הצ'קליסט מחולק ל-4 שלבים: סינון ראשוני → מסמכים → כספים ומיסוי → משפטי. סמן כל סעיף שבדקת. ההתקדמות נשמרת רק בדף הנוכחי — לא בענן.</p>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-text">
+    <span><strong id="progressNum">0</strong> / 26 סעיפים</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<div class="phase">
+  <div class="phase-head">
+    <div class="phase-num">1</div>
+    <div>
+      <div class="phase-title">סינון ראשוני — מוצאים נכס ובודקים רקע</div>
+      <div class="phase-sub">לפני שמשלמים כסף על עו"ד או שמאי</div>
+    </div>
+  </div>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">בדקתי ב-<a href="https://mavat.iplan.gov.il" target="_blank">מבא"ת</a> אם יש תוכנית פעילה על הכתובת</div><div class="item-help">חפש לפי כתובת או לפי <a href="glossary.html#gush" target="_blank">גוש/חלקה</a>. אם אין תוכנית — אין פרויקט.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">ראיתי מה הסטטוס: מופקדת / מאושרת / לקראת הפקדה</div><div class="item-help">הפערים ביניהם = שנים של המתנה. <a href="glossary.html#hefkada" target="_blank">מה ההבדל?</a></div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">חיפשתי את המתחם ברשימת מתחמי הפינוי-בינוי הרשמיים</div><div class="item-help">אתר <a href="https://www.gov.il/he/departments/government_authority_for_urban_renewal" target="_blank">הרשות להתחדשות עירונית</a>. הכרזה רשמית = הטבות מס לדיירים הישנים.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">מצאתי מי היזם / לא מצאתי</div><div class="item-help">אם קיים — בדוק ותק, פרויקטים מוגמרים, דירוג. אם לא — הפרויקט בוודאי לא בשל.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">בדקתי עסקאות אחרונות באזור ב-<a href="https://www.nadlan.gov.il" target="_blank">nadlan.gov.il</a></div><div class="item-help">קח 12 חודשים אחרונים של אותם רחובות. זו הבסיס להשוואת מחירים.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">השוותי את המחיר המבוקש למחיר שוק רגיל באזור</div><div class="item-help">אם המחיר 20% מעל השוק — המוכר כבר הפנים את הפוטנציאל. הרווח הפוטנציאלי קטן.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">חיפשתי את כתובת המתחם באתר החדשות המקומי</div><div class="item-help">גלובס, Themarker, ynet נדל"ן, אתר גבעתיים. כל מחלוקת / התנגדות תמצא שם.</div></div></label>
+
+</div>
+
+<div class="phase">
+  <div class="phase-head">
+    <div class="phase-num">2</div>
+    <div>
+      <div class="phase-title">בדיקת מסמכים — מה באמת יש</div>
+      <div class="phase-sub">חובה לפני הגשת הצעת מחיר</div>
+    </div>
+  </div>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">הוצאתי <a href="glossary.html#nesach" target="_blank">נסח טאבו</a> מעודכן</div><div class="item-help">מי הבעלים, משכנתאות, הערות אזהרה, הערות פינוי-בינוי. עלות ~15 ש"ח.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">ראיתי את תשריט התב"ע הרלוונטית</div><div class="item-help">במבא"ת, לחץ על מספר התוכנית → "תשריט" → PDF.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">קראתי את הוראות התב"ע</div><div class="item-help">כמה קומות מותר? כמה דירות? מה יחס ההעברה (כמה מ"ר חדש על כל מ"ר ישן)?</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">ביקשתי לראות את החוזה שהדיירים חתמו עם היזם</div><div class="item-help">(אם כבר חתמו) — שיעור היחס ההעברה, פיצויים, ערבויות.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">ברור לי כמה % מהדיירים חתמו נכון להיום</div><div class="item-help">מהוועד, מיזם, מעו"ד המתחם. פחות מ-66% = סיכון. מעל 80% = שלב מתקדם.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">בדקתי פרוטוקולי ועדה מקומית של עיריית גבעתיים</div><div class="item-help">אתר עיריית גבעתיים → הנדסה → פרוטוקולים. תאריכי דיונים בפרויקט שלך.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">בדקתי אם יש התנגדויות שטרם טופלו</div><div class="item-help">בטקסט המחלטת הוועדה. התנגדות פעילה = עיכוב.</div></div></label>
+
+</div>
+
+<div class="phase">
+  <div class="phase-head">
+    <div class="phase-num">3</div>
+    <div>
+      <div class="phase-title">כספים ומיסוי</div>
+      <div class="phase-sub">מה באמת תשלם, מה באמת תקבל</div>
+    </div>
+  </div>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">חישבתי <a href="glossary.html#rechisha" target="_blank">מס רכישה</a> לפי סטטוס שלי</div><div class="item-help">דירה יחידה: 0%-5% מדרגות. דירה 2+: 8% מהשקל הראשון. זה ההפרש הכי גדול במשוואה.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">התייעצתי עם יועץ מס על <a href="glossary.html#shevach" target="_blank">מס שבח</a> העתידי</div><div class="item-help">אם אתה משקיע, לא דייר — מס שבח יחול כשתמכור.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">ברור לי מי משלם <a href="glossary.html#hashvaha" target="_blank">היטל השבחה</a></div><div class="item-help">בפינוי-בינוי — בדרך כלל היזם. בקשת דירה ישנה — בחלק מהמקרים אתה. בדוק בחוזה.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">אם קונה מיזם — ראיתי דוגמה ל<a href="glossary.html#arvut" target="_blank">ערבות בנקאית</a></div><div class="item-help">עליה לכסות כל תשלום מעל 7% מערך הדירה. בלי זה — אל תשלם.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">בדקתי כושר המשכנתא שלי</div><div class="item-help">בנק או יועץ משכנתאות. מה האחוז המרבי, מה הריבית, מה ההחזר החודשי.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">חישבתי תזרים מלא: קנייה + ריבית + דמי ניהול + מסים עד המסירה</div><div class="item-help">פרויקט שלוקח 8 שנים — הריבית המצטברת יכולה להכפיל את העלות האמיתית.</div></div></label>
+
+</div>
+
+<div class="phase">
+  <div class="phase-head">
+    <div class="phase-num">4</div>
+    <div>
+      <div class="phase-title">משפטי — רק עם עורך דין מקרקעין</div>
+      <div class="phase-sub">לפני החתימה</div>
+    </div>
+  </div>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">עו"ד מקרקעין עם ניסיון בפינוי-בינוי ליווה אותי</div><div class="item-help">לא כל עו"ד מקרקעין מכיר את הניואנסים של פינוי-בינוי. בקש המלצות.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">החוזה כולל תנאי יציאה ברור למקרה שהפרויקט לא מתקדם</div><div class="item-help">"אם לא התקבל היתר בנייה תוך X שנים — הרוכש זכאי לבטל את העסקה ולקבל את כספו חזרה עם ריבית".</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">זיכרון דברים לא נחתם לפני שעו"ד אישר</div><div class="item-help">זיכרון דברים הוא חוזה מחייב. חריג שכיח בישראל.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">בדקתי חוזה עם היזם (אם קיים) לתנאי פיצוי לדיירים הישנים</div><div class="item-help">אם בעל הבית הישן כבר חתם — מה הוא קיבל? זה מעיד על היחס לרוכשים.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">קראתי את התוכנית מול התשריט — הדירה שאני קונה אמנם נמצאת שם</div><div class="item-help">במיוחד אם יש הבטחה ל"דירה חדשה בעתיד" — חשוב לראות את הקומה, הכיוון, המ"ר.</div></div></label>
+
+  <label class="check-item"><input type="checkbox"><div class="item-content"><div class="item-title">הוספתי לחוזה סעיף אכיפה אם היזם חורג מלו"ז</div><div class="item-help">קנסות יומיים, או זכות ביטול אחרי איחור X חודשים.</div></div></label>
+
+</div>
+
+<button class="reset-all" onclick="document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);update();saveProgress()">איפוס כל הצ'קליסט</button>
+
+<footer>
+  <div class="disclaimer">
+    ⚠️ צ'קליסט זה אינו תחליף לייעוץ מקצועי פרטני. בכל מקרה — עבוד עם עו"ד מקרקעין ויועץ מס.
+  </div>
+  <div>© 2026 · כלי עזר לאיתור הזדמנויות פינוי-בינוי בגבעתיים · לא ייעוץ משפטי או פיננסי</div>
+</footer>
+
+</div>
+
+<script>
+function update(){
+  const total=document.querySelectorAll('.check-item input').length;
+  const done=document.querySelectorAll('.check-item input:checked').length;
+  const pct=Math.round(done/total*100);
+  document.getElementById('progressNum').textContent=done;
+  document.getElementById('progressPct').textContent=pct+'%';
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.querySelectorAll('.check-item').forEach(item=>{
+    item.classList.toggle('done',item.querySelector('input').checked);
+  });
+}
+function saveProgress(){
+  const states=[...document.querySelectorAll('.check-item input')].map(i=>i.checked);
+  try{sessionStorage.setItem('checklist_givatayim',JSON.stringify(states));}catch(e){}
+}
+function loadProgress(){
+  try{
+    const saved=sessionStorage.getItem('checklist_givatayim');
+    if(saved){
+      const states=JSON.parse(saved);
+      document.querySelectorAll('.check-item input').forEach((i,idx)=>i.checked=states[idx]||false);
+    }
+  }catch(e){}
+}
+document.querySelectorAll('.check-item input').forEach(i=>i.addEventListener('change',()=>{update();saveProgress()}));
+loadProgress();update();
+</script>
+<script src="cities.js?v=20260418e"></script>
+<script>
+(function(){
+  const city = getCurrentCity();
+  document.getElementById('city-selector-slot').innerHTML = buildCitySelector(city.slug);
+  preserveCityInLinks();
+})();
+</script>
+</body>
+</html>

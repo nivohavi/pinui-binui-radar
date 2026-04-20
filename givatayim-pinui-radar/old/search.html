@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>חיפוש דירות · רדאר פינוי-בינוי</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.search-form{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px}
+.search-form .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media (max-width:700px){.search-form .row{grid-template-columns:1fr}}
+.search-form label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px;font-weight:600}
+.search-form input, .search-form select{width:100%;background:var(--bg-2);border:1px solid var(--border);padding:12px 14px;border-radius:10px;color:var(--text);font-family:inherit;font-size:15px}
+.search-form input:focus, .search-form select:focus{outline:none;border-color:var(--accent)}
+.hood-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.hood-chip{background:var(--bg-2);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.hood-chip:hover{color:var(--text);border-color:var(--accent)}
+.hood-chip.selected{background:var(--gradient);color:var(--bg);border-color:transparent;font-weight:700}
+.big-search-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.result-preview{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:20px;font-size:14px;color:var(--muted);line-height:1.7}
+.result-preview code{background:var(--bg-2);padding:2px 8px;border-radius:4px;color:var(--accent);font-family:ui-monospace,monospace;font-size:12px;word-break:break-all}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="nav">
+  <div class="nav-top">
+    <div class="logo"><a href="index.html">⬡ רדאר פינוי-בינוי</a></div>
+    <div id="city-selector-slot"></div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">בית</a>
+    <a href="zones.html">מתחמים</a>
+    <a href="prices.html">מחירים</a>
+    <a href="compare.html">השוואה</a>
+    <a href="search.html" class="active">חיפוש דירות</a>
+    <a href="glossary.html">מונחים</a>
+    <a href="score.html">ניקוד הזדמנות</a>
+    <a href="checklist.html">צ'קליסט</a>
+    <a href="workflow.html">איך עובדים</a>
+    <a href="resources.html">משאבים</a>
+  </div>
+</nav>
+
+<header>
+  <div class="kicker">6 פלטפורמות · קישורים מסוננים</div>
+  <h1>חפש <span class="accent">דירות</span> מסוננות לפי מתחם ותקציב</h1>
+  <p class="lead">הכלי הזה יוצר קישורי חיפוש מסוננים לפי העיר, השכונה, מספר חדרים ומחיר מקסימלי — ופותח אותם ישר ב-Yad2, Madlan, Facebook, Nadlan.gov.il, Homeless וקומו (לוח ynet). במקום להיכנס לכל אתר ולמלא פילטרים — לחץ פעם אחת.</p>
+</header>
+
+<div class="search-form">
+  <div class="row">
+    <div>
+      <label>שכונה / מתחם (אופציונלי)</label>
+      <input type="text" id="hood" placeholder="למשל: בורוכוב, גבעת רמב&quot;ם, כפר שלם">
+      <div class="hood-chips" id="hood-chips"></div>
+    </div>
+    <div>
+      <label>חדרים</label>
+      <select id="rooms">
+        <option value="">לא משנה</option>
+        <option value="2-3">2-3 חדרים</option>
+        <option value="3-3">3 חדרים בלבד</option>
+        <option value="3-4">3-4 חדרים</option>
+        <option value="4-4">4 חדרים בלבד</option>
+        <option value="4-5">4-5 חדרים</option>
+        <option value="5-99">5+ חדרים</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label>מחיר מקסימלי (₪)</label>
+      <input type="number" id="maxPrice" placeholder="למשל 4000000" step="100000">
+    </div>
+    <div>
+      <label>העיר הפעילה</label>
+      <input type="text" id="city-display" disabled style="opacity:.7">
+    </div>
+  </div>
+
+  <div class="row" style="grid-template-columns:1fr">
+    <div>
+      <label>סטטוס סינון</label>
+      <input type="text" id="deep-status" disabled style="opacity:.85">
+    </div>
+  </div>
+
+  <div class="big-search-btns" id="big-search-btns"></div>
+
+  <div class="result-preview" id="url-preview"></div>
+</div>
+
+<section>
+  <h2>טיפים לחיפוש יעיל</h2>
+  <div class="grid-3" style="margin-top:16px">
+    <div class="card">
+      <h3>Yad2</h3>
+      <p class="sub">הפלטפורמה הגדולה ביותר — רוב המוכרים מפרסמים כאן קודם. יתרון: סינון חזק. חיסרון: הרבה מודעות כפולות.</p>
+    </div>
+    <div class="card">
+      <h3>Madlan</h3>
+      <p class="sub">מציג עסקאות אחרונות באזור לצד המודעות — כך אפשר להשוות את מחיר הדירה למה שבאמת נסגר בשכונה לאחרונה.</p>
+    </div>
+    <div class="card">
+      <h3>Facebook · מרובה-כיוונים</h3>
+      <p class="sub">הכפתורים פותחים חיפוש ממוקד בתוך מספר קבוצות רלוונטיות, חיפוש פוסטים חוצה-קבוצות (בכל הקבוצות שאתה חבר בהן), גילוי קבוצות חדשות, ו-Marketplace. הרבה מודעות עולות כאן לפני אתרי התיווך.</p>
+    </div>
+    <div class="card">
+      <h3>Nadlan.gov.il</h3>
+      <p class="sub">רישום רשמי של עסקאות אמיתיות שנחתמו. שם בודקים מה המחיר האמיתי שנסגר, לא המחיר המבוקש. חובה לפני הצעה.</p>
+    </div>
+    <div class="card">
+      <h3>Homeless</h3>
+      <p class="sub">הרבה מודעות מבעלי-בתים ישירות, פחות תיווך. טוב לדירות ישנות במתחמים שיתחדשו.</p>
+    </div>
+    <div class="card">
+      <h3>Komo · לוח ynet</h3>
+      <p class="sub">לוח המודעות של ynet — מחליף את WinWin. הרבה מודעות מבעלי-דירות ופרויקטים חדשים.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="disclaimer">
+    ⚠️ הקישורים מועברים לפלטפורמות חיצוניות. אנחנו לא שולטים על התכנים המוצגים שם, על רמת הסינון של המודעות, ועל אמיתות המחירים המפורסמים. השווה תמיד מול Nadlan.gov.il לעסקאות אמיתיות.
+  </div>
+  <div>© 2026 · כלי עזר לאיתור הזדמנויות פינוי-בינוי · לא ייעוץ משפטי או פיננסי</div>
+</footer>
+
+</div>
+
+<script src="cities.js?v=20260418e"></script>
+<script>
+(function(){
+  const city = getCurrentCity();
+  document.title = `חיפוש דירות · ${city.name} · רדאר פינוי-בינוי`;
+  document.getElementById('city-display').value = city.name;
+
+  // Collect unique hoods from zones
+  const hoods = [...new Set(city.zones.map(z => z.hood).filter(Boolean))];
+  document.getElementById('hood-chips').innerHTML = hoods.map(h =>
+    `<button type="button" class="hood-chip" data-hood="${h}">${h}</button>`
+  ).join('');
+
+  // Chip click
+  document.querySelectorAll('.hood-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const isSelected = chip.classList.contains('selected');
+      document.querySelectorAll('.hood-chip').forEach(c => c.classList.remove('selected'));
+      if (!isSelected) {
+        chip.classList.add('selected');
+        document.getElementById('hood').value = chip.dataset.hood;
+      } else {
+        document.getElementById('hood').value = '';
+      }
+      rebuild();
+    });
+  });
+
+  function rebuild() {
+    const hood = document.getElementById('hood').value.trim();
+    const rooms = document.getElementById('rooms').value;
+    const maxPrice = document.getElementById('maxPrice').value;
+    const links = buildSearchLinks(city, { hood, rooms, maxPrice });
+    // In search.html the user is actively filtering, so expand FB into multiple buttons
+    document.getElementById('big-search-btns').innerHTML = renderSearchButtons(links, 'lg', { expandFb: true, city, hood });
+
+    // Deep-filter status
+    document.getElementById('deep-status').value = links._deep
+      ? '✓ סינון שכונה עמוק ב-Yad2 פעיל'
+      : 'סינון ברמת עיר בלבד (אין ID שכונה ידוע)';
+
+    // URL preview — drop internal fields that start with "_"
+    const labels = {yad2:'Yad2', madlan:'Madlan', facebook:'Facebook', nadlan:'Nadlan.gov.il', homeless:'Homeless', komo:'Komo'};
+    const visible = Object.entries(links).filter(([k]) => !k.startsWith('_'));
+    document.getElementById('url-preview').innerHTML =
+      '<strong>תצוגה מקדימה של הקישורים:</strong><br>' +
+      visible.map(([k,v]) => `${labels[k]||k}: <code>${v}</code>`).join('<br>');
+  }
+
+  ['hood','rooms','maxPrice'].forEach(id =>
+    document.getElementById(id).addEventListener('input', rebuild)
+  );
+  rebuild();
+
+  // City selector
+  document.getElementById('city-selector-slot').innerHTML = buildCitySelector(city.slug);
+  preserveCityInLinks();
+})();
+</script>
+</body>
+</html>
