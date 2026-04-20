@@ -136,7 +136,7 @@ const App = {
     return getAllZonesFlat().filter(z =>
       (s.cities.length === 0 || s.cities.includes(z.citySlug)) &&
       (s.statuses.length === 0 || s.statuses.includes(z.status)) &&
-      (z.status === 'yes' || !s.budget || z.entryPriceMin <= s.budget)
+      (!s.budget || z.entryPriceMin <= s.budget)
     );
   },
 
