@@ -449,10 +449,19 @@ const App = {
     const sorted = this._sortZones(zones);
 
     if (this.state.viewMode === 'map') {
-      html += '<div class="data-panel" style="height:500px; padding:0; overflow:hidden; position:relative" id="map-container">';
-      html += '<div id="map" style="width:100%; height:100%; background:var(--card)"></div>';
-      html += '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:var(--muted)">';
-      html += '<strong>מפה בתהליך טעינה...</strong><br><small>מציג 54 מתחמי פינוי-בינוי</small>';
+      html += '<div class="map-layout">';
+      // Right sidebar list (RTL)
+      html += '<div class="map-list" id="map-zone-list">';
+      sorted.forEach(z => {
+        html += `<div class="map-list-item" id="map-item-${z.zoneId}" onclick="App.focusZoneOnMap('${z.zoneId}')">
+          <div class="map-list-title">${z.zone}</div>
+          <div class="map-list-meta">${z.city} · ${z.statusLabel} · ${z.priceLabel}</div>
+        </div>`;
+      });
+      html += '</div>';
+      // Left map canvas
+      html += '<div class="map-canvas" id="map-container">';
+      html += '<div id="map" style="width:100%; height:100%"></div>';
       html += '</div></div>';
       
       // Initialize map after render
@@ -757,6 +766,7 @@ const App = {
 
   // ── Map View Helpers ───────────────────────────────────────────
   _map: null,
+  _markers: {},
   _initLeafletMap(zones) {
     // Load Leaflet CSS & JS dynamically if not already present
     if (!document.getElementById('leaflet-css')) {
@@ -778,6 +788,7 @@ const App = {
 
   _createMap(zones) {
     if (this._map) this._map.remove();
+    this._markers = {};
     
     // Default to center of the 3-city cluster
     this._map = L.map('map', { zoomControl: false }).setView([32.072, 34.808], 14);
@@ -799,16 +810,13 @@ const App = {
       'רמת אביב': [32.1145, 34.7945], 'נווה שרת': [32.1195, 34.8245]
     };
 
-    // Track how many markers per neighborhood to apply deterministic offset
     const hoodCounts = {};
 
     zones.forEach(z => {
       const base = neighborhoodCoords[z.hood] || [32.072, 34.812];
-      
-      // Deterministic offset (spiral) so markers don't overlap but also don't move randomly
       hoodCounts[z.hood] = (hoodCounts[z.hood] || 0) + 1;
       const count = hoodCounts[z.hood];
-      const angle = count * 0.8; // simple spiral
+      const angle = count * 0.8;
       const radius = count * 0.0006;
       const lat = base[0] + Math.cos(angle) * radius;
       const lng = base[1] + Math.sin(angle) * radius;
@@ -818,6 +826,8 @@ const App = {
         radius: 8, fillColor: color, color: '#fff', weight: 1, fillOpacity: 0.8
       }).addTo(this._map);
 
+      this._markers[z.zoneId] = marker;
+
       marker.bindPopup(`
         <div style="direction:rtl; text-align:right; font-family:'Heebo'; min-width:140px">
           <strong style="color:var(--accent); font-size:13px">${z.zone}</strong><br>
@@ -826,7 +836,27 @@ const App = {
           <button onclick="App.navigate('zone','${z.zoneId}')" style="width:100%; margin-top:6px; background:var(--accent); color:#000; border:0; border-radius:4px; padding:6px; cursor:pointer; font-size:11px; font-weight:800">לצפייה בפרטים</button>
         </div>
       `);
+
+      marker.on('click', () => this.focusZoneOnMap(z.zoneId, true));
     });
+  },
+
+  focusZoneOnMap(zoneId, fromMarker) {
+    const marker = this._markers[zoneId];
+    if (!marker) return;
+
+    // Highlight in list
+    document.querySelectorAll('.map-list-item').forEach(el => el.classList.remove('active'));
+    const item = document.getElementById(`map-item-${zoneId}`);
+    if (item) {
+      item.classList.add('active');
+      item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    if (!fromMarker) {
+      this._map.setView(marker.getLatLng(), 16);
+      marker.openPopup();
+    }
   },
 
   _sortZones(zones) {
