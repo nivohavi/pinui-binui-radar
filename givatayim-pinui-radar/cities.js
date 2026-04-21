@@ -831,13 +831,13 @@ function buildFacebookLinks(city, opts) {
 let _listingsCache = null;
 function loadListings() {
   if (_listingsCache) return Promise.resolve(_listingsCache);
-  return fetch('data_v1.json?v=1776781334628')
+  return fetch('data_v1.json?v=1776782708325')
     .then(r => r.ok ? r.json() : { byZone: {}, _meta: {} })
     .then(data => { _listingsCache = data; return data; })
     .catch(() => { _listingsCache = { byZone: {}, _meta: {} }; return _listingsCache; });
 }
 
-function formatListingCard(l, zoneAvgPpsqm, zoneScore) {
+function formatListingCard(l, zoneAvgPpsqm, zoneScore, zone) {
   const sourceColor = {
     'Yad2':'#ff9800','Madlan':'#00d4ff','Facebook':'#1877f2',
     'Nadlan.gov':'#2ee59d','Homeless':'#7c5cff','Komo':'#fbbf24'

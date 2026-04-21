@@ -667,7 +667,8 @@ const App = {
         if (sqm > 0 && price > 0) {
           const ppsqm = price / sqm;
           if (ppsqm / avgPpsqm < 0.92) {
-            deals.push({ html: formatListingCard(l, avgPpsqm), ppsqmRatio: ppsqm / avgPpsqm });
+            const score = computeValueScore(zone);
+            deals.push({ html: formatListingCard(l, avgPpsqm, score, zone), ppsqmRatio: ppsqm / avgPpsqm });
           }
         }
       }
@@ -1268,13 +1269,14 @@ const App = {
     if (!list.length) return '';
 
     const avgPpsqm = parsePpsqmRange(zone.prices.rows);
+    const score = computeValueScore(zone);
     const updated = _listingsCache._meta && _listingsCache._meta.updated ? ' · עודכן ' + _listingsCache._meta.updated : '';
 
     let html = '<div class="data-panel">';
     html += `<div class="panel-header"><span class="panel-title">דירות לדוגמה במתחם${updated}</span></div>`;
     html += '<div class="listings-grid">';
     for (const l of list) {
-      html += formatListingCard(l, avgPpsqm);
+      html += formatListingCard(l, avgPpsqm, score, zone);
     }
     html += '</div></div>';
     return html;
