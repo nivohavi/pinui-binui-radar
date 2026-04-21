@@ -197,6 +197,13 @@ const App = {
     this.render();
   },
 
+  resetFilters() {
+    localStorage.removeItem('pinui_budget');
+    localStorage.removeItem('pinui_cities');
+    localStorage.removeItem('pinui_statuses');
+    location.reload();
+  },
+
   _filterZoneList(query) {
     this.state.search = query;
     const q = query.trim().toLowerCase();
@@ -327,11 +334,14 @@ const App = {
       const statusList = [['yes','לקנות'],['maybe','לעקוב'],['no','לחכות']];
       for (const [key, label] of statusList) {
         const on = this.state.statuses.includes(key) ? ' on' : '';
-        html += `<button class="sb-chip${on}" data-status="${key}" onclick="App.toggleStatus('${key}')">${label}</button>`;
+        html += `<button class="sb-chip${on}" onclick="App.toggleStatus('${key}')">${label}</button>`;
       }
       html += '</div>';
+
+      // Reset button
+      html += '<button class="sb-chip" style="margin-top:20px; width:100%; border-style:dashed; opacity:0.8" onclick="App.resetFilters()">🔄 איפוס הגדרות</button>';
       html += '</div>';
-    }
+      }
 
     // Zone list — all views, grouped by city, filterable
     html += '<div class="sb-section-label">מתחמים</div>';
