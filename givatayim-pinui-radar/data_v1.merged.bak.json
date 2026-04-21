@@ -1,8 +1,8 @@
 {
   "_meta": {
     "updated": "2026-04-21",
-    "source": "Yad2 (Fresh Scrape)",
-    "note": "ניתן לראות רק את תוצאות הסריקה האחרונה מ-יד2."
+    "source": "Yad2 + Madlan (via Claude Code agents)",
+    "note": "Merged with new Yad2 results (1000+ extracted)."
   },
   "byZone": {
     "east": [
@@ -622,6 +622,7 @@
         "meta": "5 ח' · 148 מ״ר · ק' 4"
       }
     ],
+    "northwest": [],
     "katzenelson": [
       {
         "title": "כצנלסון",
@@ -690,6 +691,12 @@
         "meta": "4 ח' · 114 מ״ר · ק' 4"
       }
     ],
+    "korazin": [],
+    "lavi": [],
+    "katzenelson-gordon": [],
+    "jasmin": [],
+    "aura-katzenelson": [],
+    "herzog": [],
     "gnessin": [
       {
         "title": "גנסין",
@@ -804,6 +811,19 @@
         "source": "Yad2",
         "url": "https://www.yad2.co.il/realestate/forsale?topArea=2&area=1&city=8600&neighborhood=684&property=1",
         "meta": "4 ח' · 130 מ״ר"
+      }
+    ],
+    "uziel": [
+      {
+        "title": "עוזיאל",
+        "price": "₪ 3,290,000",
+        "rooms": "4",
+        "sqm": "98",
+        "floor": "4",
+        "hood": "ראשונים",
+        "source": "ImmoIsrael",
+        "url": "https://www.yad2.co.il/realestate/forsale?topArea=2&area=1&city=8600&neighborhood=684&property=1",
+        "meta": "4 ח' · 98 מ״ר · ק' 4"
       }
     ],
     "rashi": [
@@ -2185,6 +2205,11 @@
         "url": "https://www.yad2.co.il/realestate/forsale?topArea=2&area=1&city=5000&neighborhood=256&property=1",
         "meta": "5 ח' · 110 מ״ר · ק' 6"
       }
-    ]
+    ],
+    "zeitim": [],
+    "krinitzi-nachalat": [],
+    "shalem": [],
+    "taharlev": [],
+    "kfar-shalem-yafet": []
   }
 }

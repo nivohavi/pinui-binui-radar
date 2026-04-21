@@ -73,47 +73,74 @@ function dedupe(listings) {
   return result;
 }
 
-function build(byZone, sources, fileName = 'listings.json') {
+function build(byZone, sources, fileName = 'data_v1.json') {
   const outputPath = path.join(__dirname, '..', '..', 'givatayim-pinui-radar', fileName);
-  const output = {
-    _meta: {
-      updated: new Date().toISOString().slice(0, 10),
-      source: sources.join(' + '),
-      note: 'עודכן אוטומטית. דירות ממופות לפי שכונה לאזורי פינוי-בינוי הרלוונטיים. לא כל דירה היא מועמדת לפינוי-בינוי.'
-    },
-    byZone: {}
-  };
+  
+  // 1. Load existing data if available
+  let existingData = { byZone: {}, _meta: {} };
+  if (fs.existsSync(outputPath)) {
+    try {
+      existingData = JSON.parse(fs.readFileSync(outputPath, 'utf8'));
+    } catch (e) {
+      console.warn(`[Build] Could not parse existing ${fileName}, starting fresh.`);
+    }
+  }
 
+  const finalByZone = { ...existingData.byZone };
+
+  // 2. Process each zone
+  const allZoneIds = new Set([...Object.keys(finalByZone), ...Object.keys(byZone)]);
   let totalListings = 0;
 
-  for (const [zoneId, listings] of Object.entries(byZone)) {
-    // Format all listings
-    const formatted = listings.map(formatListing).filter(l => l.title || l.price);
+  for (const zoneId of allZoneIds) {
+    const existingListings = finalByZone[zoneId] || [];
+    const newListings = byZone[zoneId] || [];
 
-    // Dedupe within zone
-    const unique = dedupe(formatted);
+    // Filter out old listings from the sources we just scraped
+    const preservedListings = existingListings.filter(l => !sources.includes(l.source));
+    
+    // Format and combine
+    const formattedNew = newListings.map(formatListing).filter(l => l.title || l.price);
+    const combined = [...preservedListings, ...formattedNew];
 
-    // Sort by price ascending
+    // Dedupe by URL
+    const seenUrls = new Set();
+    const unique = combined.filter(l => {
+      if (!l.url || seenUrls.has(l.url)) return false;
+      seenUrls.add(l.url);
+      return true;
+    });
+
+    // Sort by price
     unique.sort((a, b) => {
       const pa = parseInt((a.price || '').replace(/[^\d]/g, '')) || 0;
       const pb = parseInt((b.price || '').replace(/[^\d]/g, '')) || 0;
       return pa - pb;
     });
 
-    // Cap per zone
-    output.byZone[zoneId] = unique.slice(0, MAX_PER_ZONE);
-    totalListings += output.byZone[zoneId].length;
+    finalByZone[zoneId] = unique.slice(0, 50); // Increased cap
+    totalListings += finalByZone[zoneId].length;
   }
+
+  // 3. Prepare output
+  const output = {
+    ...existingData,
+    _meta: {
+      updated: new Date().toISOString().slice(0, 10),
+      source: [...new Set([...(existingData._meta?.source?.split(' + ') || []), ...sources])].join(' + '),
+      note: 'עודכן אוטומטית. דירות ממופות לפי שכונה לאזורי פינוי-בינוי הרלוונטיים.'
+    },
+    byZone: finalByZone
+  };
 
   // Safety check
   if (totalListings < MIN_TOTAL_LISTINGS) {
-    console.error(`[Build] ABORT: Only ${totalListings} listings (threshold: ${MIN_TOTAL_LISTINGS}). Something is wrong. Keeping previous ${fileName}.`);
+    console.error(`[Build] ABORT: Only ${totalListings} listings. Keeping previous ${fileName}.`);
     return false;
   }
 
-  // Write output
   fs.writeFileSync(outputPath, JSON.stringify(output, null, 2), 'utf8');
-  console.log(`[Build] Wrote ${totalListings} listings across ${Object.keys(output.byZone).length} zones to ${fileName}`);
+  console.log(`[Build] Updated ${fileName}: Total ${totalListings} listings across ${Object.keys(finalByZone).length} zones.`);
   return true;
 }
 

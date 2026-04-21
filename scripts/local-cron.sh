@@ -21,13 +21,13 @@ git pull --rebase >> "$LOG_FILE" 2>&1
 cd "$PIPELINE_DIR"
 npm ci --silent >> "$LOG_FILE" 2>&1
 
-# Run pipeline
-node run.js >> "$LOG_FILE" 2>&1
+# Run pipeline for all sources (merging into data_v1.json as per our new build logic)
+node run.js --output-file=data_v1.json >> "$LOG_FILE" 2>&1
 
 # Commit if changed
 cd "$REPO_DIR"
-if ! git diff --quiet givatayim-pinui-radar/listings.json; then
-  git add givatayim-pinui-radar/listings.json
+if ! git diff --quiet givatayim-pinui-radar/data_v1.json; then
+  git add givatayim-pinui-radar/data_v1.json
   git commit -m "daily: update listings $(date +%Y-%m-%d) [local]" >> "$LOG_FILE" 2>&1
   git push >> "$LOG_FILE" 2>&1
   echo "✓ Committed and pushed" >> "$LOG_FILE"
