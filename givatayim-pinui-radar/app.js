@@ -887,6 +887,7 @@ const App = {
     html += '</div>';
 
     // KPI chips from prices.rows
+    html += '<div style="font-size:11px; color:var(--muted); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px">📊 ניתוח מחירים</div>';
     html += '<div class="zone-kpis">';
     for (const row of zone.prices.rows) {
       html += `<div class="zone-kpi"><div class="zone-kpi-label">${row[0]}</div><div class="zone-kpi-value">${row[1]}</div></div>`;
@@ -894,6 +895,7 @@ const App = {
     html += '</div>';
 
     // Facts
+    html += '<div style="font-size:11px; color:var(--muted); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px">🏗 פרטי הפרויקט</div>';
     html += '<div class="zone-kpis">';
     for (const fact of zone.facts) {
       html += `<div class="zone-kpi"><div class="zone-kpi-label">${fact[0]}</div><div class="zone-kpi-value">${fact[1]}</div></div>`;
