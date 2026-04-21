@@ -442,6 +442,8 @@ const App = {
       <button class="sb-chip${this.state.viewMode==='map'?' on':''}" style="margin:0; border-radius:0 8px 8px 0" onclick="App.toggleViewMode('map')">🗺️ מפה</button>
     </div>`;
 
+    const sorted = this._sortZones(zones);
+
     if (this.state.viewMode === 'map') {
       html += '<div class="data-panel" style="height:500px; padding:0; overflow:hidden; position:relative" id="map-container">';
       html += '<div id="map" style="width:100%; height:100%; background:var(--card)"></div>';
@@ -453,7 +455,6 @@ const App = {
       setTimeout(() => this._initLeafletMap(zones), 100);
     } else {
       // ── Ranked Table ──
-      const sorted = this._sortZones(zones);
       html += '<div class="data-panel" id="zone-table">';
     html += '<div class="panel-header"><span class="panel-title">דירוג מתחמים</span><span class="panel-subtitle">' + zones.length + ' מתחמים</span></div>';
     html += '<table class="zone-table"><thead><tr>';
