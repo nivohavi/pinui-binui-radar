@@ -437,9 +437,13 @@ const App = {
     html += '</div>';
 
     // ── View Mode Switcher ──
-    html += `<div style="display:flex; justify-content:flex-end; margin-bottom:12px; gap:4px">
-      <button class="sb-chip${this.state.viewMode==='table'?' on':''}" style="margin:0; border-radius:8px 0 0 8px" onclick="App.toggleViewMode('table')">▦ טבלה</button>
-      <button class="sb-chip${this.state.viewMode==='map'?' on':''}" style="margin:0; border-radius:0 8px 8px 0" onclick="App.toggleViewMode('map')">🗺️ מפה</button>
+    html += `<div style="display:flex; justify-content:flex-start; margin-bottom:20px; background:rgba(255,255,255,0.03); padding:4px; border-radius:12px; width:fit-content; border:1px solid var(--border)">
+      <button class="sb-chip${this.state.viewMode==='table'?' on':''}" 
+        style="margin:0; border-radius:8px; padding:8px 16px; font-size:13px; min-width:100px; border:0" 
+        onclick="App.toggleViewMode('table')">▦ טבלה</button>
+      <button class="sb-chip${this.state.viewMode==='map'?' on':''}" 
+        style="margin:0; border-radius:8px; padding:8px 16px; font-size:13px; min-width:100px; border:0" 
+        onclick="App.toggleViewMode('map')">🗺️ מפה</button>
     </div>`;
 
     const sorted = this._sortZones(zones);
