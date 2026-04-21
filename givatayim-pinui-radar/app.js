@@ -108,6 +108,7 @@ const App = {
     dealsSortCol: 'ratio',
     dealsSortAsc: true,
     search: '',
+    viewMode: 'table', // 'table' or 'map'
     toolsOpen: {}
   },
 
@@ -232,6 +233,11 @@ const App = {
     if (this.state.dealsSortCol === col) this.state.dealsSortAsc = !this.state.dealsSortAsc;
     else { this.state.dealsSortCol = col; this.state.dealsSortAsc = true; }
     this.renderDeals();
+  },
+
+  toggleViewMode(mode) {
+    this.state.viewMode = mode;
+    this.renderDashboard();
   },
 
   // ── Master Render ──────────────────────────────────────────────
@@ -430,9 +436,25 @@ const App = {
     html += this._kpi('מציאות', deals, 'מחיר < 92% ממוצע מתחם', '', `App.navigate('deals')`);
     html += '</div>';
 
-    // ── Ranked Table ──
-    const sorted = this._sortZones(zones);
-    html += '<div class="data-panel" id="zone-table">';
+    // ── View Mode Switcher ──
+    html += `<div style="display:flex; justify-content:flex-end; margin-bottom:12px; gap:4px">
+      <button class="sb-chip${this.state.viewMode==='table'?' on':''}" style="margin:0; border-radius:8px 0 0 8px" onclick="App.toggleViewMode('table')">▦ טבלה</button>
+      <button class="sb-chip${this.state.viewMode==='map'?' on':''}" style="margin:0; border-radius:0 8px 8px 0" onclick="App.toggleViewMode('map')">🗺️ מפה</button>
+    </div>`;
+
+    if (this.state.viewMode === 'map') {
+      html += '<div class="data-panel" style="height:500px; padding:0; overflow:hidden; position:relative" id="map-container">';
+      html += '<div id="map" style="width:100%; height:100%; background:var(--card)"></div>';
+      html += '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:var(--muted)">';
+      html += '<strong>מפה בתהליך טעינה...</strong><br><small>מציג 54 מתחמי פינוי-בינוי</small>';
+      html += '</div></div>';
+      
+      // Initialize map after render
+      setTimeout(() => this._initLeafletMap(zones), 100);
+    } else {
+      // ── Ranked Table ──
+      const sorted = this._sortZones(zones);
+      html += '<div class="data-panel" id="zone-table">';
     html += '<div class="panel-header"><span class="panel-title">דירוג מתחמים</span><span class="panel-subtitle">' + zones.length + ' מתחמים</span></div>';
     html += '<table class="zone-table"><thead><tr>';
 
@@ -445,13 +467,14 @@ const App = {
       { key: 'premium', label: 'פרמיה' },
       { key: 'timeline', label: 'אופק' },
       { key: 'status', label: 'סטטוס' },
-      { key: 'score', label: 'ציון' }
+      { key: 'score', label: 'ציון', tooltip: 'פוטנציאל רווח שנתי מתואם סיכון: (פרמיה / שנים) × סיכון' }
     ];
     for (const c of cols) {
       const isSorted = this.state.sortCol === c.key;
       const arrow = isSorted ? (this.state.sortAsc ? '▲' : '▼') : '▽';
       const cls = isSorted ? ' class="sorted"' : '';
-      html += `<th${cls} onclick="App.sortBy('${c.key}')"><span class="arrow">${arrow}</span>${c.label}</th>`;
+      const tip = c.tooltip ? ` title="${c.tooltip}" style="cursor:help; border-bottom:1px dotted var(--muted)"` : '';
+      html += `<th${cls} onclick="App.sortBy('${c.key}')"><span${tip}>${c.label}</span><span class="arrow">${arrow}</span></th>`;
     }
     html += '</tr></thead><tbody>';
 
@@ -459,10 +482,12 @@ const App = {
       const statusCls = { yes: 'badge-good', maybe: 'badge-warn', no: 'badge-bad' }[z.status] || 'badge-neutral';
       const statusLabel = { yes: 'לקנות', maybe: 'לעקוב', no: 'לחכות' }[z.status] || z.status;
       const scoreCls = z.valueScore != null ? (z.valueScore >= 3 ? 'badge-good' : z.valueScore >= 1.5 ? 'badge-accent' : 'badge-neutral') : 'badge-neutral';
+      const displayAddress = z.address || (z.zone.includes(z.hood) ? z.zone : `שכונת ${z.hood}`);
+
       html += `<tr onclick="App.navigate('zone','${z.zoneId}')">`;
       html += `<td class="rank">${i + 1}</td>`;
       html += `<td class="zone-name">${z.zone}</td>`;
-      html += `<td class="address-col">${z.address || '-'}</td>`;
+      html += `<td class="address-col">${displayAddress}</td>`;
       html += `<td class="city-name">${z.city}</td>`;
       html += `<td>${z.priceLabel}</td>`;
       html += `<td>${z.premiumLabel}</td>`;
@@ -488,7 +513,8 @@ const App = {
     html += '</div></div>';
 
     // Right: Timeline mini-gantt
-    html += '<div class="data-panel"><div class="panel-header"><span class="panel-title">ציר זמן</span></div>';
+    html += '<div class="data-panel"><div class="panel-header"><span class="panel-title">ציר זמן (שנים)</span></div>';
+    html += '<div style="position:relative; padding-bottom:10px">';
     const maxYears = 15;
     for (const z of sorted) {
       if (!z.timelineMidYears) continue;
@@ -497,15 +523,23 @@ const App = {
       const left = (lo / maxYears * 100).toFixed(1);
       const width = (Math.min((hi - lo) / maxYears * 100, 100 - parseFloat(left))).toFixed(1);
       const color = { yes: 'var(--good)', maybe: 'var(--warn)', no: 'var(--bad)' }[z.status] || 'var(--muted)';
-      html += `<div class="timeline-bar-row">
-        <div class="timeline-bar-label">${z.zone.length > 12 ? z.zone.slice(0, 12) + '…' : z.zone}</div>
-        <div class="timeline-bar-track">
-          <div class="timeline-bar-fill" style="right:${left}%;width:${width}%;background:${color}"></div>
+      const barLabel = `${z.timelineMidYears}±2`;
+      
+      html += `<div class="timeline-bar-row" style="margin-bottom:12px">
+        <div class="timeline-bar-label" title="${z.zone}">${z.zone.length > 12 ? z.zone.slice(0, 12) + '…' : z.zone}</div>
+        <div class="timeline-bar-track" style="position:relative; background:rgba(255,255,255,0.03)">
+          <!-- Vertical grid lines for 5 and 10 years -->
+          <div style="position:absolute; left:33.3%; top:0; bottom:0; border-left:1px solid rgba(255,255,255,0.05); z-index:0"></div>
+          <div style="position:absolute; left:66.6%; top:0; bottom:0; border-left:1px solid rgba(255,255,255,0.05); z-index:0"></div>
+          
+          <div class="timeline-bar-fill" style="right:${left}%; width:${width}%; background:${color}; display:flex; align-items:center; justify-content:center; font-size:9px; color:#000; font-weight:800; border-radius:4px; min-width:24px; z-index:1">
+            ${barLabel}
+          </div>
         </div>
       </div>`;
     }
-    html += `<div class="timeline-axis"><span>0</span><span>5</span><span>10</span><span>15 שנים</span></div>`;
-    html += '</div>';
+    html += `<div class="timeline-axis" style="margin-top:8px"><span>0</span><span>5</span><span>10</span><span>15 שנים</span></div>`;
+    html += '</div></div>';
 
     html += '</div>'; // close bottom-grid
 
@@ -710,6 +744,71 @@ const App = {
       if (city.zones.find(cz => cz.id === zoneId)) return city;
     }
     return null;
+  },
+
+  // ── Map View Helpers ───────────────────────────────────────────
+  _map: null,
+  _initLeafletMap(zones) {
+    // Load Leaflet CSS & JS dynamically if not already present
+    if (!document.getElementById('leaflet-css')) {
+      const link = document.createElement('link');
+      link.id = 'leaflet-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+    if (typeof L === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+      script.onload = () => this._createMap(zones);
+      document.head.appendChild(script);
+    } else {
+      this._createMap(zones);
+    }
+  },
+
+  _createMap(zones) {
+    if (this._map) this._map.remove();
+    
+    // Default to center of Givatayim/Ramat Gan
+    this._map = L.map('map', { zoomControl: false }).setView([32.072, 34.812], 14);
+    L.control.zoom({ position: 'bottomright' }).addTo(this._map);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap'
+    }).addTo(this._map);
+
+    const neighborhoodCoords = {
+      'סיטי': [32.083, 34.801], 'הסתדרות': [32.071, 34.815], 'יבנאלי': [32.067, 34.818],
+      'גבעת רמב"ם': [32.075, 34.805], 'בן גוריון': [32.074, 34.818], 'מזרח גבעתיים': [32.068, 34.821],
+      'ארלוזורוב': [32.077, 34.811], 'בורוכוב': [32.081, 34.808], 'שינקין': [32.066, 34.812],
+      'ראשונים': [32.085, 34.803], 'ירושלים': [32.078, 34.823], 'הגפן': [32.089, 34.815],
+      'עמידר': [32.052, 34.828], 'רמת חן': [32.048, 34.818], 'קריניצי': [32.045, 34.822],
+      'נחלת גנים': [32.087, 34.809], 'כפר שלם': [32.045, 34.795], 'יפו': [32.042, 34.755],
+      'שפירא': [32.051, 34.775], 'קרית שלום': [32.042, 34.778], 'יד אליהו': [32.058, 34.793],
+      'רמת אביב': [32.115, 34.795], 'נווה שרת': [32.118, 34.825]
+    };
+
+    zones.forEach(z => {
+      const base = neighborhoodCoords[z.hood] || [32.072, 34.812];
+      // Jitter a bit so multiple zones in same hood don't overlap perfectly
+      const lat = base[0] + (Math.random() - 0.5) * 0.003;
+      const lng = base[1] + (Math.random() - 0.5) * 0.003;
+      
+      const color = { yes: 'var(--good)', maybe: 'var(--warn)', no: 'var(--bad)' }[z.status] || 'var(--muted)';
+      const marker = L.circleMarker([lat, lng], {
+        radius: 8, fillColor: color, color: '#fff', weight: 1, fillOpacity: 0.8
+      }).addTo(this._map);
+
+      marker.bindPopup(`
+        <div style="direction:rtl; text-align:right; font-family:'Heebo'">
+          <strong style="color:var(--accent)">${z.zone}</strong><br>
+          ${z.city} · ${z.statusLabel}<br>
+          <small>${z.priceLabel}</small><br>
+          <button onclick="App.navigate('zone','${z.zoneId}')" style="margin-top:8px; background:var(--accent); color:#000; border:0; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:11px; font-weight:800">פרטים נוספים</button>
+        </div>
+      `);
+    });
   },
 
   _sortZones(zones) {
