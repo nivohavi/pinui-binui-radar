@@ -1003,6 +1003,36 @@ const App = {
     }
     html += '</div>';
 
+    // Investment Radar Section
+    if (zone.iplan || zone.riskAnalysis) {
+      html += '<div style="font-size:11px; color:var(--muted); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px">🔍 מכ"ם השקעה (Intelligence)</div>';
+      html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px">';
+      
+      // Planning Intelligence
+      if (zone.iplan) {
+        html += `<div class="data-panel" style="margin:0; padding:12px; border-left:3px solid var(--accent)">
+          <div style="font-size:10px; color:var(--accent); font-weight:800; margin-bottom:6px">סטטוס תכנוני (i-plan)</div>
+          <div style="font-size:12px; font-weight:700; margin-bottom:4px">תוכנית: ${zone.iplan.planNum}</div>
+          <div style="font-size:11px; margin-bottom:2px">שלב: <strong>${zone.iplan.stage}</strong></div>
+          <div style="font-size:11px; color:var(--faint)">פרוטוקול אחרון: ${zone.iplan.lastProtocol}</div>
+          <div style="font-size:11px; margin-top:6px; font-style:italic; line-height:1.4">${zone.iplan.details}</div>
+        </div>`;
+      }
+      
+      // Risk & Legal
+      if (zone.riskAnalysis) {
+        const riskColor = zone.riskAnalysis.legalFlags.includes('גבוה') ? 'var(--bad)' : 'var(--good)';
+        html += `<div class="data-panel" style="margin:0; padding:12px; border-left:3px solid ${riskColor}">
+          <div style="font-size:10px; color:${riskColor}; font-weight:800; margin-bottom:6px">ניתוח סיכונים ומשפטי</div>
+          <div style="font-size:12px; font-weight:700; margin-bottom:4px">דירוג יזם: טייר ${zone.riskAnalysis.developerTier}</div>
+          <div style="font-size:11px; margin-bottom:2px">דגלים משפטיים: <span style="color:${riskColor}">${zone.riskAnalysis.legalFlags}</span></div>
+          <div style="font-size:11px">מצב דיירים: ${zone.riskAnalysis.tenantStatus}</div>
+        </div>`;
+      }
+      
+      html += '</div>';
+    }
+
     // Description
     html += `<div class="zone-desc">${zone.desc}</div>`;
 

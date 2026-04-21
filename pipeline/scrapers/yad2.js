@@ -76,66 +76,86 @@ async function scrapeYad2City(cityConfig, zones, browser) {
 
         // Extract listings from Yad2 DOM
         const pageListings = await page.evaluate(() => {
-          // Yad2 uses various classes for feed items
-          const items = document.querySelectorAll('[data-testid="feed-item"], [class*="feeditem"], [class*="feed_item"], [class*="listing"], [class*="FeedItem"]');
           const results = [];
+          
+          // DEBUG: Find all elements containing ₪ and no children
+          const potentialPrices = [...document.querySelectorAll('*')].filter(el => 
+            el.textContent.includes('₪') && el.children.length === 0 && el.textContent.length < 20
+          );
+          
+          if (potentialPrices.length > 0) {
+            for (const priceEl of potentialPrices) {
+              const priceText = priceEl.textContent.trim();
+              const priceVal = parseInt(priceText.replace(/[^\d]/g, ''));
+              
+              // Skip very low prices (likely parking or storage)
+              if (priceVal < 500000) continue;
 
-          for (const item of items) {
-            try {
-              // Try many common selector patterns for price and title
-              const priceEl = item.querySelector('[data-testid*="price"], [class*="price"], .price, [class*="Price"]');
-              const titleEl = item.querySelector('[data-testid*="title"], [class*="title"], [class*="address"], .title, [class*="Title"]');
-              const linkEl = item.querySelector('a[href*="/realestate/item/"]');
-              const hoodEl = item.querySelector('[class*="subtitle"], [class*="neighborhood"], .subtitle');
-              
-              const price = priceEl?.textContent?.trim() || '';
-              const title = titleEl?.textContent?.trim() || '';
-              const url = linkEl?.href || '';
+              let container = priceEl.parentElement;
+              for (let i = 0; i < 10 && container; i++) {
+                const link = container.querySelector('a[href*="/realestate/item/"]');
+                if (link) {
+                  // Try many ways to find a title
+                  const titleEl = container.querySelector('[data-testid="feed-item-title"], [class*="title"], [class*="address"], b, strong');
+                  const title = titleEl?.textContent?.trim() || 'דירה למכירה';
+                  const url = link.href;
+                  
+                  // Try to find rooms, sqm, floor
+                  let rooms = '', sqm = '', floor = '';
+                  
+                  // Look for specific testids first
+                  const rEl = container.querySelector('[data-testid*="rooms"]');
+                  const sEl = container.querySelector('[data-testid*="size"]');
+                  const fEl = container.querySelector('[data-testid*="floor"]');
+                  
+                  if (rEl) rooms = rEl.textContent.trim();
+                  if (sEl) sqm = sEl.textContent.trim().replace('מ"ר', '').trim();
+                  if (fEl) floor = fEl.textContent.trim().replace('קומה', '').replace("ק'", "").trim();
+                  
+                  // Fallback: look for elements with specific text
+                  if (!rooms || !sqm) {
+                    const allEls = [...container.querySelectorAll('span, div')].filter(el => el.children.length === 0);
+                    for (const el of allEls) {
+                      const txt = el.textContent.trim();
+                      if (txt.match(/^\d+\.?\d*$/) && !rooms && txt.length < 3) rooms = txt;
+                      else if (txt.includes('מ"ר') && !sqm) sqm = txt.replace('מ"ר', '').trim();
+                      else if ((txt.includes('קומה') || txt.includes("ק'")) && !floor) {
+                        floor = txt.replace('קומה', '').replace("ק'", "").trim();
+                      }
+                    }
+                  }
 
-              if (!price || !title) continue;
-              
-              // Skip generic "Ad" items but be less strict if we're getting zero results
-              const isAd = title.includes('נכס דומה') || url.includes('spot=') || url.includes('component-type=main_feed');
-              
-              // Parse info
-              let rooms = '', sqm = '', floor = '';
-              const roomsEl = item.querySelector('[data-testid*="rooms"], [class*="rooms"]');
-              const floorEl = item.querySelector('[data-testid*="floor"], [class*="floor"]');
-              const sizeEl = item.querySelector('[data-testid*="size"], [class*="size"], [class*="sqm"]');
-              
-              if (roomsEl) rooms = roomsEl.textContent.trim();
-              if (floorEl) floor = floorEl.textContent.trim().replace('קומה', '').replace("ק'", "").trim();
-              if (sizeEl) sqm = sizeEl.textContent.trim().replace('מ"ר', '').trim();
-
-              // Fallback for info
-              if (!rooms || !sqm) {
-                const infoEls = item.querySelectorAll('[class*="info"], [class*="detail"], [class*="row_val"], .info_item');
-                const infoTexts = [...infoEls].map(el => el.textContent.trim());
-                for (const t of infoTexts) {
-                  if (t.match(/^\d+\.?\d*$/) && !rooms) rooms = t;
-                  else if (t.match(/\d+\s*מ/) && !sqm) sqm = t.match(/(\d+)/)?.[1] || '';
-                  else if (t.match(/קומה|ק'/) && !floor) floor = t.match(/(\d+)/)?.[1] || '';
+                  results.push({
+                    title,
+                    price: priceText,
+                    rooms,
+                    sqm,
+                    floor,
+                    url,
+                    isAd: title.includes('נכס דומה') || url.includes('spot=')
+                  });
+                  break;
                 }
+                container = container.parentElement;
               }
-
-              results.push({
-                title,
-                price,
-                rooms,
-                sqm,
-                floor,
-                hood: hoodEl?.textContent?.trim() || '',
-                url,
-                isAd
-              });
-            } catch (e) { /* skip */ }
+            }
           }
+          
           return results;
         });
 
-        // Filter ads if we have organic results, otherwise keep them but mark them
-        const organic = pageListings.filter(l => !l.isAd);
-        const finalPageListings = organic.length > 0 ? organic : pageListings;
+        // Dedupe results by URL
+        const uniqueResults = [];
+        const seenUrls = new Set();
+        for (const r of pageListings) {
+          if (!seenUrls.has(r.url)) {
+            seenUrls.add(r.url);
+            uniqueResults.push(r);
+          }
+        }
+
+        const organic = uniqueResults.filter(l => !l.isAd);
+        const finalPageListings = organic.length > 0 ? organic : uniqueResults;
 
         for (const l of finalPageListings) {
           listings.push({
