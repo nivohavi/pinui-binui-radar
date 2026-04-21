@@ -831,7 +831,7 @@ function buildFacebookLinks(city, opts) {
 let _listingsCache = null;
 function loadListings() {
   if (_listingsCache) return Promise.resolve(_listingsCache);
-  return fetch('data_v1.json?v=1776782708325')
+  return fetch('data_v1.json?v=1776783013044')
     .then(r => r.ok ? r.json() : { byZone: {}, _meta: {} })
     .then(data => { _listingsCache = data; return data; })
     .catch(() => { _listingsCache = { byZone: {}, _meta: {} }; return _listingsCache; });
@@ -883,7 +883,7 @@ function formatListingCard(l, zoneAvgPpsqm, zoneScore, zone) {
       <span class="listing-source" style="--b:${sourceColor}">${l.source}</span>
       <span class="listing-price" ${priceSentimentCls}>${l.price}</span>
     </div>
-    <div class="listing-title">${potentialTag}${l.title}${zone ? ` (${zone.city})` : ''}</div>
+    <div class="listing-title">${potentialTag}${l.title}${zone ? ` (${zone.cityName})` : ''}</div>
     <div class="listing-meta">${rooms}${sqm}</div>
     ${ppsqmStr}
     ${note}
@@ -1012,12 +1012,11 @@ function getAllZonesFlat() {
       const keywords = ['אופק', 'אכלוס', 'זמן', 'שנים'];
       const timelineRow = z.facts.find(f => keywords.some(k => f[0].includes(k) || f[1].includes(k)));
       all.push({
-        city: city.name,
+        cityName: city.name,
         citySlug: slug,
         zone: z.name,
         zoneId: z.id,
-        address: z.address || '',
-        status: z.status,
+        address: z.address || '',        status: z.status,
         statusLabel: z.statusLabel,
         priceLabel: priceRow ? priceRow[1] : '-',
         premiumLabel: premiumRow ? premiumRow[1] : (z.status === 'yes' ? 'קנייה ישירה' : '-'),

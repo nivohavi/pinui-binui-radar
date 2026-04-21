@@ -512,7 +512,7 @@ const App = {
       html += `<td class="rank">${i + 1}</td>`;
       html += `<td class="zone-name">${z.zone}</td>`;
       html += `<td class="address-col">${displayAddress}</td>`;
-      html += `<td class="city-name">${z.city}</td>`;
+      html += `<td class="city-name">${z.cityName}</td>`;
       html += `<td>${z.priceLabel}</td>`;
       html += `<td>${z.premiumLabel}</td>`;
       html += `<td>${z.timelineLabel}</td>`;
@@ -769,7 +769,7 @@ const App = {
   _findZoneData(zoneId) {
     for (const [slug, city] of Object.entries(CITIES)) {
       const z = city.zones.find(cz => cz.id === zoneId);
-      if (z) return { ...z, citySlug: slug };
+      if (z) return { ...z, citySlug: slug, cityName: city.name };
     }
     return null;
   },
@@ -887,9 +887,8 @@ const App = {
         case 'score':    va = a.valueScore || 0; vb = b.valueScore || 0; break;
         case 'zone':     va = a.zone; vb = b.zone; break;
         case 'address':  va = a.address; vb = b.address; break;
-        case 'city':     va = a.city; vb = b.city; break;
-        case 'price':    va = a.entryPriceMin; vb = b.entryPriceMin; break;
-        case 'premium':  va = a.premiumMid; vb = b.premiumMid; break;
+        case 'city':     va = a.cityName; vb = b.cityName; break;
+        case 'price':    va = a.entryPriceMin; vb = b.entryPriceMin; break;        case 'premium':  va = a.premiumMid; vb = b.premiumMid; break;
         case 'timeline': va = a.timelineMidYears; vb = b.timelineMidYears; break;
         case 'status':   va = { yes: 3, maybe: 2, no: 1 }[a.status] || 0; vb = { yes: 3, maybe: 2, no: 1 }[b.status] || 0; break;
         default:         va = a.valueScore || 0; vb = b.valueScore || 0;
