@@ -977,7 +977,14 @@ const App = {
     html += '<div style="font-size:11px; color:var(--muted); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px">📊 ניתוח מחירים</div>';
     html += '<div class="zone-kpis">';
     for (const row of zone.prices.rows) {
-      html += `<div class="zone-kpi"><div class="zone-kpi-label">${row[0]}</div><div class="zone-kpi-value">${row[1]}</div></div>`;
+      const isPremium = row[0].includes('פרמיה');
+      const theme = isPremium ? 'style="border-color:var(--good); background:rgba(52,211,153,0.03)"' : 'style="border-color:rgba(6,182,212,0.3)"';
+      const labelIcon = isPremium ? '📈 ' : '💰 ';
+      const valColor = isPremium ? 'color:var(--good)' : '';
+      html += `<div class="zone-kpi" ${theme}>
+        <div class="zone-kpi-label">${labelIcon}${row[0]}</div>
+        <div class="zone-kpi-value" style="${valColor}">${row[1]}</div>
+      </div>`;
     }
     html += '</div>';
 
@@ -985,7 +992,14 @@ const App = {
     html += '<div style="font-size:11px; color:var(--muted); font-weight:700; margin-bottom:10px; text-transform:uppercase; letter-spacing:0.5px">🏗 פרטי הפרויקט</div>';
     html += '<div class="zone-kpis">';
     for (const fact of zone.facts) {
-      html += `<div class="zone-kpi"><div class="zone-kpi-label">${fact[0]}</div><div class="zone-kpi-value">${fact[1]}</div></div>`;
+      const isTimeline = fact[0].includes('אופק') || fact[0].includes('זמן');
+      const isUnits = fact[0].includes('יחידות') || fact[0].includes('דירות');
+      const theme = isTimeline ? 'style="border-color:var(--warn); background:rgba(251,191,36,0.03)"' : (isUnits ? 'style="border-color:var(--accent)"' : '');
+      const labelIcon = isTimeline ? '⏳ ' : (isUnits ? '🏢 ' : '📝 ');
+      html += `<div class="zone-kpi" ${theme}>
+        <div class="zone-kpi-label">${labelIcon}${fact[0]}</div>
+        <div class="zone-kpi-value">${fact[1]}</div>
+      </div>`;
     }
     html += '</div>';
 
