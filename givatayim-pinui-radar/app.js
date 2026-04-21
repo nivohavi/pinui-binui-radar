@@ -1024,7 +1024,7 @@ const App = {
         const riskColor = zone.riskAnalysis.legalFlags.includes('גבוה') ? 'var(--bad)' : 'var(--good)';
         html += `<div class="data-panel" style="margin:0; padding:12px; border-left:3px solid ${riskColor}">
           <div style="font-size:10px; color:${riskColor}; font-weight:800; margin-bottom:6px">ניתוח סיכונים ומשפטי</div>
-          <div style="font-size:12px; font-weight:700; margin-bottom:4px">דירוג יזם: טייר ${zone.riskAnalysis.developerTier}</div>
+          <div style="font-size:12px; font-weight:700; margin-bottom:4px">דירוג יזם: ${zone.riskAnalysis.developerTier === '-' ? 'בבדיקה' : 'רמה ' + zone.riskAnalysis.developerTier.replace('A','א\u0027').replace('B','ב\u0027').replace('C','ג\u0027')}</div>
           <div style="font-size:11px; margin-bottom:2px">דגלים משפטיים: <span style="color:${riskColor}">${zone.riskAnalysis.legalFlags}</span></div>
           <div style="font-size:11px">מצב דיירים: ${zone.riskAnalysis.tenantStatus}</div>
         </div>`;
