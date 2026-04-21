@@ -268,6 +268,14 @@ const App = {
     }
     html += '</div>';
 
+    // Global Search
+    html += `<div style="margin-bottom:20px; position:relative">
+      <input type="text" class="sb-input" placeholder="חפש רחוב, פרויקט או יזם..." 
+        style="padding-right:32px"
+        oninput="App._filterZoneList(this.value)">
+      <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); opacity:0.5">🔍</span>
+    </div>`;
+
     // Nav — 3 items now
     const navItems = [
       { view: 'dashboard', icon: '⊞', label: 'סקירה' },
