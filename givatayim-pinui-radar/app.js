@@ -430,10 +430,10 @@ const App = {
     const deals = this._countDeals();
 
     let html = '<div class="kpi-row">';
-    html += this._kpi('מתחמים בתקציב', inBudget, `מתוך ${getAllZonesFlat().length} מתחמים`, '', `App.scrollToSection('zone-table')`);
-    html += this._kpi('ציון ערך מוביל', topScore ? topScore.valueScore.toFixed(1) : '-', topScore ? topScore.zone : '', 'accent', topScore ? `App.navigate('zone','${topScore.zoneId}')` : '');
-    html += this._kpi('ממוצע ₪/מ"ר', avgPpsqm ? '₪' + Math.round(avgPpsqm / 1000) + 'K' : '-', 'ממוצע מתחמים מסוננים', '', `App.scrollToSection('zone-table')`);
-    html += this._kpi('מציאות', deals, 'מחיר < 92% ממוצע מתחם', '', `App.navigate('deals')`);
+    html += this._kpi('מתחמים בתקציב', inBudget, `מתוך ${getAllZonesFlat().length} מתחמים`, 'kpi-cyan', '🏢', `App.scrollToSection('zone-table')`);
+    html += this._kpi('ציון ערך מוביל', topScore ? topScore.valueScore.toFixed(1) : '-', topScore ? topScore.zone : '', 'kpi-gold', '⭐', topScore ? `App.navigate('zone','${topScore.zoneId}')` : '');
+    html += this._kpi('ממוצע ₪/מ"ר', avgPpsqm ? '₪' + Math.round(avgPpsqm / 1000) + 'K' : '-', 'ממוצע מתחמים מסוננים', 'kpi-amber', '📊', `App.scrollToSection('zone-table')`);
+    html += this._kpi('מציאות', deals, 'מחיר < 92% ממוצע מתחם', 'kpi-emerald', '✨', `App.navigate('deals')`);
     html += '</div>';
 
     // ── View Mode Switcher ──
@@ -567,13 +567,16 @@ const App = {
   },
 
   // ── Dashboard Helpers ──
-  _kpi(label, value, sub, cls, onclick) {
-    const clickAttr = onclick ? ` onclick="${onclick}" style="cursor:pointer"` : '';
+  _kpi(label, value, sub, theme, icon, onclick) {
+    const clickAttr = onclick ? ` onclick="${onclick}"` : '';
     const hoverCls = onclick ? ' kpi-clickable' : '';
-    return `<div class="kpi${hoverCls}"${clickAttr}>
-      <div class="kpi-label">${label}</div>
-      <div class="kpi-value${cls ? ' ' + cls : ''}">${value}</div>
-      <div class="kpi-sub">${sub}${onclick ? ' →' : ''}</div>
+    return `<div class="kpi ${theme}${hoverCls}"${clickAttr}>
+      <div class="kpi-icon">${icon}</div>
+      <div class="kpi-content">
+        <div class="kpi-label">${label}</div>
+        <div class="kpi-value">${value}</div>
+        <div class="kpi-sub">${sub}</div>
+      </div>
     </div>`;
   },
 
@@ -772,30 +775,39 @@ const App = {
   _createMap(zones) {
     if (this._map) this._map.remove();
     
-    // Default to center of Givatayim/Ramat Gan
-    this._map = L.map('map', { zoomControl: false }).setView([32.072, 34.812], 14);
+    // Default to center of the 3-city cluster
+    this._map = L.map('map', { zoomControl: false }).setView([32.072, 34.808], 14);
     L.control.zoom({ position: 'bottomright' }).addTo(this._map);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
       attribution: '&copy; OpenStreetMap'
     }).addTo(this._map);
 
+    // Precise neighborhood center points
     const neighborhoodCoords = {
-      'סיטי': [32.083, 34.801], 'הסתדרות': [32.071, 34.815], 'יבנאלי': [32.067, 34.818],
-      'גבעת רמב"ם': [32.075, 34.805], 'בן גוריון': [32.074, 34.818], 'מזרח גבעתיים': [32.068, 34.821],
-      'ארלוזורוב': [32.077, 34.811], 'בורוכוב': [32.081, 34.808], 'שינקין': [32.066, 34.812],
-      'ראשונים': [32.085, 34.803], 'ירושלים': [32.078, 34.823], 'הגפן': [32.089, 34.815],
-      'עמידר': [32.052, 34.828], 'רמת חן': [32.048, 34.818], 'קריניצי': [32.045, 34.822],
-      'נחלת גנים': [32.087, 34.809], 'כפר שלם': [32.045, 34.795], 'יפו': [32.042, 34.755],
-      'שפירא': [32.051, 34.775], 'קרית שלום': [32.042, 34.778], 'יד אליהו': [32.058, 34.793],
-      'רמת אביב': [32.115, 34.795], 'נווה שרת': [32.118, 34.825]
+      'סיטי': [32.0835, 34.8005], 'הסתדרות': [32.0720, 34.8145], 'יבנאלי': [32.0675, 34.8175],
+      'גבעת רמב"ם': [32.0745, 34.8045], 'בן גוריון': [32.0755, 34.8185], 'מזרח גבעתיים': [32.0685, 34.8225],
+      'ארלוזורוב': [32.0780, 34.8105], 'בורוכוב': [32.0825, 34.8075], 'שינקין': [32.0655, 34.8115],
+      'ראשונים': [32.0865, 34.8025], 'ירושלים': [32.0775, 34.8235], 'הגפן': [32.0915, 34.8145],
+      'עמידר': [32.0525, 34.8275], 'רמת חן': [32.0485, 34.8175], 'קריניצי': [32.0455, 34.8215],
+      'נחלת גנים': [32.0885, 34.8085], 'כפר שלם': [32.0465, 34.7945], 'יפו': [32.0425, 34.7545],
+      'שפירא': [32.0505, 34.7745], 'קרית שלום': [32.0435, 34.7775], 'יד אליהו': [32.0595, 34.7925],
+      'רמת אביב': [32.1145, 34.7945], 'נווה שרת': [32.1195, 34.8245]
     };
+
+    // Track how many markers per neighborhood to apply deterministic offset
+    const hoodCounts = {};
 
     zones.forEach(z => {
       const base = neighborhoodCoords[z.hood] || [32.072, 34.812];
-      // Jitter a bit so multiple zones in same hood don't overlap perfectly
-      const lat = base[0] + (Math.random() - 0.5) * 0.003;
-      const lng = base[1] + (Math.random() - 0.5) * 0.003;
+      
+      // Deterministic offset (spiral) so markers don't overlap but also don't move randomly
+      hoodCounts[z.hood] = (hoodCounts[z.hood] || 0) + 1;
+      const count = hoodCounts[z.hood];
+      const angle = count * 0.8; // simple spiral
+      const radius = count * 0.0006;
+      const lat = base[0] + Math.cos(angle) * radius;
+      const lng = base[1] + Math.sin(angle) * radius;
       
       const color = { yes: 'var(--good)', maybe: 'var(--warn)', no: 'var(--bad)' }[z.status] || 'var(--muted)';
       const marker = L.circleMarker([lat, lng], {
@@ -803,11 +815,11 @@ const App = {
       }).addTo(this._map);
 
       marker.bindPopup(`
-        <div style="direction:rtl; text-align:right; font-family:'Heebo'">
-          <strong style="color:var(--accent)">${z.zone}</strong><br>
-          ${z.city} · ${z.statusLabel}<br>
-          <small>${z.priceLabel}</small><br>
-          <button onclick="App.navigate('zone','${z.zoneId}')" style="margin-top:8px; background:var(--accent); color:#000; border:0; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:11px; font-weight:800">פרטים נוספים</button>
+        <div style="direction:rtl; text-align:right; font-family:'Heebo'; min-width:140px">
+          <strong style="color:var(--accent); font-size:13px">${z.zone}</strong><br>
+          <span style="font-size:11px">${z.city} · ${z.statusLabel}</span><br>
+          <div style="margin:4px 0; font-size:11px; color:var(--muted)">${z.priceLabel}</div>
+          <button onclick="App.navigate('zone','${z.zoneId}')" style="width:100%; margin-top:6px; background:var(--accent); color:#000; border:0; border-radius:4px; padding:6px; cursor:pointer; font-size:11px; font-weight:800">לצפייה בפרטים</button>
         </div>
       `);
     });
