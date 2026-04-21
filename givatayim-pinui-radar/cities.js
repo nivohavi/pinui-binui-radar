@@ -837,10 +837,10 @@ function loadListings() {
     .catch(() => { _listingsCache = { byZone: {}, _meta: {} }; return _listingsCache; });
 }
 
-function formatListingCard(l, zoneAvgPpsqm) {
+function formatListingCard(l, zoneAvgPpsqm, zoneScore) {
   const sourceColor = {
     'Yad2':'#ff9800','Madlan':'#00d4ff','Facebook':'#1877f2',
-    'Nadlan.gov':'#2ee59d','Homeless':'#7c5cff','Komo':'#ffb547'
+    'Nadlan.gov':'#2ee59d','Homeless':'#7c5cff','Komo':'#fbbf24'
   }[l.source] || '#888';
   const sqmNum = parseInt(l.sqm) || 0;
   const priceNum = parseInt((l.price || '').replace(/[^\d]/g, '')) || 0;
@@ -848,17 +848,30 @@ function formatListingCard(l, zoneAvgPpsqm) {
 
   let dealBadge = '';
   let savingStr = '';
+  let priceSentimentCls = '';
+  
   if (ppsqm && zoneAvgPpsqm) {
     const ratio = ppsqm / zoneAvgPpsqm;
     const diff = zoneAvgPpsqm - ppsqm;
     
-    if (ratio < 0.92) {
-      dealBadge = '<span class="deal-badge deal-good">מציאה</span>';
-      savingStr = `<div style="font-size:10px; color:var(--good); margin-top:2px">₪${diff.toLocaleString('he-IL')} מתחת לממוצע</div>`;
+    if (ratio < 0.90) {
+      dealBadge = '<span class="deal-badge deal-good">🔥 מציאה</span>';
+      savingStr = `<div style="font-size:9px; color:var(--good); margin-top:2px; font-weight:700">₪${diff.toLocaleString('he-IL')} מתחת לממוצע</div>`;
+      priceSentimentCls = 'style="color:var(--good)"';
     }
-    else if (ratio <= 1.05) dealBadge = '<span class="deal-badge deal-market">שוק</span>';
-    else dealBadge = '<span class="deal-badge deal-expensive">יקר</span>';
+    else if (ratio < 0.98) {
+      dealBadge = '<span class="deal-badge deal-good">מחיר הוגן</span>';
+    }
+    else if (ratio > 1.10) {
+      dealBadge = '<span class="deal-badge deal-expensive">מחיר גבוה</span>';
+      priceSentimentCls = 'style="color:var(--bad)"';
+    }
   }
+
+  // Potential tag based on score
+  let potentialTag = '';
+  if (zoneScore >= 4) potentialTag = '<span class="badge badge-good" style="font-size:8px; padding:1px 4px; margin-left:4px; vertical-align:middle">פוטנציאל אדיר</span>';
+  else if (zoneScore >= 2.5) potentialTag = '<span class="badge badge-accent" style="font-size:8px; padding:1px 4px; margin-left:4px; vertical-align:middle">פוטנציאל גבוה</span>';
   
   const ppsqmStr = ppsqm ? `<div class="listing-ppsqm">₪${(ppsqm/1000).toFixed(1)}K/מ"ר ${dealBadge}${savingStr}</div>` : '';
 
@@ -868,9 +881,9 @@ function formatListingCard(l, zoneAvgPpsqm) {
   return `<a href="${l.url}" target="_blank" rel="noopener" class="listing-card">
     <div class="listing-head">
       <span class="listing-source" style="--b:${sourceColor}">${l.source}</span>
-      <span class="listing-price">${l.price}</span>
+      <span class="listing-price" ${priceSentimentCls}>${l.price}</span>
     </div>
-    <div class="listing-title">${l.title}</div>
+    <div class="listing-title">${potentialTag}${l.title}</div>
     <div class="listing-meta">${rooms}${sqm}</div>
     ${ppsqmStr}
     ${note}
@@ -881,7 +894,8 @@ function renderListingsForZone(zoneId, listingsData, zone) {
   const list = (listingsData && listingsData.byZone && listingsData.byZone[zoneId]) || [];
   if (!list.length) return '';
   const avgPpsqm = zone ? parsePpsqmRange(zone.prices.rows) : null;
-  const cards = list.map(l => formatListingCard(l, avgPpsqm)).join('');
+  const score = zone ? computeValueScore(zone) : null;
+  const cards = list.map(l => formatListingCard(l, avgPpsqm, score)).join('');
   const updated = listingsData._meta && listingsData._meta.updated ? ` · עודכן ${listingsData._meta.updated}` : '';
   return `<div class="listings-row">
     <div class="listings-head">דירות לדוגמה במתחם${updated}</div>

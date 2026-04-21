@@ -76,31 +76,51 @@ async function scrapeYad2City(cityConfig, zones, browser) {
 
         // Extract listings from Yad2 DOM
         const pageListings = await page.evaluate(() => {
-          // Yad2 uses feed-item cards
-          const items = document.querySelectorAll('[class*="feeditem"], [class*="feed_item"], [class*="listing"], [data-testid*="feed"]');
+          // Yad2 uses feed-item cards with data-testid attributes
+          const items = document.querySelectorAll('[data-testid="feed-item"], [class*="feeditem"], [class*="feed_item"], [class*="listing"]');
           const results = [];
 
           for (const item of items) {
             try {
-              const priceEl = item.querySelector('[class*="price"], [data-testid*="price"]');
-              const titleEl = item.querySelector('[class*="title"], [class*="address"], [data-testid*="title"]');
-              const infoEls = item.querySelectorAll('[class*="info"], [class*="detail"], [class*="row_val"]');
+              // Priority for data-testid as it's more stable
+              const priceEl = item.querySelector('[data-testid="feed-item-price"], [class*="price"], [data-testid*="price"]');
+              const titleEl = item.querySelector('[data-testid="feed-item-title"], [class*="title"], [class*="address"], [data-testid*="title"]');
               const linkEl = item.querySelector('a[href*="/realestate/item/"]');
               const hoodEl = item.querySelector('[class*="subtitle"], [class*="neighborhood"]');
-
+              
               const price = priceEl?.textContent?.trim() || '';
               const title = titleEl?.textContent?.trim() || '';
+              const url = linkEl?.href || '';
 
               if (!price || !title) continue;
               if (!price.match(/[\d,]+/)) continue;
+              
+              // Skip promoted ads which often have generic titles or specific URL patterns
+              if (title.includes('נכס דומה') || url.includes('spot=') || url.includes('component-type=main_feed')) {
+                // Only skip if we have other choices, but for now let's be strict to find organic results
+                if (url.includes('spot=platinum') || url.includes('spot=look_alike')) continue;
+              }
 
-              // Parse info cells (rooms, sqm, floor)
+              // Parse info cells using both data-testid and positional/text markers
               let rooms = '', sqm = '', floor = '';
-              const infoTexts = [...infoEls].map(el => el.textContent.trim());
-              for (const t of infoTexts) {
-                if (t.match(/^\d+\.?\d*$/) && !rooms) rooms = t;
-                else if (t.match(/\d+\s*מ/) && !sqm) sqm = t.match(/(\d+)/)?.[1] || '';
-                else if (t.match(/קומה|ק'/) && !floor) floor = t.match(/(\d+)/)?.[1] || '';
+              
+              const roomsEl = item.querySelector('[data-testid="feed-item-info-rooms"]');
+              const floorEl = item.querySelector('[data-testid="feed-item-info-floor"]');
+              const sizeEl = item.querySelector('[data-testid="feed-item-info-size"]');
+              
+              if (roomsEl) rooms = roomsEl.textContent.trim();
+              if (floorEl) floor = floorEl.textContent.trim().replace('קומה', '').trim();
+              if (sizeEl) sqm = sizeEl.textContent.trim().replace('מ"ר', '').trim();
+
+              // Fallback to searching all info elements if data-testid didn't work
+              if (!rooms || !sqm) {
+                const infoEls = item.querySelectorAll('[class*="info"], [class*="detail"], [class*="row_val"]');
+                const infoTexts = [...infoEls].map(el => el.textContent.trim());
+                for (const t of infoTexts) {
+                  if (t.match(/^\d+\.?\d*$/) && !rooms) rooms = t;
+                  else if (t.match(/\d+\s*מ/) && !sqm) sqm = t.match(/(\d+)/)?.[1] || '';
+                  else if (t.match(/קומה|ק'/) && !floor) floor = t.match(/(\d+)/)?.[1] || '';
+                }
               }
 
               results.push({
@@ -110,7 +130,7 @@ async function scrapeYad2City(cityConfig, zones, browser) {
                 sqm,
                 floor,
                 hood: hoodEl?.textContent?.trim() || '',
-                url: linkEl?.href || ''
+                url
               });
             } catch (e) { /* skip */ }
           }

@@ -1,0 +1,295 @@
+{
+  "_meta": {
+    "updated": "2026-04-21",
+    "source": "Yad2",
+    "note": "עודכן אוטומטית. דירות ממופות לפי שכונה לאזורי פינוי-בינוי הרלוונטיים. לא כל דירה היא מועמדת לפינוי-בינוי."
+  },
+  "byZone": {
+    "air": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 7,950,000",
+        "rooms": "",
+        "sqm": "1",
+        "floor": "1",
+        "hood": "סיטי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/fg01glbp?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "1 מ״ר · ק' 1"
+      }
+    ],
+    "aviv": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 2,650,000",
+        "rooms": "",
+        "sqm": "1",
+        "floor": "1",
+        "hood": "הסתדרות",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/kv0r2oxs?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "1 מ״ר · ק' 1"
+      }
+    ],
+    "yevneely": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 7,700,000",
+        "rooms": "",
+        "sqm": "1",
+        "floor": "1",
+        "hood": "יבנאלי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/h6g8kwt7?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "1 מ״ר · ק' 1"
+      }
+    ],
+    "rambam": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 3,250,000",
+        "rooms": "",
+        "sqm": "1",
+        "floor": "1",
+        "hood": "גבעת רמב\"ם",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/00hanv4d?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "1 מ״ר · ק' 1"
+      }
+    ],
+    "bengurion": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 2,950,000",
+        "rooms": "",
+        "sqm": "1",
+        "floor": "1",
+        "hood": "בן גוריון",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/pylbjhqk?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "1 מ״ר · ק' 1"
+      }
+    ],
+    "arlozorov": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 8,189,999",
+        "rooms": "",
+        "sqm": "1",
+        "floor": "1",
+        "hood": "ארלוזורוב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/p7g9rm24?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "1 מ״ר · ק' 1"
+      }
+    ],
+    "northwest": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 4,000,000",
+        "rooms": "",
+        "sqm": "1",
+        "floor": "1",
+        "hood": "בורוכוב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/vih925fy?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "1 מ״ר · ק' 1"
+      }
+    ],
+    "rishonim": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 3,940,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "ראשונים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/ar16u39d?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "jerusalem80": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 2,190,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "ירושלים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/ez5gexxy?opened-from=feed&component-type=main_feed&spot=look_alike&location=999",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "hagapen": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 3,190,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "הגפן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/ldcnuy9i?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "amidar": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 2,200,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "עמידר",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/35p78us2?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "ramat-chen": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 4,600,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "רמת חן",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/lm8az1eu?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "zeitim": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 4,150,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "קריניצי",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/vra8wrea?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "hapodim": [
+      {
+        "title": "נכס דומה לנכס שחיפשת, שווה בדיקה",
+        "price": "₪ 2,750,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "נחלת גנים",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/hbz9wz2x?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "kfar-shalem-yafet": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 2,290,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "כפר שלם",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/86ee6vd5?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "yafet-yafo": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 3,650,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "יפו",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/ze0va227?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "neve-eliezer": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 50",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "נווה אליעזר",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/t0un3gfa?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "shapira": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 1,675,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "שפירא",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/247d7l76?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "kiryat-shalom": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 3,680,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "קרית שלום",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/wuyk3d2z?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "yafo-old": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 8,600,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "יפו העתיקה",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/jvjry50n?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "asherman": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 2,190,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "יד אליהו",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/1xdancgs?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ],
+    "hadar-yosef": [
+      {
+        "title": "בילטמור 8, תל אביב",
+        "price": "₪ 4,925,000",
+        "rooms": "",
+        "sqm": "2",
+        "floor": "2",
+        "hood": "רמת אביב",
+        "source": "Yad2",
+        "url": "https://www.yad2.co.il/realestate/item/tel-aviv-area/xbxncxit?opened-from=feed&component-type=main_feed&spot=platinum&location=1",
+        "meta": "2 מ״ר · ק' 2"
+      }
+    ]
+  }
+}

@@ -740,8 +740,9 @@ const App = {
         if (sqm > 0 && price > 0) {
           const ppsqm = price / sqm;
           if (ppsqm / avgPpsqm < 0.92) {
+            const score = computeValueScore(zoneData);
             deals.push({ 
-              html: formatListingCard(l, avgPpsqm), 
+              html: formatListingCard(l, avgPpsqm, score), 
               ppsqmRatio: ppsqm / avgPpsqm,
               price: price,
               sqm: sqm
@@ -933,6 +934,43 @@ const App = {
 
     // Subtitle with city + facts
     html += `<div class="zone-subtitle">${city.name} · ${zone.sub}</div>`;
+    
+    // Progress Bar
+    const stages = [
+      { label: 'תכנון', keywords: ['תכנון', 'אב', 'הכנה'] },
+      { label: 'הפקדה', keywords: ['הפקדה', 'מחוזית'] },
+      { label: 'אישור', keywords: ['אישור', 'אושרה', 'תב"ע'] },
+      { label: 'היתר', keywords: ['היתר', 'היתרים'] },
+      { label: 'ביצוע', keywords: ['הריסה', 'בביצוע', 'בנייה'] },
+      { label: 'סיום', keywords: ['סיום', 'אכלוס', 'הושלם'] }
+    ];
+    
+    // Simple heuristic to find current stage
+    let currentIdx = 0;
+    const factText = JSON.stringify(zone.facts) + zone.sub + zone.desc;
+    stages.forEach((s, idx) => {
+      if (s.keywords.some(k => factText.includes(k))) currentIdx = idx;
+    });
+    // Status 'yes' usually means approved or better
+    if (zone.status === 'yes' && currentIdx < 2) currentIdx = 2;
+
+    html += '<div style="margin:20px 0 24px">';
+    html += '<div style="display:flex; justify-content:space-between; margin-bottom:8px">';
+    stages.forEach((s, idx) => {
+      const isPast = idx <= currentIdx;
+      const color = isPast ? 'var(--accent)' : 'var(--border-hi)';
+      const opacity = isPast ? '1' : '0.4';
+      html += `<div style="flex:1; text-align:center; font-size:10px; font-weight:700; color:${color}; opacity:${opacity}">${s.label}</div>`;
+    });
+    html += '</div>';
+    html += '<div style="display:flex; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; gap:4px">';
+    stages.forEach((s, idx) => {
+      const isPast = idx <= currentIdx;
+      const color = isPast ? 'var(--accent)' : 'transparent';
+      html += `<div style="flex:1; background:${color}; border-radius:3px; transition:all 0.3s"></div>`;
+    });
+    html += '</div></div>';
+    
     html += '</div>';
 
     // KPI chips from prices.rows
