@@ -497,6 +497,7 @@ const App = {
       html += '</tr>';
     });
     html += '</tbody></table></div>';
+    }
 
     // ── Bottom Grid ──
     html += '<div class="bottom-grid">';
