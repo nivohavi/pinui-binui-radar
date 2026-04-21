@@ -623,19 +623,19 @@ const App = {
 
       const avgPpsqm = parsePpsqmRange(zone.prices.rows);
       if (!avgPpsqm) {
-        if (zoneId === "east") console.log("[Debug] East zone has no avgPpsqm");
+        console.log(`[Debug] Zone ${zoneId} avgPpsqm is null. Rows:`, JSON.stringify(zone.prices.rows));
         continue;
       }
       for (const l of listings) {
         const sqm = parseInt(l.sqm) || 0;
         const price = parseInt((l.price || '').replace(/[^\d]/g, '')) || 0;
 
-        // Filter by budget
         if (s.budget && price > s.budget) continue;
 
         if (sqm > 0 && price > 0) {
           const ppsqm = price / sqm;
-          if (ppsqm / avgPpsqm < 0.92) count++;
+          const ratio = ppsqm / avgPpsqm;
+          if (ratio < 0.92) count++;
         }
       }
     }
