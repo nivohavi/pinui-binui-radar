@@ -613,6 +613,7 @@ const App = {
     if (!_listingsCache || !_listingsCache.byZone) return 0;
     const s = this.state;
     let count = 0;
+    console.log("[Debug] _countDeals starting. Listings zones:", Object.keys(_listingsCache.byZone).length);
     for (const [zoneId, listings] of Object.entries(_listingsCache.byZone)) {
       const zone = this._findZoneData(zoneId);
       if (!zone) continue;
@@ -621,7 +622,10 @@ const App = {
       if (s.cities.length > 0 && !s.cities.includes(zone.citySlug)) continue;
 
       const avgPpsqm = parsePpsqmRange(zone.prices.rows);
-      if (!avgPpsqm) continue;
+      if (!avgPpsqm) {
+        if (zoneId === "east") console.log("[Debug] East zone has no avgPpsqm");
+        continue;
+      }
       for (const l of listings) {
         const sqm = parseInt(l.sqm) || 0;
         const price = parseInt((l.price || '').replace(/[^\d]/g, '')) || 0;
@@ -635,6 +639,7 @@ const App = {
         }
       }
     }
+    console.log("[Debug] _countDeals finished. Found:", count);
     return count;
   },
 
