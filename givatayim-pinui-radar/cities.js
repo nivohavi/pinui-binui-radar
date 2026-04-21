@@ -847,13 +847,20 @@ function formatListingCard(l, zoneAvgPpsqm) {
   const ppsqm = (sqmNum > 0 && priceNum > 0) ? Math.round(priceNum / sqmNum) : null;
 
   let dealBadge = '';
+  let savingStr = '';
   if (ppsqm && zoneAvgPpsqm) {
     const ratio = ppsqm / zoneAvgPpsqm;
-    if (ratio < 0.92) dealBadge = '<span class="deal-badge deal-good">מציאה</span>';
+    const diff = zoneAvgPpsqm - ppsqm;
+    
+    if (ratio < 0.92) {
+      dealBadge = '<span class="deal-badge deal-good">מציאה</span>';
+      savingStr = `<div style="font-size:10px; color:var(--good); margin-top:2px">₪${diff.toLocaleString('he-IL')} מתחת לממוצע</div>`;
+    }
     else if (ratio <= 1.05) dealBadge = '<span class="deal-badge deal-market">שוק</span>';
     else dealBadge = '<span class="deal-badge deal-expensive">יקר</span>';
   }
-  const ppsqmStr = ppsqm ? `<div class="listing-ppsqm">₪${(ppsqm/1000).toFixed(1)}K/מ"ר ${dealBadge}</div>` : '';
+  
+  const ppsqmStr = ppsqm ? `<div class="listing-ppsqm">₪${(ppsqm/1000).toFixed(1)}K/מ"ר ${dealBadge}${savingStr}</div>` : '';
 
   const sqm = l.sqm ? ` · ${l.sqm} מ"ר` : '';
   const rooms = l.rooms ? `${l.rooms} חד'` : '';

@@ -116,22 +116,56 @@ const App = {
   // ── Routing ────────────────────────────────────────────────────
   parseHash() {
     const h = location.hash.slice(1) || 'dashboard';
-    if (h.startsWith('zone/')) return { view: 'zone', zoneId: h.slice(5) };
-    if (h === 'deals') return { view: 'deals' };
+    const [path, query] = h.split('?');
+    
+    // Parse params if they exist (e.g. ?b=3000000&c=givatayim)
+    if (query) {
+      const params = new URLSearchParams(query);
+      if (params.has('b')) this.state.budget = parseInt(params.get('b'));
+      if (params.has('c')) this.state.cities = params.get('c').split(',').filter(Boolean);
+      if (params.has('s')) this.state.statuses = params.get('s').split(',').filter(Boolean);
+    }
+
+    if (path.startsWith('zone/')) return { view: 'zone', zoneId: path.slice(5) };
+    if (path === 'deals') return { view: 'deals' };
     // Redirect old tools routes to dashboard
-    if (h === 'tools' || h.startsWith('tools/')) return { view: 'dashboard' };
+    if (path === 'tools' || path.startsWith('tools/')) return { view: 'dashboard' };
     return { view: 'dashboard' };
   },
 
+  updateURL() {
+    const s = this.state;
+    let url = '#' + s.view;
+    if (s.view === 'zone') url = '#zone/' + s.zoneId;
+    
+    const params = new URLSearchParams();
+    if (s.budget !== 3000000) params.set('b', s.budget);
+    if (s.cities.length < 3) params.set('c', s.cities.join(','));
+    if (s.statuses.length < 3) params.set('s', s.statuses.join(','));
+    
+    const pStr = params.toString();
+    location.hash = pStr ? url + '?' + pStr : url;
+  },
+
   navigate(view, params) {
-    if (view === 'zone') location.hash = '#zone/' + params;
-    else location.hash = '#' + view;
+    this.state.view = view;
+    if (view === 'zone') this.state.zoneId = params;
+    this.updateURL();
   },
 
   // ── Persistence ────────────────────────────────────────────────
-  saveBudget() { localStorage.setItem('pinui_budget', this.state.budget); },
-  saveCities() { localStorage.setItem('pinui_cities', JSON.stringify(this.state.cities)); },
-  saveStatuses() { localStorage.setItem('pinui_statuses', JSON.stringify(this.state.statuses)); },
+  saveBudget() { 
+    localStorage.setItem('pinui_budget', this.state.budget);
+    this.updateURL();
+  },
+  saveCities() { 
+    localStorage.setItem('pinui_cities', JSON.stringify(this.state.cities));
+    this.updateURL();
+  },
+  saveStatuses() { 
+    localStorage.setItem('pinui_statuses', JSON.stringify(this.state.statuses));
+    this.updateURL();
+  },
 
   // ── Filters ────────────────────────────────────────────────────
   getFilteredZones() {
@@ -221,8 +255,18 @@ const App = {
     const sb = document.getElementById('sidebar');
     const v = this.state.view;
 
-    // Logo
-    let html = '<div class="sb-logo"><span>⬡</span><span>התחדשות.AI</span></div>';
+    // Logo & Freshness
+    let html = '<div class="sb-logo-container" style="display:flex; justify-content:space-between; align-items:center; padding:0 8px 16px 0">';
+    html += '<div class="sb-logo"><span>⬡</span><span>התחדשות.AI</span></div>';
+    
+    if (_listingsCache && _listingsCache._meta) {
+      const date = _listingsCache._meta.updated || '';
+      html += `<div title="נתונים נכונים ליום: ${date}" style="display:flex; align-items:center; gap:4px; font-size:10px; color:var(--good); background:rgba(46,229,157,0.1); padding:2px 6px; border-radius:12px; border:1px solid rgba(46,229,157,0.2)">
+        <span style="width:5px; height:5px; border-radius:50%; background:var(--good); display:inline-block"></span>
+        מעודכן
+      </div>`;
+    }
+    html += '</div>';
 
     // Nav — 3 items now
     const navItems = [
