@@ -10,6 +10,8 @@ const { build } = require('./outputs/build-listings');
 const args = process.argv.slice(2);
 const sourceFlag = args.find(a => a.startsWith('--source='));
 const source = sourceFlag ? sourceFlag.split('=')[1] : 'all';
+const outputFileFlag = args.find(a => a.startsWith('--output-file='));
+const outputFile = outputFileFlag ? outputFileFlag.split('=')[1] : 'listings.json';
 const dryRun = args.includes('--dry-run');
 
 async function main() {
@@ -70,7 +72,7 @@ async function main() {
   }
 
   // Build and write listings.json
-  const success = build(byZone, sources);
+  const success = build(byZone, sources, outputFile);
   if (!success) {
     console.error('Build failed. Aborting.');
     process.exit(1);

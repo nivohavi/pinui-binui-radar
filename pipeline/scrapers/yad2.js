@@ -50,13 +50,28 @@ async function scrapeYad2City(cityConfig, zones, browser) {
       const page = await context.newPage();
 
       try {
-        await page.goto(url.toString(), { waitUntil: 'domcontentloaded', timeout: 30000 });
+        await page.goto(url.toString(), { waitUntil: 'domcontentloaded', timeout: 45000 });
         await delay(3000);
 
-        // Scroll to load listings
-        for (let i = 0; i < 5; i++) {
-          await page.evaluate(() => window.scrollBy(0, window.innerHeight));
-          await delay(1000);
+        // Human-like scrolling to trigger lazy loading
+        console.log(`    [Yad2] Scrolling to load feed...`);
+        for (let i = 0; i < 15; i++) {
+          const scrollHeight = 400 + Math.floor(Math.random() * 400);
+          await page.evaluate((y) => window.scrollBy(0, y), scrollHeight);
+          await delay(800 + Math.random() * 1000);
+          
+          // Occasionally scroll up a bit
+          if (i % 5 === 0) {
+            await page.evaluate(() => window.scrollBy(0, -200));
+            await delay(500);
+          }
+        }
+
+        // Wait for at least one listing to appear
+        try {
+          await page.waitForSelector('[class*="feeditem"], [class*="feed_item"], [class*="listing"], [data-testid*="feed"]', { timeout: 10000 });
+        } catch (e) {
+          console.warn(`    [Yad2] No listings appeared after scrolling.`);
         }
 
         // Extract listings from Yad2 DOM

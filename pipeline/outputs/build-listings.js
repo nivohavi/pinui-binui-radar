@@ -73,7 +73,8 @@ function dedupe(listings) {
   return result;
 }
 
-function build(byZone, sources) {
+function build(byZone, sources, fileName = 'listings.json') {
+  const outputPath = path.join(__dirname, '..', '..', 'givatayim-pinui-radar', fileName);
   const output = {
     _meta: {
       updated: new Date().toISOString().slice(0, 10),
@@ -106,13 +107,13 @@ function build(byZone, sources) {
 
   // Safety check
   if (totalListings < MIN_TOTAL_LISTINGS) {
-    console.error(`[Build] ABORT: Only ${totalListings} listings (threshold: ${MIN_TOTAL_LISTINGS}). Something is wrong. Keeping previous listings.json.`);
+    console.error(`[Build] ABORT: Only ${totalListings} listings (threshold: ${MIN_TOTAL_LISTINGS}). Something is wrong. Keeping previous ${fileName}.`);
     return false;
   }
 
   // Write output
-  fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output, null, 2), 'utf8');
-  console.log(`[Build] Wrote ${totalListings} listings across ${Object.keys(output.byZone).length} zones to listings.json`);
+  fs.writeFileSync(outputPath, JSON.stringify(output, null, 2), 'utf8');
+  console.log(`[Build] Wrote ${totalListings} listings across ${Object.keys(output.byZone).length} zones to ${fileName}`);
   return true;
 }
 
