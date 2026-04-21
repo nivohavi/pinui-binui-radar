@@ -50,49 +50,79 @@ async function scrapeMadlanCity(cityConfig, browser) {
         }
       });
 
-      await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
-      await delay(3000); // Let JS render
+      await page.goto(url, { waitUntil: 'load', timeout: 60000 });
+      await delay(5000 + Math.random() * 5000); // Wait for the "Checking your browser" or initial load
 
-      // Scroll to load more listings
-      for (let i = 0; i < 3; i++) {
-        await page.evaluate(() => window.scrollBy(0, window.innerHeight));
-        await delay(1500);
+      // Simulate some human-like interaction on the body
+      try {
+        await page.mouse.move(Math.random() * 500, Math.random() * 500);
+        await page.mouse.click(10, 10);
+      } catch (e) {}
+
+      // Human-like scrolling to trigger lazy loading
+      console.log(`    [Madlan] Scrolling to load feed...`);
+      for (let i = 0; i < 20; i++) {
+        const scrollHeight = 300 + Math.floor(Math.random() * 500);
+        await page.evaluate((y) => window.scrollBy(0, y), scrollHeight);
+        await delay(1000 + Math.random() * 1500);
+        
+        // Occasionally scroll up a bit
+        if (i % 4 === 0) {
+          await page.evaluate(() => window.scrollBy(0, -100));
+          await delay(500);
+        }
       }
 
       // Extract listings from the DOM
       const domListings = await page.evaluate(() => {
-        const cards = document.querySelectorAll('[class*="listing"], [class*="card"], [class*="bulletin"], [data-testid*="listing"]');
         const results = [];
+        
+        // Strategy: Find all links that look like property bulletins or for-sale items
+        const listingLinks = [...document.querySelectorAll('a')].filter(a => 
+          a.href && (a.href.includes('/bulletin/') || a.href.includes('/for-sale/')) && !a.href.includes('/for-sale/israel') && !a.href.includes('/for-sale/city')
+        );
 
-        for (const card of cards) {
-          try {
-            // Try multiple selector patterns (Madlan changes their class names)
-            const priceEl = card.querySelector('[class*="price"], [data-testid*="price"]');
-            const addressEl = card.querySelector('[class*="address"], [class*="street"], [data-testid*="address"]');
-            const roomsEl = card.querySelector('[class*="rooms"], [class*="room"]');
-            const sqmEl = card.querySelector('[class*="area"], [class*="sqm"], [class*="size"]');
-            const floorEl = card.querySelector('[class*="floor"]');
-            const linkEl = card.querySelector('a[href*="/for-sale/"], a[href*="/bulletin/"]');
-            const hoodEl = card.querySelector('[class*="neighborhood"], [class*="hood"], [class*="location"]');
+        if (listingLinks.length > 0) {
+          const seenUrls = new Set();
+          for (const link of listingLinks) {
+            if (seenUrls.has(link.href)) continue;
+            seenUrls.add(link.href);
 
-            const price = priceEl?.textContent?.trim() || '';
-            const address = addressEl?.textContent?.trim() || '';
+            // Find a price in or near this link
+            let container = link;
+            let foundPrice = '';
+            let foundTitle = '';
+            
+            // Search upwards to find a container with a price-like number
+            for (let i = 0; i < 10 && container; i++) {
+              const text = container.textContent || '';
+              
+              // Match NIS symbol or numbers in the millions (e.g., 2,500,000)
+              const priceMatch = text.match(/[₪\d,]{6,}/) || text.match(/₪\s*[\d,]+/);
+              if (priceMatch && !foundPrice) {
+                const p = priceMatch[0].trim();
+                // Basic validation for price (should contain at least one digit)
+                if (p.match(/\d/)) foundPrice = p;
+              }
+              
+              if (!foundTitle) {
+                const titleEl = container.querySelector('h1, h2, h3, b, strong, [class*="address"], [class*="street"]');
+                if (titleEl) foundTitle = titleEl.textContent.trim();
+              }
+              
+              if (foundPrice && foundTitle) break;
+              container = container.parentElement;
+            }
 
-            // Skip if no meaningful data
-            if (!price && !address) continue;
-            // Skip if price doesn't look like NIS
-            if (price && !price.match(/[\d,]+/)) continue;
-
-            results.push({
-              title: address,
-              price: price,
-              rooms: roomsEl?.textContent?.match(/[\d.]+/)?.[0] || '',
-              sqm: sqmEl?.textContent?.match(/\d+/)?.[0] || '',
-              floor: floorEl?.textContent?.match(/\d+/)?.[0] || '',
-              hood: hoodEl?.textContent?.trim() || '',
-              url: linkEl?.href || ''
-            });
-          } catch (e) { /* skip malformed card */ }
+            if (foundPrice && foundPrice.length > 5) {
+              results.push({
+                title: foundTitle || 'דירה למכירה',
+                price: foundPrice.startsWith('₪') ? foundPrice : '₪ ' + foundPrice,
+                url: link.href,
+                source: 'Madlan'
+              });
+            }
+          }
         }
         return results;
       });
