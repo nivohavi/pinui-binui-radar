@@ -107,6 +107,7 @@ const App = {
     sortAsc: false,
     dealsSortCol: 'ratio',
     dealsSortAsc: true,
+    search: '',
     toolsOpen: {}
   },
 
@@ -170,10 +171,12 @@ const App = {
   // ── Filters ────────────────────────────────────────────────────
   getFilteredZones() {
     const s = this.state;
+    const q = (s.search || '').toLowerCase();
     return getAllZonesFlat().filter(z =>
       (s.cities.length === 0 || s.cities.includes(z.citySlug)) &&
       (s.statuses.length === 0 || s.statuses.includes(z.status)) &&
-      (!s.budget || z.entryPriceMin <= s.budget)
+      (!s.budget || z.entryPriceMin <= s.budget) &&
+      (!q || (z.zone + z.address + z.city).toLowerCase().includes(q))
     );
   },
 
@@ -194,18 +197,24 @@ const App = {
   },
 
   _filterZoneList(query) {
+    this.state.search = query;
     const q = query.trim().toLowerCase();
+    
+    // Filter sidebar items (immediate DOM update for speed)
     const items = document.querySelectorAll('.sb-zone-item');
     const groups = document.querySelectorAll('.sb-city-group');
     for (const item of items) {
       const name = (item.getAttribute('data-zone-name') || '').toLowerCase();
       item.style.display = (!q || name.includes(q)) ? '' : 'none';
     }
-    // Hide empty city groups
     for (const g of groups) {
       const visible = g.querySelectorAll('.sb-zone-item:not([style*="display: none"])');
       g.style.display = visible.length ? '' : 'none';
     }
+
+    // Filter main content (throttled re-render if needed, but for small data direct is fine)
+    if (this.state.view === 'deals') this.renderDeals();
+    else this.renderDashboard();
   },
 
   scrollToSection(id) {
@@ -272,6 +281,7 @@ const App = {
     html += `<div style="margin-bottom:20px; position:relative">
       <input type="text" class="sb-input" placeholder="חפש רחוב, פרויקט או יזם..." 
         style="padding-right:32px"
+        value="${this.state.search || ''}"
         oninput="App._filterZoneList(this.value)">
       <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); opacity:0.5">🔍</span>
     </div>`;
