@@ -883,7 +883,7 @@ function formatListingCard(l, zoneAvgPpsqm, zoneScore) {
       <span class="listing-source" style="--b:${sourceColor}">${l.source}</span>
       <span class="listing-price" ${priceSentimentCls}>${l.price}</span>
     </div>
-    <div class="listing-title">${potentialTag}${l.title}</div>
+    <div class="listing-title">${potentialTag}${l.title}${zone ? ` (${zone.city})` : ''}</div>
     <div class="listing-meta">${rooms}${sqm}</div>
     ${ppsqmStr}
     ${note}
@@ -895,7 +895,7 @@ function renderListingsForZone(zoneId, listingsData, zone) {
   if (!list.length) return '';
   const avgPpsqm = zone ? parsePpsqmRange(zone.prices.rows) : null;
   const score = zone ? computeValueScore(zone) : null;
-  const cards = list.map(l => formatListingCard(l, avgPpsqm, score)).join('');
+  const cards = list.map(l => formatListingCard(l, avgPpsqm, score, zone)).join('');
   const updated = listingsData._meta && listingsData._meta.updated ? ` · עודכן ${listingsData._meta.updated}` : '';
   return `<div class="listings-row">
     <div class="listings-head">דירות לדוגמה במתחם${updated}</div>

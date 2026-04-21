@@ -742,7 +742,7 @@ const App = {
           if (ppsqm / avgPpsqm < 0.92) {
             const score = computeValueScore(zoneData);
             deals.push({ 
-              html: formatListingCard(l, avgPpsqm, score), 
+              html: formatListingCard(l, avgPpsqm, score, zoneData), 
               ppsqmRatio: ppsqm / avgPpsqm,
               price: price,
               sqm: sqm
